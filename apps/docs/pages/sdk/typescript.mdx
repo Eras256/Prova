@@ -1,0 +1,88 @@
+# TypeScript SDK
+
+## Installation
+
+```bash
+pnpm add @prova/sdk
+```
+
+## ProvaClient
+
+```typescript
+import { ProvaClient } from '@prova/sdk';
+
+const client = new ProvaClient({
+  rpcUrl: string,          // Solana RPC URL
+  agentKeypair: Keypair,   // Agent's Ed25519 keypair
+  privacyMode?: boolean,   // Default: false
+  schemaVersion?: number,  // Default: 1
+});
+```
+
+### Methods
+
+#### `attest(payload)`
+
+Issue a behavior attestation on-chain.
+
+```typescript
+const receipt = await client.attest({
+  actionType: 'Transaction',
+  payload: { txSignature: '...' },
+  metadata: { reason: 'user-request' },
+});
+```
+
+#### `verify(attestationId)`
+
+Verify an attestation exists and is valid on-chain.
+
+```typescript
+const { valid } = await client.verify(receipt.id);
+```
+
+#### `batchAttest(payloads[])`
+
+Issue up to 10 attestations in parallel.
+
+```typescript
+const receipts = await client.batchAttest([
+  AttestationBuilder.transaction('sig1'),
+  AttestationBuilder.toolCall('search', { q: 'hello' }),
+]);
+```
+
+#### `history(query)`
+
+Query historical attestations for an agent (requires API access).
+
+```typescript
+const history = await client.history({
+  agentId: 'agent-pda',
+  fromTimestamp: Date.now() - 86400000,
+  actionType: 'Transaction',
+});
+```
+
+## AttestationBuilder
+
+Factory helpers for common action types:
+
+```typescript
+import { AttestationBuilder } from '@prova/sdk';
+
+// Transaction
+AttestationBuilder.transaction(txSig, extraPayload?)
+
+// Tool call
+AttestationBuilder.toolCall(toolName, args?)
+
+// Model invocation
+AttestationBuilder.modelInvocation(model, promptHash)
+
+// Custom
+new AttestationBuilder()
+  .setActionType('ResourceAccess')
+  .setPayload({ uri: 'https://api.example.com' })
+  .build()
+```

@@ -1,0 +1,22 @@
+# Prova Documentation
+
+**Prova** is a behavior attestation layer that issues verifiable, signed, immutable receipts of every AI agent action on Solana, built on top of the [Solana Attestation Service (SAS)](https://attest.solana.com).
+
+## Quick Navigation
+
+- [Quick Start](/quick-start) — Issue your first attestation in 2 minutes
+- [Concepts](/concepts/attestations) — What are behavior attestations?
+- [SDK Reference](/sdk/typescript) — TypeScript and Rust SDK docs
+- [API Reference](/api/overview) — REST API documentation
+- [Security](/security/model) — Threat model and security design
+
+## What is Prova?
+
+When an AI agent executes an action — a transaction, a tool call, a decision — Prova issues a **cryptographic attestation** on Solana. This attestation is:
+
+- **Signed** by the agent's Ed25519 key
+- **Immutable** — stored on Solana, cannot be altered
+- **Verifiable** — anyone can verify without trusting Prova
+- **Composable** — built on SAS, standard schemas
+
+> **Disclaimer:** Prova is NOT affiliated with, endorsed by, or sponsored by the Solana Foundation. Solana® is a registered trademark of the Solana Foundation.

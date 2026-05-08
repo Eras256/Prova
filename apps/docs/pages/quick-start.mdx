@@ -1,0 +1,49 @@
+# Quick Start
+
+Issue your first AI agent behavior attestation on Solana in under 2 minutes.
+
+## 1. Install
+
+```bash
+pnpm add @prova/sdk
+```
+
+## 2. Initialize client
+
+```typescript
+import { ProvaClient } from '@prova/sdk';
+import { Keypair } from '@solana/web3.js';
+
+const client = new ProvaClient({
+  rpcUrl: 'https://api.devnet.solana.com',
+  agentKeypair: Keypair.fromSecretKey(agentSecretKey),
+});
+```
+
+## 3. Issue attestation
+
+```typescript
+import { AttestationBuilder } from '@prova/sdk';
+
+const receipt = await client.attest(
+  AttestationBuilder.transaction(txSignature, {
+    operation: 'swap',
+    amountUsd: 500,
+  })
+);
+
+console.log('On-chain receipt:', receipt.id);
+```
+
+## 4. Verify
+
+```typescript
+const result = await client.verify(receipt.id);
+console.log(result.valid); // true
+```
+
+## Next steps
+
+- [Concepts: What are attestations?](/concepts/attestations)
+- [SDK Reference](/sdk/typescript)
+- [Forensic Explorer](https://prova.io/explorer)

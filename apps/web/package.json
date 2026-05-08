@@ -1,0 +1,34 @@
+{
+  "name": "@prova/web",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .next"
+  },
+  "dependencies": {
+    "@prova/core": "workspace:*",
+    "@prova/ui": "workspace:*",
+    "@tanstack/react-query": "^5.62.16",
+    "lucide-react": "^0.468.0",
+    "next": "15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.3",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@prova/config-typescript": "workspace:*",
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3"
+  }
+}

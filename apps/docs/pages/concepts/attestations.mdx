@@ -1,0 +1,35 @@
+# What are Behavior Attestations?
+
+A behavior attestation is a **cryptographic receipt** for an AI agent action — proving that a specific agent, at a specific time, performed a specific action, with a signature that can be verified by anyone.
+
+## Anatomy of an Attestation
+
+| Field | Type | Description |
+|---|---|---|
+| `pda` | `Pubkey` | On-chain account address |
+| `agent` | `Pubkey` | The agent that issued it |
+| `actionType` | `ActionType` | Category of action |
+| `actionHash` | `[u8; 32]` | SHA-256 of the action payload |
+| `timestamp` | `i64` | Unix timestamp of issuance |
+| `blockHeight` | `u64` | Solana slot at issuance |
+| `privacyMode` | `bool` | Whether payload is encrypted |
+| `signature` | `[u8; 64]` | Ed25519 signature by agent key |
+| `schemaVersion` | `u8` | Schema version |
+
+## Action Types
+
+- `Transaction` — On-chain transaction executed by the agent
+- `Decision` — Consequential decision made by the agent
+- `ModelInvocation` — LLM API call
+- `ToolCall` — External tool or service called
+- `ResourceAccess` — File, database, or API access
+- `PolicyCheck` — Compliance policy evaluation
+- `Custom` — User-defined action type
+
+## Privacy Mode
+
+When `privacyMode = true`, the action payload is encrypted via **Vanish Core** before hashing. The attestation is still on-chain and verifiable (the hash is stored), but payload content is only accessible to authorized parties.
+
+## SAS Compatibility
+
+All Prova attestations are issued via the Solana Attestation Service and follow a published schema, making them composable with any SAS-compatible tooling.
