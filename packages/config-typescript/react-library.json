@@ -5,6 +5,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
     "noEmit": false,
+    "allowImportingTsExtensions": false,
     "outDir": "dist"
   },
   "exclude": ["node_modules", "dist"]

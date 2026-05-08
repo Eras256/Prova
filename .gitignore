@@ -38,3 +38,9 @@ Thumbs.db
 # Misc
 *.log
 .changeset
+
+# Next.js
+next-env.d.ts
+
+# Claude Code local state
+.claude/
