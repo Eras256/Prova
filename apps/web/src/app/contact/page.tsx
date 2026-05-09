@@ -28,7 +28,7 @@ export default function ContactPage() {
           <div className="mt-3 flex gap-4 text-sm">
             <a href="https://discord.gg/prova" className="text-muted-foreground hover:text-white">Discord</a>
             <a href="https://x.com/prova_io" className="text-muted-foreground hover:text-white">X (Twitter)</a>
-            <a href="https://github.com/prova-io/prova" className="text-muted-foreground hover:text-white">GitHub</a>
+            <a href="https://github.com/Eras256/Prova" className="text-muted-foreground hover:text-white">GitHub</a>
           </div>
         </div>
       </div>

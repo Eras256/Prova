@@ -29,7 +29,7 @@ const content = {
         icon: Code2,
         title: 'API reference',
         desc: 'Every endpoint, with a try-it console powered by your own key.',
-        href: '/developers/api',
+        href: '/developers/docs',
         cta: 'Browse API',
       },
       {
@@ -66,7 +66,7 @@ const content = {
         icon: Code2,
         title: 'Referencia de la API',
         desc: 'Cada endpoint, con una consola de prueba alimentada por tu propia llave.',
-        href: '/developers/api',
+        href: '/developers/docs',
         cta: 'Explorar API',
       },
       {
@@ -103,7 +103,7 @@ const content = {
         icon: Code2,
         title: 'API 参考',
         desc: '每一个接口，都有使用您自己的密钥驱动的测试控制台。',
-        href: '/developers/api',
+        href: '/developers/docs',
         cta: '浏览 API',
       },
       {
@@ -142,7 +142,7 @@ export function DevelopersContent() {
                 <Link href="/developers/quick-start">{t.quickStart}</Link>
               </Button>
               <Button size="lg" variant="outline" asChild className="gap-2">
-                <a href="https://github.com/prova-io/prova" target="_blank" rel="noreferrer noopener">
+                <a href="https://github.com/Eras256/Prova" target="_blank" rel="noreferrer noopener">
                   <Github className="h-4 w-4" />
                   {t.github}
                 </a>

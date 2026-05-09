@@ -111,7 +111,7 @@ const organizationSchema = {
   description:
     'Prova issues cryptographic, on-chain receipts for every action an AI agent takes, built on the Solana Attestation Service.',
   sameAs: [
-    'https://github.com/prova-io/prova',
+    'https://github.com/Eras256/Prova',
     'https://x.com/prova_io',
     'https://discord.gg/prova',
   ],

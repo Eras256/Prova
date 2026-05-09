@@ -49,7 +49,7 @@ export function Footer() {
             </p>
             <div className="mt-5 flex gap-5">
               {[
-                { label: 'GitHub', href: 'https://github.com/prova-io/prova' },
+                { label: 'GitHub', href: 'https://github.com/Eras256/Prova' },
                 { label: 'X', href: 'https://x.com/prova_io' },
                 { label: 'Discord', href: 'https://discord.gg/prova' },
               ].map((s) => (
