@@ -182,7 +182,7 @@ export function DevelopersContent() {
                 <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.tsTag}</span>
                 <span className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">Node 18+</span>
               </div>
-              <pre className="mt-3 font-mono text-sm text-foreground">pnpm add @prova/sdk</pre>
+              <pre className="mt-3 font-mono text-sm text-foreground">npm install prova-agent-sdk</pre>
             </div>
             <div className="bg-background p-6">
               <div className="flex items-center justify-between">
