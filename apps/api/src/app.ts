@@ -13,7 +13,26 @@ import { rateLimiter } from './middleware/rate-limiter';
 
 export const app = new Hono();
 
-app.use('*', cors({ origin: ['https://prova.io', 'http://localhost:3000'] }));
+const ALLOWED_ORIGINS = [
+  'https://prova.io',
+  'https://www.prova.io',
+  'https://prova-solana.vercel.app',
+  // Previews de Vercel (patrón glob no soportado por Hono — usamos función)
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3002',
+];
+
+app.use('*', cors({
+  origin: (origin) => {
+    if (!origin) return origin;
+    if (ALLOWED_ORIGINS.includes(origin)) return origin;
+    // Permite previews de Vercel: prova-solana-*.vercel.app
+    if (/^https:\/\/prova-solana-[^.]+\.vercel\.app$/.test(origin)) return origin;
+    return null;
+  },
+  credentials: true,
+}));
 app.use('*', logger());
 app.use('*', prettyJSON());
 app.use('*', secureHeaders());

@@ -4,6 +4,8 @@ export const PROGRAM_ID = new PublicKey(
   process.env.NEXT_PUBLIC_PROVA_PROGRAM_ID ?? 'G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1'
 );
 
+// En producción usa Helius (más estable y con rate limits más altos).
+// El fallback al endpoint público solo si no hay env var configurada.
 export const RPC_URL =
   process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? 'https://api.devnet.solana.com';
 

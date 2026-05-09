@@ -5,7 +5,9 @@ export default defineConfig({
   out: './migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    // Para migraciones usar DATABASE_DIRECT_URL (conexión directa, no pooler)
+    // El pooler de Supabase (pgBouncer) no soporta el modo Session que necesita Drizzle Kit
+    url: process.env.DATABASE_DIRECT_URL ?? process.env.DATABASE_URL!,
   },
   verbose: true,
   strict: true,
