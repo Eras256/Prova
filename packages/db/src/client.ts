@@ -12,7 +12,10 @@ export function getDb(databaseUrl?: string) {
     throw new Error('DATABASE_URL environment variable is required');
   }
 
-  const pool = new Pool({ connectionString: url });
+  const pool = new Pool({
+    connectionString: url,
+    ssl: url.includes('sslmode=') ? { rejectUnauthorized: false } : undefined,
+  });
   db = drizzle(pool, { schema });
   return db;
 }
