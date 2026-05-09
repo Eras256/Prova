@@ -1,5 +1,7 @@
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::sysvar::instructions::{load_instruction_at_checked, ID as IX_ID};
+use anchor_lang::solana_program::sysvar::instructions::{
+    load_current_index_checked, load_instruction_at_checked, ID as IX_ID,
+};
 use crate::errors::ProvaError;
 use crate::state::AgentAccount;
 
@@ -52,8 +54,9 @@ pub struct RecordAttestations<'info> {
 //   [12..14] message_data_size       (u16 LE) — must be 32 (action_hash)
 //   [14..16] message_instruction_index (u16 LE) — must be 0xFFFF
 //
-// Transaction must be built as: [Ed25519_0, ..., Ed25519_N-1, record_attestations]
-// so that attestation i corresponds to Ed25519 instruction at index i.
+// Para cada atestación se busca una instrucción Ed25519 en cualquier posición ANTERIOR
+// a record_attestations. Esto es robusto frente a wallets (Phantom, Backpack, etc.)
+// que prependen instrucciones ComputeBudget u otras sin previo aviso.
 fn verify_ed25519_ix(
     ix: &anchor_lang::solana_program::instruction::Instruction,
     expected_pubkey: &[u8; 32],
@@ -109,11 +112,26 @@ pub fn handler(ctx: Context<RecordAttestations>, attestations: Vec<AttestationIn
     let agent = &mut ctx.accounts.agent;
     let ix_sysvar = ctx.accounts.instructions.to_account_info();
 
-    // One Ed25519 pre-verification instruction per attestation, in order
-    for (i, att) in attestations.iter().enumerate() {
-        let ix = load_instruction_at_checked(i, &ix_sysvar)
-            .map_err(|_| ProvaError::InvalidSignature)?;
-        verify_ed25519_ix(&ix, &agent.agent_id, &att.action_hash)?;
+    // Índice de la instrucción record_attestations en esta tx.
+    // Solo miramos instrucciones anteriores (wallets pueden agregar ComputeBudget al inicio).
+    let current_ix_index =
+        load_current_index_checked(&ix_sysvar).map_err(|_| ProvaError::InvalidSignature)? as usize;
+
+    // Para cada atestación: buscar en 0..current_ix_index una Ed25519 ix que coincida
+    // con agent_id Y action_hash. Orden no importa; cada hash debe cubrirse al menos una vez.
+    for att in attestations.iter() {
+        let mut verified = false;
+        for scan_idx in 0..current_ix_index {
+            let ix = match load_instruction_at_checked(scan_idx, &ix_sysvar) {
+                Ok(ix) => ix,
+                Err(_) => continue,
+            };
+            if verify_ed25519_ix(&ix, &agent.agent_id, &att.action_hash).is_ok() {
+                verified = true;
+                break;
+            }
+        }
+        require!(verified, ProvaError::InvalidSignature);
     }
 
     let clock = Clock::get()?;

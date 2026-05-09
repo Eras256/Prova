@@ -340,7 +340,7 @@ export function IssueAttestation() {
                     </Button>
                   ) : (
                     <div className="space-y-3">
-                      <div className="flex items-center gap-3 border border-primary/40 bg-primary/[0.04] px-4 py-3">
+                      <div className="flex items-center gap-3 border border-primary/40 bg-primary/4 px-4 py-3">
                         <CheckCircle className="h-4 w-4 text-primary" strokeWidth={1.5} />
                         <div className="min-w-0 flex-1">
                           <p className="font-pixel text-[11px] uppercase tracking-wider text-primary">{t.step1.success}</p>
@@ -448,7 +448,7 @@ export function IssueAttestation() {
                         onClick={() => setActionType(type)}
                         className={`border px-3 py-2 text-left font-pixel text-[11px] uppercase tracking-wider transition-colors ${
                           actionType === type
-                            ? 'border-primary bg-primary/[0.06] text-foreground'
+                            ? 'border-primary bg-primary/6 text-foreground'
                             : 'border-border text-muted-foreground hover:text-foreground'
                         }`}
                       >
@@ -464,7 +464,7 @@ export function IssueAttestation() {
                     type="button"
                     onClick={() => setPrivacyMode(!privacyMode)}
                     className={`mt-2 flex w-full items-center gap-3 border px-4 py-3 text-left transition-colors ${
-                      privacyMode ? 'border-primary bg-primary/[0.06]' : 'border-border'
+                      privacyMode ? 'border-primary bg-primary/6' : 'border-border'
                     }`}
                   >
                     {privacyMode ? (
@@ -487,12 +487,12 @@ export function IssueAttestation() {
               {error && (
                 <div className="mt-6 flex items-start gap-3 border border-destructive/40 bg-destructive/5 px-5 py-4 text-sm text-destructive">
                   <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-                  <span className="break-words">{error}</span>
+                  <span className="wrap-break-word">{error}</span>
                 </div>
               )}
 
               {result ? (
-                <div className="mt-6 border border-primary/40 bg-primary/[0.04] p-6">
+                <div className="mt-6 border border-primary/40 bg-primary/4 p-6">
                   <div className="flex items-center gap-2 font-pixel text-[12px] uppercase tracking-wider text-primary">
                     <CheckCircle className="h-4 w-4" /> {t.success.tag} {NETWORK}
                   </div>

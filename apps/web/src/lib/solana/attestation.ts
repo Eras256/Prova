@@ -7,6 +7,7 @@ import {
 } from '@solana/web3.js';
 import { type Program, type AnchorProvider } from '@coral-xyz/anchor';
 import nacl from 'tweetnacl';
+import { deriveAgentPda } from './constants';
 
 export type ActionTypeName =
   | 'transaction'
@@ -96,6 +97,10 @@ export async function issueAttestation(params: IssueParams): Promise<{ txSignatu
       accounts: (a: Record<string, unknown>) => { instruction: () => Promise<unknown> };
     }
   >;
+  // El PDA del agente debe pasarse explícitamente — Anchor no puede auto-derivarlo
+  // porque el seed usa `agent.operator` (campo interno) creando una referencia circular.
+  const [agentPda] = deriveAgentPda(operator);
+
   const recordIx = (await methods
     .recordAttestations!([
       {
@@ -106,6 +111,7 @@ export async function issueAttestation(params: IssueParams): Promise<{ txSignatu
       },
     ])
     .accounts({
+      agent: agentPda,
       operator,
       instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
     })
