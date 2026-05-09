@@ -1,4 +1,4 @@
-import type { ActionType } from '@prova/core';
+import type { ActionType } from './core';
 
 export interface AttestationPayload {
   actionType: ActionType;

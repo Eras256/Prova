@@ -1,6 +1,6 @@
 {
-  "name": "@prova/sdk",
-  "version": "0.1.0",
+  "name": "prova-agent-sdk",
+  "version": "0.1.5",
   "description": "Behavior attestation SDK for AI agents on Solana — wrap any agent action in a cryptographic receipt",
   "license": "Apache-2.0",
   "author": "Prova Labs",
@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.0",
-    "@prova/core": "workspace:*",
     "@solana/web3.js": "^1.98.0",
     "tweetnacl": "^1.0.3"
   },

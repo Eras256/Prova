@@ -1,5 +1,5 @@
 import type { Keypair, PublicKey } from '@solana/web3.js';
-import type { ActionType } from '@prova/core';
+import type { ActionType } from './core';
 
 // ─── Configuración ────────────────────────────────────────────────────────────
 

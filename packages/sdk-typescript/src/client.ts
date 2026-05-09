@@ -9,8 +9,8 @@ import {
 } from '@solana/web3.js';
 import { AnchorProvider, Program, Wallet, type Idl } from '@coral-xyz/anchor';
 import nacl from 'tweetnacl';
-import { PROVA_PROGRAM_ID, AGENT_SEED, MAX_BATCH_ATTESTATIONS } from '@prova/core';
-import { BatchLimitExceededError, AgentNotFoundError, AgentRevokedError } from '@prova/core';
+import { PROVA_PROGRAM_ID, AGENT_SEED, MAX_BATCH_ATTESTATIONS } from './core';
+import { BatchLimitExceededError, AgentNotFoundError, AgentRevokedError } from './core';
 import type {
   ProvaClientConfig,
   RegisterAgentParams,

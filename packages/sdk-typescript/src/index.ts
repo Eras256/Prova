@@ -1,5 +1,17 @@
-// Cliente principal
+// Cliente principal (on-chain)
 export { ProvaClient } from './client';
+
+// Cliente REST API (off-chain queries)
+export { ProvaApiClient } from './api-client';
+export type {
+  ProvaApiClientConfig,
+  ListAttestationsQuery,
+  AttestationResponse,
+  AgentResponse,
+  AgentStatsResponse,
+  BulkVerifyItem,
+  Pagination,
+} from './api-client';
 
 // Builder de payloads
 export { AttestationBuilder } from './attestation-builder';
@@ -29,7 +41,7 @@ export {
   ACTION_TYPES,
   SCHEMA_VERSION,
   MAX_BATCH_ATTESTATIONS,
-} from '@prova/core';
+} from './core';
 
 // Errores re-exportados
 export {
@@ -40,4 +52,4 @@ export {
   InvalidSignatureError,
   BatchLimitExceededError,
   UnauthorizedError,
-} from '@prova/core';
+} from './core';

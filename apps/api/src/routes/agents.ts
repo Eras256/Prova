@@ -1,8 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { getDb } from '@prova/db';
-import { getAgentByAgentId, getAgentStats } from '@prova/db';
+import { getDb, getAgentByAgentId, getAgentStats } from '@prova/db';
 import { AgentNotFoundError } from '@prova/core';
 
 export const agentsRouter = new Hono();
@@ -28,9 +27,7 @@ agentsRouter.get('/:agentId/stats', zValidator('param', agentIdSchema), async (c
   const db = getDb();
 
   const agent = await getAgentByAgentId(db, agentId);
-  if (!agent) {
-    throw new AgentNotFoundError(agentId);
-  }
+  if (!agent) throw new AgentNotFoundError(agentId);
 
   const stats = await getAgentStats(db, agent.pda);
   return c.json({ data: stats });

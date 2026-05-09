@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import type { ActionType } from '@prova/core';
+import type { ActionType } from './core';
 import type { AttestationRecord } from './types';
 
 // Discriminadores SHA-256("event:<Name>")[0..8] — calculados al momento de compilar el contrato.

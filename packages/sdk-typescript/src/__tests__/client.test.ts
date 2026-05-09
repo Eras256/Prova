@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { ProvaClient } from '../client';
-import { PROVA_PROGRAM_ID } from '@prova/core';
+import { PROVA_PROGRAM_ID } from '../core';
 
 // Usa un keypair determinista para tests reproducibles
 const TEST_AGENT = Keypair.fromSeed(Buffer.alloc(32, 0x01));
