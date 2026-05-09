@@ -1,167 +1,408 @@
-import { Connection, Keypair, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
-import * as anchor from '@coral-xyz/anchor';
-import nacl from 'tweetnacl';
-import bs58 from 'bs58';
 import {
-  PROVA_PROGRAM_ID,
-  AGENT_SEED,
-  ATTESTATION_SEED,
-  MAX_BATCH_ATTESTATIONS,
-  SCHEMA_VERSION,
-} from '@prova/core';
-import { BatchLimitExceededError, AgentRevokedError } from '@prova/core';
-import type { AttestationPayload, AttestationResult, HistoryQuery, VerifyResult } from '@prova/core';
-import type { ProvaClientConfig } from './types';
+  Connection,
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  Ed25519Program,
+  SYSVAR_INSTRUCTIONS_PUBKEY,
+} from '@solana/web3.js';
+import { AnchorProvider, Program, Wallet, type Idl } from '@coral-xyz/anchor';
+import nacl from 'tweetnacl';
+import { PROVA_PROGRAM_ID, AGENT_SEED, MAX_BATCH_ATTESTATIONS } from '@prova/core';
+import { BatchLimitExceededError, AgentNotFoundError, AgentRevokedError } from '@prova/core';
+import type {
+  ProvaClientConfig,
+  RegisterAgentParams,
+  RegisterAgentResult,
+  AttestParams,
+  AttestResult,
+  BatchAttestParams,
+  RevokeAgentParams,
+  UpdatePolicyRootParams,
+  AgentAccount,
+  AttestationRecord,
+  BatchAttestEntry,
+} from './types';
+import { getAttestationsFromLogs } from './events';
+import idl from './idl.json';
 
+// Anchor camelCase del enum Action Type para instrucción
+function actionTypeVariant(t: string): Record<string, Record<string, never>> {
+  // 'Transaction' → { transaction: {} } (Anchor camelCase de enum)
+  const key = t.charAt(0).toLowerCase() + t.slice(1);
+  return { [key]: {} };
+}
+
+function explorerTxUrl(sig: string, network = 'devnet'): string {
+  return `https://explorer.solana.com/tx/${sig}?cluster=${network}`;
+}
+
+/**
+ * Cliente principal del SDK Prova.
+ *
+ * Permite registrar agentes de IA en Solana y emitir atestaciones de comportamiento
+ * criptográficamente verificables con una API de 5 líneas.
+ *
+ * @example
+ * ```typescript
+ * import { ProvaClient } from '@prova/sdk';
+ * import { Keypair } from '@solana/web3.js';
+ *
+ * const prova = new ProvaClient({
+ *   rpcUrl: 'https://devnet.helius-rpc.com/?api-key=TU_KEY',
+ *   agentKeypair: Keypair.fromSecretKey(agentSecretBytes),
+ * });
+ *
+ * const hash = await ProvaClient.hashAction('swap 100 USDC → SOL en Jupiter');
+ * const { txSignature } = await prova.attest({ operatorKeypair, actionHash: hash });
+ * console.log(`Receipt: ${txSignature}`);
+ * ```
+ */
 export class ProvaClient {
   private readonly connection: Connection;
-  private readonly keypair: Keypair;
-  private readonly privacyMode: boolean;
-  private readonly schemaVersion: number;
+  private readonly agentKeypair: Keypair;
+  private readonly programId: PublicKey;
+  private readonly network: string;
 
   constructor(config: ProvaClientConfig) {
-    this.connection = new Connection(config.rpcUrl, 'confirmed');
-    this.keypair = config.agentKeypair;
-    this.privacyMode = config.privacyMode ?? false;
-    this.schemaVersion = config.schemaVersion ?? SCHEMA_VERSION;
+    this.connection = new Connection(config.rpcUrl, { commitment: 'confirmed' });
+    this.agentKeypair = config.agentKeypair;
+    this.programId = new PublicKey(config.programId ?? PROVA_PROGRAM_ID);
+    this.network = config.rpcUrl.includes('mainnet') ? 'mainnet' : 'devnet';
   }
 
-  getAgentPda(): PublicKey {
-    const [pda] = PublicKey.findProgramAddressSync(
-      [AGENT_SEED, this.keypair.publicKey.toBuffer()],
-      new PublicKey(PROVA_PROGRAM_ID)
+  // ─── Helpers públicos ───────────────────────────────────────────────────────
+
+  /**
+   * Deriva la PDA del AgentAccount para un operador dado.
+   * PDA = findProgramAddress([b"prova_agent", operator_pubkey], programId)
+   */
+  deriveAgentPda(operator: PublicKey): [PublicKey, number] {
+    return PublicKey.findProgramAddressSync(
+      [Buffer.from('prova_agent'), operator.toBuffer()],
+      this.programId
     );
-    return pda;
   }
 
-  async attest(payload: AttestationPayload): Promise<AttestationResult> {
-    const serialized = JSON.stringify({
-      actionType: payload.actionType,
-      payload: payload.payload,
-      metadata: payload.metadata,
-      timestamp: Date.now(),
-    });
+  /**
+   * Calcula sha-256 de una cadena de texto y devuelve 32 bytes.
+   * Úsalo para producir el action_hash antes de llamar a attest().
+   */
+  static async hashAction(action: string): Promise<Uint8Array> {
+    const bytes = new TextEncoder().encode(action);
+    const buf = new ArrayBuffer(bytes.byteLength);
+    new Uint8Array(buf).set(bytes);
+    const digest = await crypto.subtle.digest('SHA-256', buf);
+    return new Uint8Array(digest);
+  }
 
-    const actionHash = await this.hashPayload(serialized);
-    const signature = nacl.sign.detached(
-      Buffer.from(actionHash, 'hex'),
-      this.keypair.secretKey
-    );
+  // ─── Instrucciones on-chain ─────────────────────────────────────────────────
 
-    const agentPda = this.getAgentPda();
-    const [attestationPda] = PublicKey.findProgramAddressSync(
-      [
-        ATTESTATION_SEED,
-        agentPda.toBuffer(),
-        Buffer.from(actionHash, 'hex').slice(0, 8),
-      ],
-      new PublicKey(PROVA_PROGRAM_ID)
-    );
+  /**
+   * Registra el agente en Solana.
+   * - Crea el AgentAccount (PDA) con el agent_id = agentKeypair.publicKey
+   * - El operador paga el rent y firma la tx
+   * - Solo necesitas llamarlo una vez por operador
+   */
+  async registerAgent({
+    operatorKeypair,
+    policyRoot = new Uint8Array(32),
+  }: RegisterAgentParams): Promise<RegisterAgentResult> {
+    if (policyRoot.length !== 32) throw new Error('policyRoot must be exactly 32 bytes');
 
-    const tx = new Transaction().add(
-      this.buildIssueInstruction({
-        agentPda,
-        attestationPda,
-        actionType: payload.actionType,
-        actionHash,
-        metadataUri: null,
-        privacyMode: this.privacyMode,
-        signature: Array.from(signature),
+    const program = this.buildProgram(operatorKeypair);
+    const agentId = Array.from(this.agentKeypair.publicKey.toBytes());
+    const policy = Array.from(policyRoot);
+
+    const methods = program.methods as unknown as Record<
+      string,
+      (...args: unknown[]) => {
+        accounts: (a: Record<string, unknown>) => { rpc: (opts?: unknown) => Promise<string> };
+      }
+    >;
+
+    const [agentPda] = this.deriveAgentPda(operatorKeypair.publicKey);
+
+    const txSignature = await methods
+      .registerAgent!(agentId, policy)
+      .accounts({
+        operator: operatorKeypair.publicKey,
+        systemProgram: SystemProgram.programId,
       })
-    );
-
-    const txSignature = await this.connection.sendTransaction(tx, [this.keypair]);
-    const { context } = await this.connection.confirmTransaction(txSignature);
+      .rpc({ commitment: 'confirmed' });
 
     return {
-      id: attestationPda.toBase58(),
-      agentPda: agentPda.toBase58(),
       txSignature,
-      timestamp: Date.now(),
-      blockHeight: context.slot,
+      agentPda,
+      explorerUrl: explorerTxUrl(txSignature, this.network),
     };
   }
 
-  async batchAttest(payloads: AttestationPayload[]): Promise<AttestationResult[]> {
-    if (payloads.length > MAX_BATCH_ATTESTATIONS) {
+  /**
+   * Emite una atestación de comportamiento.
+   *
+   * 1. El agente firma el action_hash con su keypair (Ed25519, off-chain)
+   * 2. Se añade una instrucción Ed25519 pre-verify (verificada nativamente por Solana)
+   * 3. Se añade record_attestations — el programa valida la firma y emite AttestationIssued
+   * 4. El operador firma y paga la tx completa
+   */
+  async attest({
+    operatorKeypair,
+    actionHash,
+    actionType = 'Transaction',
+    privacyMode = false,
+  }: AttestParams): Promise<AttestResult> {
+    if (actionHash.length !== 32) throw new Error('actionHash must be exactly 32 bytes');
+
+    const txSignature = await this.sendAttestations(operatorKeypair, [
+      { actionHash, actionType, privacyMode },
+    ]);
+
+    return { txSignature, explorerUrl: explorerTxUrl(txSignature, this.network) };
+  }
+
+  /**
+   * Emite múltiples atestaciones en una sola transacción (máximo 100).
+   * Más eficiente que llamar attest() varias veces.
+   */
+  async batchAttest({
+    operatorKeypair,
+    attestations,
+  }: BatchAttestParams): Promise<AttestResult> {
+    if (attestations.length === 0) throw new Error('attestations array cannot be empty');
+    if (attestations.length > MAX_BATCH_ATTESTATIONS) {
       throw new BatchLimitExceededError(MAX_BATCH_ATTESTATIONS);
     }
-    return Promise.all(payloads.map((p) => this.attest(p)));
+    for (const a of attestations) {
+      if (a.actionHash.length !== 32) throw new Error('Each actionHash must be exactly 32 bytes');
+    }
+
+    const txSignature = await this.sendAttestations(operatorKeypair, attestations);
+    return { txSignature, explorerUrl: explorerTxUrl(txSignature, this.network) };
   }
 
-  async verify(attestationId: string): Promise<VerifyResult> {
-    try {
-      const pda = new PublicKey(attestationId);
-      const accountInfo = await this.connection.getAccountInfo(pda);
+  /**
+   * Revoca el agente. Después de revocar, record_attestations falla con AgentRevoked.
+   * La revocación es irreversible con el mismo operador.
+   */
+  async revokeAgent({ operatorKeypair }: RevokeAgentParams): Promise<AttestResult> {
+    const program = this.buildProgram(operatorKeypair);
+    const [agentPda] = this.deriveAgentPda(operatorKeypair.publicKey);
 
-      if (!accountInfo) {
-        return { valid: false, error: 'Attestation account not found on-chain' };
+    const methods = program.methods as unknown as Record<
+      string,
+      () => {
+        accounts: (a: Record<string, unknown>) => { rpc: (opts?: unknown) => Promise<string> };
       }
+    >;
 
-      return { valid: true };
-    } catch (error) {
-      return {
-        valid: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      };
+    const txSignature = await methods
+      .revokeAgent!()
+      .accounts({ agent: agentPda, operator: operatorKeypair.publicKey })
+      .rpc({ commitment: 'confirmed' });
+
+    return { txSignature, explorerUrl: explorerTxUrl(txSignature, this.network) };
+  }
+
+  /**
+   * Actualiza la raíz de política (Merkle root) del agente.
+   * Permite actualizar el árbol de políticas sin volver a registrar.
+   */
+  async updatePolicyRoot({
+    operatorKeypair,
+    newRoot,
+  }: UpdatePolicyRootParams): Promise<AttestResult> {
+    if (newRoot.length !== 32) throw new Error('newRoot must be exactly 32 bytes');
+
+    const program = this.buildProgram(operatorKeypair);
+    const [agentPda] = this.deriveAgentPda(operatorKeypair.publicKey);
+
+    const methods = program.methods as unknown as Record<
+      string,
+      (root: number[]) => {
+        accounts: (a: Record<string, unknown>) => { rpc: (opts?: unknown) => Promise<string> };
+      }
+    >;
+
+    const txSignature = await methods
+      .updatePolicyRoot!(Array.from(newRoot))
+      .accounts({ agent: agentPda, operator: operatorKeypair.publicKey })
+      .rpc({ commitment: 'confirmed' });
+
+    return { txSignature, explorerUrl: explorerTxUrl(txSignature, this.network) };
+  }
+
+  // ─── Lectura on-chain ────────────────────────────────────────────────────────
+
+  /**
+   * Lee el AgentAccount on-chain para un operador dado.
+   * Lanza AgentNotFoundError si el agente no está registrado.
+   */
+  async getAgentAccount(operator: PublicKey): Promise<AgentAccount> {
+    const program = this.buildReadOnly();
+    const [agentPda] = this.deriveAgentPda(operator);
+
+    const accountNs = program.account as unknown as Record<
+      string,
+      { fetch: (addr: PublicKey) => Promise<unknown> }
+    >;
+
+    const raw = (await accountNs.agentAccount!.fetch(agentPda)) as {
+      operator: PublicKey;
+      agentId: number[];
+      policyRoot: number[];
+      attestationCount: number | { toNumber: () => number };
+      createdAt: number | { toNumber: () => number };
+      revoked: boolean;
+      bump: number;
+    };
+
+    const toNum = (v: number | { toNumber: () => number }): number =>
+      typeof v === 'number' ? v : v.toNumber();
+
+    return {
+      address: agentPda,
+      operator: raw.operator,
+      agentId: new Uint8Array(raw.agentId),
+      policyRoot: new Uint8Array(raw.policyRoot),
+      attestationCount: toNum(raw.attestationCount),
+      createdAt: toNum(raw.createdAt),
+      revoked: raw.revoked,
+      bump: raw.bump,
+    };
+  }
+
+  /**
+   * Verifica si el agente está registrado y activo.
+   * Útil antes de emitir atestaciones para evitar txs fallidas.
+   */
+  async isAgentActive(operator: PublicKey): Promise<boolean> {
+    try {
+      const account = await this.getAgentAccount(operator);
+      return !account.revoked;
+    } catch {
+      return false;
     }
   }
 
-  async history(query: HistoryQuery): Promise<AttestationResult[]> {
-    return [];
-  }
+  /**
+   * Obtiene las últimas atestaciones emitidas por este agente.
+   * Lee directamente del RPC sin necesitar el indexer.
+   */
+  async getRecentAttestations(
+    agentPdaOrOperator: PublicKey,
+    limit = 25
+  ): Promise<AttestationRecord[]> {
+    // Resuelve si se pasó el operador
+    let agentPda = agentPdaOrOperator;
+    try {
+      const account = await this.getAgentAccount(agentPdaOrOperator);
+      agentPda = account.address;
+    } catch {
+      // Asumir que ya es una PDA directa
+    }
 
-  async revoke(): Promise<void> {
-    const agentPda = this.getAgentPda();
-    const tx = new Transaction().add(
-      this.buildRevokeInstruction({ agentPda })
+    const sigs = await this.connection.getSignaturesForAddress(agentPda, { limit }, 'confirmed');
+    const txs = await this.connection.getTransactions(
+      sigs.map((s) => s.signature),
+      { commitment: 'confirmed', maxSupportedTransactionVersion: 0 }
     );
-    const txSignature = await this.connection.sendTransaction(tx, [this.keypair]);
-    await this.connection.confirmTransaction(txSignature);
-  }
 
-  private async hashPayload(data: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const buffer = encoder.encode(data);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-    return Array.from(new Uint8Array(hashBuffer))
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-  }
-
-  private buildIssueInstruction(params: {
-    agentPda: PublicKey;
-    attestationPda: PublicKey;
-    actionType: string;
-    actionHash: string;
-    metadataUri: string | null;
-    privacyMode: boolean;
-    signature: number[];
-  }): anchor.web3.TransactionInstruction {
-    const data = Buffer.alloc(1);
-    data[0] = 2;
-    return new anchor.web3.TransactionInstruction({
-      programId: new PublicKey(PROVA_PROGRAM_ID),
-      keys: [
-        { pubkey: params.agentPda, isSigner: false, isWritable: true },
-        { pubkey: params.attestationPda, isSigner: false, isWritable: true },
-        { pubkey: this.keypair.publicKey, isSigner: true, isWritable: true },
-        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
-      ],
-      data,
+    const records: AttestationRecord[] = [];
+    txs.forEach((tx, i) => {
+      if (!tx?.meta?.logMessages) return;
+      const atts = getAttestationsFromLogs(tx.meta.logMessages, sigs[i]!.signature, tx.slot);
+      records.push(...atts);
     });
+
+    return records;
   }
 
-  private buildRevokeInstruction(params: { agentPda: PublicKey }): anchor.web3.TransactionInstruction {
-    const data = Buffer.alloc(1);
-    data[0] = 4;
-    return new anchor.web3.TransactionInstruction({
-      programId: new PublicKey(PROVA_PROGRAM_ID),
-      keys: [
-        { pubkey: params.agentPda, isSigner: false, isWritable: true },
-        { pubkey: this.keypair.publicKey, isSigner: true, isWritable: false },
-      ],
-      data,
+  // ─── Privados ────────────────────────────────────────────────────────────────
+
+  private buildProgram(operatorKeypair: Keypair): Program {
+    const provider = new AnchorProvider(
+      this.connection,
+      new Wallet(operatorKeypair),
+      AnchorProvider.defaultOptions()
+    );
+    return new Program(idl as Idl, provider);
+  }
+
+  private buildReadOnly(): Program {
+    const dummy = {
+      publicKey: PublicKey.default,
+      signTransaction: async () => { throw new Error('read-only'); },
+      signAllTransactions: async () => { throw new Error('read-only'); },
+    };
+    const provider = new AnchorProvider(this.connection, dummy as never, AnchorProvider.defaultOptions());
+    return new Program(idl as Idl, provider);
+  }
+
+  private async sendAttestations(
+    operatorKeypair: Keypair,
+    entries: BatchAttestEntry[]
+  ): Promise<string> {
+    const [agentPda] = this.deriveAgentPda(operatorKeypair.publicKey);
+    const provider = new AnchorProvider(
+      this.connection,
+      new Wallet(operatorKeypair),
+      AnchorProvider.defaultOptions()
+    );
+    const program = new Program(idl as Idl, provider);
+
+    // Por cada atestación: firmar action_hash con el agente + Ed25519 pre-verify ix
+    const ed25519Ixs = entries.map((entry) => {
+      const sig = nacl.sign.detached(entry.actionHash, this.agentKeypair.secretKey);
+      return Ed25519Program.createInstructionWithPublicKey({
+        publicKey: this.agentKeypair.publicKey.toBytes(),
+        message: entry.actionHash,
+        signature: sig,
+      });
     });
+
+    // Preparar AttestationInput[] para la instrucción
+    const attestationInputs = entries.map((entry) => {
+      const sig = nacl.sign.detached(entry.actionHash, this.agentKeypair.secretKey);
+      return {
+        actionType: actionTypeVariant(entry.actionType ?? 'Transaction'),
+        actionHash: Array.from(entry.actionHash),
+        privacyMode: entry.privacyMode ?? false,
+        signature: Array.from(sig),
+      };
+    });
+
+    const methods = program.methods as unknown as Record<
+      string,
+      (inputs: typeof attestationInputs) => {
+        accounts: (a: Record<string, unknown>) => { instruction: () => Promise<unknown> };
+      }
+    >;
+
+    const recordIx = await methods
+      .recordAttestations!(attestationInputs)
+      .accounts({
+        agent: agentPda,
+        operator: operatorKeypair.publicKey,
+        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+      })
+      .instruction();
+
+    const { blockhash, lastValidBlockHeight } = await this.connection.getLatestBlockhash();
+    const tx = new Transaction({ feePayer: operatorKeypair.publicKey, blockhash, lastValidBlockHeight });
+
+    // Ed25519 pre-verify ix en posiciones 0..N-1, record_attestations en posición N
+    for (const ix of ed25519Ixs) tx.add(ix);
+    tx.add(recordIx as never);
+
+    tx.sign(operatorKeypair);
+    const txSignature = await this.connection.sendRawTransaction(tx.serialize(), {
+      skipPreflight: false,
+      preflightCommitment: 'confirmed',
+    });
+    await this.connection.confirmTransaction({ signature: txSignature, blockhash, lastValidBlockHeight }, 'confirmed');
+
+    return txSignature;
   }
 }

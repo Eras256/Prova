@@ -1,30 +1,54 @@
 {
   "name": "@prova/sdk",
   "version": "0.1.0",
-  "description": "Behavior attestation SDK for AI agents on Solana",
+  "description": "Behavior attestation SDK for AI agents on Solana — wrap any agent action in a cryptographic receipt",
   "license": "Apache-2.0",
+  "author": "Prova Labs",
+  "homepage": "https://prova-solana.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eras256/Prova.git",
+    "directory": "packages/sdk-typescript"
+  },
+  "keywords": [
+    "solana",
+    "ai-agents",
+    "attestation",
+    "blockchain",
+    "web3",
+    "cryptography",
+    "ed25519",
+    "anchor",
+    "prova"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
+      "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
   },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --coverage",
+    "test": "vitest run",
     "test:watch": "vitest",
-    "clean": "rimraf dist"
+    "test:coverage": "vitest run --coverage",
+    "clean": "rimraf dist",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.0",
     "@prova/core": "workspace:*",
     "@solana/web3.js": "^1.98.0",
-    "bs58": "^6.0.0",
-    "tweetnacl": "^1.0.3",
-    "zod": "^3.24.1"
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@prova/config-typescript": "workspace:*",
@@ -35,5 +59,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
