@@ -409,8 +409,10 @@ export function RegisterAgent() {
                     Open agent page <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </Button>
-                <Button variant="outline" asChild className="font-mono uppercase tracking-wider">
-                  <Link href="/developers/quick-start">Issue first attestation →</Link>
+                <Button variant="outline" asChild className="gap-2 font-mono uppercase tracking-wider">
+                  <Link href="/app/issue">
+                    Issue first attestation <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 </Button>
               </div>
             </div>

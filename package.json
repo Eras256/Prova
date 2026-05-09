@@ -20,7 +20,8 @@
     "clean": "turbo run clean && rimraf node_modules",
     "db:generate": "turbo run db:generate --filter=@prova/db",
     "db:migrate": "turbo run db:migrate --filter=@prova/db",
-    "db:studio": "pnpm --filter=@prova/db db:studio"
+    "db:studio": "pnpm --filter=@prova/db db:studio",
+    "ship": "vercel --prod -y"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",

@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npx turbo run build --filter=@prova/web...",
+  "outputDirectory": "apps/web/.next",
+  "framework": "nextjs",
+  "ignoreCommand": "npx turbo run build --filter=@prova/web... --dry-run"
+}

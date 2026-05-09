@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Loader2, AlertTriangle, ShieldOff } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Loader2, AlertTriangle, ShieldOff, KeyRound } from 'lucide-react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { Button } from '@prova/ui';
 import { useAgentAccount, useAgentAttestations } from '@/lib/solana/hooks';
 import { ACTION_TYPE_LABEL, shortBytes, shortPubkey } from '@/lib/solana/events';
 import { explorerAccountUrl, explorerTxUrl, NETWORK } from '@/lib/solana/constants';
@@ -79,8 +81,10 @@ const content = {
 export function AgentDetail({ pubkey }: { pubkey: string }) {
   const { lang } = useI18n();
   const t = content[lang];
+  const wallet = useWallet();
   const { data, loading, error } = useAgentAccount(pubkey);
   const { attestations, loading: attsLoading } = useAgentAttestations(data?.address ?? null, 50);
+  const isOperator = !!data && !!wallet.publicKey && wallet.publicKey.equals(data.operator);
 
   return (
     <div className="min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
@@ -170,15 +174,25 @@ export function AgentDetail({ pubkey }: { pubkey: string }) {
             </dl>
 
             <div className="mt-16">
-              <div className="flex items-end justify-between gap-4">
+              <div className="flex flex-wrap items-end justify-between gap-4">
                 <h2 className="font-display text-xl uppercase text-foreground sm:text-3xl">
                   {t.attHistory}
                 </h2>
-                <ForensicExport
-                  resourceId={`agent:${data.address.toBase58()}`}
-                  resourceLabel={`${t.agent} ${shortPubkey(data.address, 4, 4)} — ${data.attestationCount} attestations`}
-                  printPath={`/explorer/agent/${encodeURIComponent(data.address.toBase58())}/report`}
-                />
+                <div className="flex flex-wrap items-center gap-2">
+                  {isOperator && !data.revoked && (
+                    <Button asChild size="sm" className="gap-2 font-mono text-xs uppercase tracking-wider">
+                      <Link href="/app/issue">
+                        <KeyRound className="h-3.5 w-3.5" />
+                        Issue attestation
+                      </Link>
+                    </Button>
+                  )}
+                  <ForensicExport
+                    resourceId={`agent:${data.address.toBase58()}`}
+                    resourceLabel={`${t.agent} ${shortPubkey(data.address, 4, 4)} — ${data.attestationCount} attestations`}
+                    printPath={`/explorer/agent/${encodeURIComponent(data.address.toBase58())}/report`}
+                  />
+                </div>
               </div>
 
               {attsLoading ? (
