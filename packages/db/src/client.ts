@@ -12,9 +12,11 @@ export function getDb(databaseUrl?: string) {
     throw new Error('DATABASE_URL environment variable is required');
   }
 
+  // Strip sslmode from URL — pg ignores our explicit ssl option otherwise
+  const cleanUrl = url.replace(/[?&]sslmode=[^&]*/g, '').replace(/\?$/, '');
   const pool = new Pool({
-    connectionString: url,
-    ssl: url.includes('sslmode=') ? { rejectUnauthorized: false } : undefined,
+    connectionString: cleanUrl,
+    ssl: { rejectUnauthorized: false },
   });
   db = drizzle(pool, { schema });
   return db;
