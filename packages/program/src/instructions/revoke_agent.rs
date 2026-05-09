@@ -12,23 +12,25 @@ pub struct RevokeAgent<'info> {
     )]
     pub agent: Account<'info, AgentAccount>,
 
+    #[account(mut)]
     pub operator: Signer<'info>,
 }
 
 pub fn handler(ctx: Context<RevokeAgent>) -> Result<()> {
-    ctx.accounts.agent.revoked = true;
-
-    emit!(AgentRevoked {
-        agent: ctx.accounts.agent.key(),
-        operator: ctx.accounts.operator.key(),
+    let agent = &mut ctx.accounts.agent;
+    agent.revoked = true;
+    
+    emit!(AgentRevokedEvent {
+        agent: agent.key(),
+        operator: agent.operator,
         timestamp: Clock::get()?.unix_timestamp,
     });
-
+    
     Ok(())
 }
 
 #[event]
-pub struct AgentRevoked {
+pub struct AgentRevokedEvent {
     pub agent: Pubkey,
     pub operator: Pubkey,
     pub timestamp: i64,

@@ -1,16 +1,9 @@
 use anchor_lang::prelude::*;
-use crate::state::{AgentRegistry, AgentAccount};
+use crate::state::AgentAccount;
 
 #[derive(Accounts)]
 #[instruction(agent_id: [u8; 32], policy_root: [u8; 32])]
 pub struct RegisterAgent<'info> {
-    #[account(
-        mut,
-        seeds = [AgentRegistry::SEED],
-        bump = registry.bump
-    )]
-    pub registry: Account<'info, AgentRegistry>,
-
     #[account(
         init,
         payer = operator,
@@ -31,7 +24,6 @@ pub fn handler(
     agent_id: [u8; 32],
     policy_root: [u8; 32],
 ) -> Result<()> {
-    let registry = &mut ctx.accounts.registry;
     let agent = &mut ctx.accounts.agent;
     let clock = Clock::get()?;
 
@@ -43,11 +35,9 @@ pub fn handler(
     agent.revoked = false;
     agent.bump = ctx.bumps.agent;
 
-    registry.agent_count = registry.agent_count.saturating_add(1);
-
     emit!(AgentRegistered {
-        agent: ctx.accounts.agent.key(),
-        operator: ctx.accounts.operator.key(),
+        agent: agent.key(),
+        operator: agent.operator,
         agent_id,
         timestamp: clock.unix_timestamp,
     });

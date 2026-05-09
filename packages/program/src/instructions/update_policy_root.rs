@@ -13,10 +13,28 @@ pub struct UpdatePolicyRoot<'info> {
     )]
     pub agent: Account<'info, AgentAccount>,
 
+    #[account(mut)]
     pub operator: Signer<'info>,
 }
 
 pub fn handler(ctx: Context<UpdatePolicyRoot>, new_root: [u8; 32]) -> Result<()> {
-    ctx.accounts.agent.policy_root = new_root;
+    let agent = &mut ctx.accounts.agent;
+    agent.policy_root = new_root;
+    
+    emit!(PolicyRootUpdated {
+        agent: agent.key(),
+        operator: agent.operator,
+        new_root,
+        timestamp: Clock::get()?.unix_timestamp,
+    });
+    
     Ok(())
+}
+
+#[event]
+pub struct PolicyRootUpdated {
+    pub agent: Pubkey,
+    pub operator: Pubkey,
+    pub new_root: [u8; 32],
+    pub timestamp: i64,
 }

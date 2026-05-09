@@ -6,14 +6,12 @@ pub enum ProvaError {
     AgentRevoked,
     #[msg("Caller is not the operator of this agent")]
     UnauthorizedOperator,
-    #[msg("Invalid Ed25519 signature on attestation")]
+    #[msg("Invalid Ed25519 signature or instruction missing")]
     InvalidSignature,
-    #[msg("Batch size exceeds maximum of 10 attestations")]
+    #[msg("Batch must contain at least one attestation")]
+    EmptyBatch,
+    #[msg("Batch limit exceeded (max 100)")]
     BatchLimitExceeded,
-    #[msg("Metadata URI exceeds maximum length of 200 characters")]
-    MetadataUriTooLong,
-    #[msg("Agent is already registered")]
-    AgentAlreadyRegistered,
-    #[msg("Registry is not initialized")]
-    RegistryNotInitialized,
+    #[msg("Invalid Policy Root")]
+    InvalidPolicyRoot,
 }

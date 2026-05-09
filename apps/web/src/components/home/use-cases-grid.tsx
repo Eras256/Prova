@@ -1,51 +1,121 @@
+'use client';
 import { Scale, ShieldCheck, FileSearch, BarChart3 } from 'lucide-react';
+import { useI18n } from '../i18n-provider';
 
-const cases = [
-  {
-    icon: Scale,
-    persona: 'Compliance',
-    title: 'Pass the AI Act audit on the first try',
-    desc: 'Map every agent action to MetaComp KYA and EU AI Act articles. Export PDF reports your auditor will actually accept.',
+const content = {
+  EN: {
+    sectionTitle: 'For the people who carry the risk',
+    headline: ['One receipt.', 'Four people who finally', 'sleep at night.'],
+    cases: [
+      {
+        icon: Scale,
+        persona: 'Compliance',
+        title: 'Pass the AI Act audit on the first try',
+        desc: 'Map every agent action to MetaComp KYA and EU AI Act articles. Export PDF reports your auditor will actually accept.',
+      },
+      {
+        icon: ShieldCheck,
+        persona: 'Underwriters',
+        title: 'Price agent risk with real evidence',
+        desc: 'Settle agent-related claims in days, not quarters. Cryptographic proof replaces "the customer says…" forever.',
+      },
+      {
+        icon: FileSearch,
+        persona: 'Legal',
+        title: 'Court-admissible by construction',
+        desc: 'On-chain attestations meet the Federal Rules of Evidence 901 standard for authenticity — no expert witness required.',
+      },
+      {
+        icon: BarChart3,
+        persona: 'Risk & ops',
+        title: 'Catch drift before it costs you',
+        desc: 'Stream attestations into Datadog, Splunk, or your own SIEM. Real-time dashboards on what every agent is actually doing.',
+      },
+    ]
   },
-  {
-    icon: ShieldCheck,
-    persona: 'Underwriters',
-    title: 'Price agent risk with real evidence',
-    desc: 'Settle agent-related claims in days, not quarters. Cryptographic proof replaces "the customer says…" forever.',
+  ES: {
+    sectionTitle: 'Para las personas que asumen el riesgo',
+    headline: ['Un recibo.', 'Cuatro personas que al fin', 'duermen de noche.'],
+    cases: [
+      {
+        icon: Scale,
+        persona: 'Cumplimiento',
+        title: 'Pasa la auditoría del AI Act a la primera',
+        desc: 'Mapea cada acción a MetaComp KYA y artículos del EU AI Act. Exporta informes PDF que tu auditor sí aceptará.',
+      },
+      {
+        icon: ShieldCheck,
+        persona: 'Aseguradoras',
+        title: 'Precio del riesgo del agente con evidencia real',
+        desc: 'Resuelve reclamos en días, no en trimestres. Las pruebas criptográficas reemplazan al "el cliente dice..." para siempre.',
+      },
+      {
+        icon: FileSearch,
+        persona: 'Legal',
+        title: 'Admisible en la corte por diseño',
+        desc: 'Las atestaciones on-chain cumplen el estándar 901 de Reglas Federales de Evidencia para autenticidad — sin necesidad de testigos expertos.',
+      },
+      {
+        icon: BarChart3,
+        persona: 'Riesgo y Ops',
+        title: 'Detecta desvíos antes de que te cuesten',
+        desc: 'Envía atestaciones a Datadog, Splunk o tu propio SIEM. Paneles en tiempo real sobre lo que realmente hace cada agente.',
+      },
+    ]
   },
-  {
-    icon: FileSearch,
-    persona: 'Legal',
-    title: 'Court-admissible by construction',
-    desc: 'On-chain attestations meet the Federal Rules of Evidence 901 standard for authenticity — no expert witness required.',
-  },
-  {
-    icon: BarChart3,
-    persona: 'Risk & ops',
-    title: 'Catch drift before it costs you',
-    desc: 'Stream attestations into Datadog, Splunk, or your own SIEM. Real-time dashboards on what every agent is actually doing.',
-  },
-];
+  ZH: {
+    sectionTitle: '为承担风险的人准备',
+    headline: ['一张收据。', '让四类关键人员', '终于能安稳入睡。'],
+    cases: [
+      {
+        icon: Scale,
+        persona: '合规审查员',
+        title: '一次性通过 AI 法案审计',
+        desc: '将代理的每一项操作映射到 MetaComp KYA 和欧盟 AI 法案条款。导出审计员真正认可的 PDF 报告。',
+      },
+      {
+        icon: ShieldCheck,
+        persona: '承保人',
+        title: '用确凿证据为代理风险定价',
+        desc: '在几天而不是几个季度内解决与代理相关的索赔。密码学证明将永远取代“客户说……”。',
+      },
+      {
+        icon: FileSearch,
+        persona: '法务',
+        title: '法庭采信的设计',
+        desc: '链上证明符合《联邦证据规则》901 的真实性标准 —— 无需专家证人即可采信。',
+      },
+      {
+        icon: BarChart3,
+        persona: '风险与运营',
+        title: '在造成损失前捕捉偏差',
+        desc: '将证明流输入至 Datadog、Splunk 或您自己的 SIEM。通过实时仪表板了解每位代理的实际操作。',
+      },
+    ]
+  }
+};
 
 export function UseCasesGrid() {
+  const { lang } = useI18n();
+  const t = content[lang];
   return (
     <section className="border-t border-border px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
           <div>
-            <p className="font-pixel text-[13px] uppercase tracking-wider text-primary">For the people who carry the risk</p>
+            <p className="font-pixel text-[13px] uppercase tracking-wider text-primary">{t.sectionTitle}</p>
           </div>
           <div>
             <h2 className="font-display text-2xl uppercase leading-none text-foreground sm:text-4xl lg:text-5xl">
-              <span className="block">One receipt.</span>
-              <span className="mt-2 block text-muted-foreground">Four people who finally</span>
-              <span className="block text-muted-foreground">sleep at night.</span>
+              <span className="block">{t.headline[0]}</span>
+              <span className="mt-2 block text-muted-foreground">{t.headline[1]}</span>
+              <span className="block text-muted-foreground">{t.headline[2]}</span>
             </h2>
           </div>
         </div>
 
         <div className="grid border-t border-border md:grid-cols-2 md:divide-x md:divide-border lg:grid-cols-4">
-          {cases.map((c, i) => (
+          {t.cases.map((c, i) => (
             <article
               key={c.persona}
               className={`flex flex-col gap-5 border-b border-border p-8 ${

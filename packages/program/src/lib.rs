@@ -6,15 +6,11 @@ pub mod state;
 
 use instructions::*;
 
-declare_id!("ProvaATTESTxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+declare_id!("G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1");
 
 #[program]
 pub mod prova_program {
     use super::*;
-
-    pub fn initialize_registry(ctx: Context<InitializeRegistry>) -> Result<()> {
-        instructions::initialize_registry::handler(ctx)
-    }
 
     pub fn register_agent(
         ctx: Context<RegisterAgent>,
@@ -24,18 +20,11 @@ pub mod prova_program {
         instructions::register_agent::handler(ctx, agent_id, policy_root)
     }
 
-    pub fn issue_attestation(
-        ctx: Context<IssueAttestation>,
-        params: IssueAttestationParams,
-    ) -> Result<()> {
-        instructions::issue_attestation::handler(ctx, params)
-    }
-
-    pub fn batch_attestations(
-        ctx: Context<BatchAttestations>,
+    pub fn record_attestations(
+        ctx: Context<RecordAttestations>,
         attestations: Vec<AttestationInput>,
     ) -> Result<()> {
-        instructions::batch_attestations::handler(ctx, attestations)
+        instructions::record_attestations::handler(ctx, attestations)
     }
 
     pub fn revoke_agent(ctx: Context<RevokeAgent>) -> Result<()> {

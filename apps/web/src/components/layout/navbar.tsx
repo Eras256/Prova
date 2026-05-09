@@ -1,16 +1,24 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@prova/ui';
-
-const links = [
-  { label: 'Product', href: '/product' },
-  { label: 'Explorer', href: '/explorer' },
-  { label: 'Developers', href: '/developers' },
-  { label: 'Solutions', href: '/solutions/operators' },
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'Docs', href: '/developers/docs' },
-];
+import { WalletButton } from './wallet-button';
+import { LanguageSelector } from './language-selector';
+import { useI18n } from '../i18n-provider';
 
 export function Navbar() {
+  const { t } = useI18n();
+
+  const links = [
+    { label: t('home'), href: '/' },
+    { label: t('product'), href: '/product' },
+    { label: t('explorer'), href: '/explorer' },
+    { label: t('developers'), href: '/developers' },
+    { label: t('solutions'), href: '/solutions/operators' },
+    { label: t('pricing'), href: '/pricing' },
+    { label: t('docs'), href: '/developers/docs' },
+  ];
+
   return (
     <nav
       aria-label="Primary"
@@ -45,13 +53,17 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
-            <Link href="/app/overview" className="font-mono text-xs uppercase tracking-wider">
-              Sign in
+            <Link href="/app/register" className="font-mono text-xs uppercase tracking-wider">
+              {t('registerAgent')}
             </Link>
           </Button>
+          <LanguageSelector />
+          <div className="hidden md:block">
+            <WalletButton size="sm" />
+          </div>
           <Button size="sm" asChild>
             <Link href="/developers/quick-start" className="font-mono text-xs uppercase tracking-wider">
-              Start building
+              {t('startBuilding')}
             </Link>
           </Button>
         </div>

@@ -1,0 +1,201 @@
+{
+  "address": "G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1",
+  "metadata": {
+    "name": "prova_program",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Prova attestation program — behavior receipts for AI agents on Solana"
+  },
+  "instructions": [
+    {
+      "name": "register_agent",
+      "discriminator": [135, 157, 66, 195, 2, 113, 175, 30],
+      "accounts": [
+        {
+          "name": "agent",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [112, 114, 111, 118, 97, 95, 97, 103, 101, 110, 116] },
+              { "kind": "account", "path": "operator" }
+            ]
+          }
+        },
+        { "name": "operator", "writable": true, "signer": true },
+        { "name": "system_program", "address": "11111111111111111111111111111111" }
+      ],
+      "args": [
+        { "name": "agent_id", "type": { "array": ["u8", 32] } },
+        { "name": "policy_root", "type": { "array": ["u8", 32] } }
+      ]
+    },
+    {
+      "name": "record_attestations",
+      "discriminator": [228, 78, 80, 123, 83, 203, 69, 235],
+      "accounts": [
+        {
+          "name": "agent",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [112, 114, 111, 118, 97, 95, 97, 103, 101, 110, 116] },
+              { "kind": "account", "path": "agent.operator", "account": "AgentAccount" }
+            ]
+          }
+        },
+        { "name": "operator", "writable": true, "signer": true },
+        { "name": "instructions", "address": "Sysvar1nstructions1111111111111111111111111" }
+      ],
+      "args": [
+        { "name": "attestations", "type": { "vec": { "defined": { "name": "AttestationInput" } } } }
+      ]
+    },
+    {
+      "name": "revoke_agent",
+      "discriminator": [227, 60, 209, 125, 240, 117, 163, 73],
+      "accounts": [
+        {
+          "name": "agent",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [112, 114, 111, 118, 97, 95, 97, 103, 101, 110, 116] },
+              { "kind": "account", "path": "agent.operator", "account": "AgentAccount" }
+            ]
+          }
+        },
+        { "name": "operator", "writable": true, "signer": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_policy_root",
+      "discriminator": [204, 72, 225, 189, 180, 164, 143, 74],
+      "accounts": [
+        {
+          "name": "agent",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [112, 114, 111, 118, 97, 95, 97, 103, 101, 110, 116] },
+              { "kind": "account", "path": "agent.operator", "account": "AgentAccount" }
+            ]
+          }
+        },
+        { "name": "operator", "writable": true, "signer": true }
+      ],
+      "args": [{ "name": "new_root", "type": { "array": ["u8", 32] } }]
+    }
+  ],
+  "accounts": [
+    { "name": "AgentAccount", "discriminator": [241, 119, 69, 140, 233, 9, 112, 50] }
+  ],
+  "events": [
+    { "name": "AgentRegistered", "discriminator": [191, 78, 217, 54, 232, 100, 189, 85] },
+    { "name": "AttestationIssued", "discriminator": [173, 237, 90, 123, 155, 224, 231, 242] },
+    { "name": "AgentRevokedEvent", "discriminator": [218, 156, 242, 182, 58, 95, 202, 161] },
+    { "name": "PolicyRootUpdated", "discriminator": [194, 120, 18, 146, 205, 54, 53, 217] }
+  ],
+  "errors": [
+    { "code": 6000, "name": "AgentRevoked", "msg": "Agent has been revoked and cannot issue attestations" },
+    { "code": 6001, "name": "UnauthorizedOperator", "msg": "Caller is not the operator of this agent" },
+    { "code": 6002, "name": "InvalidSignature", "msg": "Invalid Ed25519 signature or instruction missing" },
+    { "code": 6003, "name": "EmptyBatch", "msg": "Batch must contain at least one attestation" },
+    { "code": 6004, "name": "BatchLimitExceeded", "msg": "Batch limit exceeded (max 100)" },
+    { "code": 6005, "name": "InvalidPolicyRoot", "msg": "Invalid Policy Root" }
+  ],
+  "types": [
+    {
+      "name": "ActionType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          { "name": "Transaction" },
+          { "name": "Decision" },
+          { "name": "ModelInvocation" },
+          { "name": "ToolCall" },
+          { "name": "ResourceAccess" },
+          { "name": "PolicyCheck" },
+          { "name": "Custom" }
+        ]
+      }
+    },
+    {
+      "name": "AttestationInput",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "action_type", "type": { "defined": { "name": "ActionType" } } },
+          { "name": "action_hash", "type": { "array": ["u8", 32] } },
+          { "name": "privacy_mode", "type": "bool" },
+          { "name": "signature", "type": { "array": ["u8", 64] } }
+        ]
+      }
+    },
+    {
+      "name": "AgentAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "operator", "type": "pubkey" },
+          { "name": "agent_id", "type": { "array": ["u8", 32] } },
+          { "name": "policy_root", "type": { "array": ["u8", 32] } },
+          { "name": "attestation_count", "type": "u64" },
+          { "name": "created_at", "type": "i64" },
+          { "name": "revoked", "type": "bool" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "AgentRegistered",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "agent", "type": "pubkey" },
+          { "name": "operator", "type": "pubkey" },
+          { "name": "agent_id", "type": { "array": ["u8", 32] } },
+          { "name": "timestamp", "type": "i64" }
+        ]
+      }
+    },
+    {
+      "name": "AttestationIssued",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "agent", "type": "pubkey" },
+          { "name": "agent_id", "type": { "array": ["u8", 32] } },
+          { "name": "action_type", "type": { "defined": { "name": "ActionType" } } },
+          { "name": "action_hash", "type": { "array": ["u8", 32] } },
+          { "name": "privacy_mode", "type": "bool" },
+          { "name": "timestamp", "type": "i64" },
+          { "name": "signature", "type": { "array": ["u8", 64] } }
+        ]
+      }
+    },
+    {
+      "name": "AgentRevokedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "agent", "type": "pubkey" },
+          { "name": "operator", "type": "pubkey" },
+          { "name": "timestamp", "type": "i64" }
+        ]
+      }
+    },
+    {
+      "name": "PolicyRootUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "agent", "type": "pubkey" },
+          { "name": "operator", "type": "pubkey" },
+          { "name": "new_root", "type": { "array": ["u8", 32] } },
+          { "name": "timestamp", "type": "i64" }
+        ]
+      }
+    }
+  ]
+}
