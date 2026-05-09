@@ -13,8 +13,8 @@ COPY apps/api/package.json ./apps/api/
 RUN pnpm install --frozen-lockfile
 COPY packages/ ./packages/
 COPY apps/api/ ./apps/api/
-RUN pnpm --filter=@prova/core build || true
-RUN pnpm --filter=@prova/db build || true
+RUN pnpm --filter=@prova/core build
+RUN pnpm --filter=@prova/db build
 RUN pnpm --filter=@prova/api build
 RUN pnpm --filter=@prova/api deploy --prod /app/deploy
 
