@@ -1,10 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@prova/ui';
-import { WalletButton } from './wallet-button';
 import { LanguageSelector } from './language-selector';
+
+const WalletButton = dynamic(() => import('./wallet-button').then((m) => m.WalletButton), {
+  ssr: false,
+  loading: () => null,
+});
 import { useI18n } from '../i18n-provider';
 import { Menu, X } from 'lucide-react';
 

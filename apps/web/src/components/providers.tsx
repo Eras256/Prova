@@ -11,6 +11,7 @@ import { PrivyProvider } from '@privy-io/react-auth';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 
+
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, retry: 2 } } })
@@ -18,31 +19,31 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   const wallets = useMemo(() => [new PhantomWalletAdapter(), new SolflareWalletAdapter()], []);
 
+  const inner = (
+    <QueryClientProvider client={queryClient}>
+      <I18nProvider>
+        <ConnectionProvider endpoint={RPC_URL} config={{ commitment: 'confirmed' }}>
+          <WalletProvider wallets={wallets} autoConnect>
+            <WalletModalProvider>{children}</WalletModalProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </I18nProvider>
+    </QueryClientProvider>
+  );
+
+  const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+  if (!privyAppId) return inner;
+
   return (
     <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''}
+      appId={privyAppId}
       config={{
-        loginMethods: ['email', 'wallet'],
-        appearance: {
-          theme: 'dark',
-          accentColor: '#B0FF2C',
-        },
-        embeddedWallets: {
-          solana: {
-            createOnLogin: 'users-without-wallets',
-          },
-        },
+        loginMethods: ['email', 'wallet'] as ('email' | 'wallet')[],
+        appearance: { theme: 'dark', accentColor: '#B0FF2C' as `#${string}` },
+        embeddedWallets: { solana: { createOnLogin: 'users-without-wallets' } },
       }}
     >
-      <QueryClientProvider client={queryClient}>
-        <I18nProvider>
-          <ConnectionProvider endpoint={RPC_URL} config={{ commitment: 'confirmed' }}>
-            <WalletProvider wallets={wallets} autoConnect>
-              <WalletModalProvider>{children}</WalletModalProvider>
-            </WalletProvider>
-          </ConnectionProvider>
-        </I18nProvider>
-      </QueryClientProvider>
+      {inner}
     </PrivyProvider>
   );
 }
