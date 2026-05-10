@@ -5,8 +5,11 @@ import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { Keypair, PublicKey } from '@solana/web3.js';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
-import { useCreateWallet as useCreateSolanaWallet } from '@privy-io/react-auth/solana';
+import { usePrivy, useConnectWallet } from '@privy-io/react-auth';
+import {
+  useCreateWallet as useCreateSolanaWallet,
+  useWallets as usePrivySolanaWallets,
+} from '@privy-io/react-auth/solana';
 import { Button } from '@prova/ui';
 import {
   ArrowRight,
@@ -40,20 +43,22 @@ export function RegisterAgent() {
   const { program, readOnly } = useProvaProgram();
 
   const { authenticated, user, login } = usePrivy();
-  const { wallets } = useWallets();
+  const { connectWallet } = useConnectWallet();
+  // useWallets de @privy-io/react-auth/solana devuelve SOLO wallets de Solana.
+  // El useWallets del paquete principal devuelve ConnectedWallet[] que solo cubre Ethereum,
+  // por eso los wallets Solana no aparecían y veíamos "No Solana wallet provisioned" incluso
+  // cuando Privy sí los tenía registrados.
+  const { wallets: solanaWallets } = usePrivySolanaWallets();
   const { createWallet: createPrivySolanaWallet } = useCreateSolanaWallet();
   const [creatingWallet, setCreatingWallet] = useState(false);
-  // Filtrar por chainType === 'solana' para no agarrar el embedded de Ethereum (Privy crea ambos por defecto).
-  const embeddedWallet = wallets.find(
-    (w: { walletClientType?: string; chainType?: string }) =>
-      w.walletClientType === 'privy' && w.chainType === 'solana'
+  const embeddedWallet = solanaWallets.find(
+    (w) => (w as { standardWallet?: { name?: string } }).standardWallet?.name === 'Privy'
   );
 
-  // Validar que la dirección sea base58 válida antes de instanciar PublicKey
   const privyPubkey = (() => {
     if (!embeddedWallet) return null;
     try {
-      return new PublicKey((embeddedWallet as { address: string }).address);
+      return new PublicKey((embeddedWallet as unknown as { address: string }).address);
     } catch {
       return null;
     }
@@ -238,22 +243,32 @@ export function RegisterAgent() {
                       <p className="font-mono text-[11px] text-destructive">
                         No Solana wallet provisioned for this account yet. Create one with Privy to continue.
                       </p>
-                      <Button
-                        size="sm"
-                        onClick={provisionPrivyWallet}
-                        disabled={creatingWallet}
-                        className="gap-2 font-mono uppercase tracking-wider"
-                      >
-                        {creatingWallet ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" /> Provisioning…
-                          </>
-                        ) : (
-                          <>
-                            <Wallet className="h-4 w-4" /> Create Solana wallet
-                          </>
-                        )}
-                      </Button>
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          size="sm"
+                          onClick={provisionPrivyWallet}
+                          disabled={creatingWallet}
+                          className="gap-2 font-mono uppercase tracking-wider"
+                        >
+                          {creatingWallet ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" /> Provisioning…
+                            </>
+                          ) : (
+                            <>
+                              <Wallet className="h-4 w-4" /> Create Solana wallet
+                            </>
+                          )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => connectWallet()}
+                          className="gap-2 font-mono uppercase tracking-wider"
+                        >
+                          <Wallet className="h-4 w-4" /> Connect existing wallet
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -522,21 +537,32 @@ export function RegisterAgent() {
               </div>
             </div>
           ) : (
-            <Button
-              onClick={register}
-              disabled={!downloaded || registering || hasActiveAgent || hasRevokedAgent}
-              className="mt-6 gap-2 font-mono uppercase tracking-wider"
-            >
-              {registering ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Sending transaction…
-                </>
-              ) : (
-                <>
-                  Register on {NETWORK} <ArrowRight className="h-3.5 w-3.5" />
-                </>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Button
+                onClick={register}
+                disabled={!downloaded || registering || hasActiveAgent || hasRevokedAgent}
+                className="gap-2 font-mono uppercase tracking-wider"
+              >
+                {registering ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" /> Sending transaction…
+                  </>
+                ) : (
+                  <>
+                    Register on {NETWORK} <ArrowRight className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </Button>
+              {readOnly && (
+                <Button
+                  variant="outline"
+                  onClick={() => connectWallet()}
+                  className="gap-2 font-mono uppercase tracking-wider"
+                >
+                  <Wallet className="h-4 w-4" /> Connect wallet via Privy
+                </Button>
               )}
-            </Button>
+            </div>
           )}
         </section>
       </div>
