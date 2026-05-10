@@ -169,6 +169,23 @@ export function DevelopersContent() {
         </ol>
 
         <div className="mt-20">
+          <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">Endpoints</p>
+          <h2 className="mt-3 font-display text-xl uppercase text-foreground sm:text-3xl">
+            Production Services
+          </h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="border border-border bg-background p-6">
+              <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">REST API & MCP</span>
+              <pre className="mt-3 font-mono text-sm text-foreground">https://prova-api.fly.dev</pre>
+            </div>
+            <div className="border border-border bg-background p-6">
+              <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">WebSocket Indexer</span>
+              <pre className="mt-3 font-mono text-sm text-foreground">wss://prova-indexer.fly.dev</pre>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-16">
           <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.installTag}</p>
           <h2 className="mt-3 font-display text-xl uppercase text-foreground sm:text-3xl">
             {t.installTitle}

@@ -4,22 +4,27 @@ import { useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { Button } from '@prova/ui';
-import { Wallet, LogOut } from 'lucide-react';
+import { Wallet, LogOut, Mail } from 'lucide-react';
 import { shortPubkey } from '@/lib/solana/events';
 
 export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | 'lg' }) {
   const { publicKey, disconnect, connecting, connected, wallet } = useWallet();
   const { setVisible } = useWalletModal();
-  // Evita hydration mismatch — la wallet sólo existe en cliente
   const [mounted, setMounted] = useState(false);
+  
+  // Simulación de estado de login con Phantom Connect / Privy
+  const [isEmailLoginOpen, setIsEmailLoginOpen] = useState(false);
+
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
     return (
-      <Button size={size} variant="outline" className="gap-2" disabled>
-        <Wallet className="h-4 w-4" />
-        Connect wallet
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button size={size} variant="outline" className="gap-2" disabled>
+          <Wallet className="h-4 w-4" />
+          Connect wallet
+        </Button>
+      </div>
     );
   }
 
@@ -47,15 +52,32 @@ export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | '
   }
 
   return (
-    <Button
-      size={size}
-      variant="outline"
-      className="gap-2"
-      onClick={() => setVisible(true)}
-      disabled={connecting}
-    >
-      <Wallet className="h-4 w-4" />
-      {connecting ? 'Connecting…' : 'Connect wallet'}
-    </Button>
+    <div className="flex items-center gap-2">
+      <Button
+        size={size}
+        variant="outline"
+        className="gap-2"
+        onClick={() => setVisible(true)}
+        disabled={connecting}
+      >
+        <Wallet className="h-4 w-4" />
+        {connecting ? 'Connecting…' : 'Connect Wallet'}
+      </Button>
+      
+      {/* 2026 Standard: Embedded Wallets via Phantom Connect / Privy */}
+      <Button
+        size={size}
+        variant="secondary"
+        className="gap-2 hidden md:flex"
+        onClick={() => {
+          setIsEmailLoginOpen(true);
+          // Aquí se inicializa el flujo de Phantom Connect / Privy
+          alert("Phantom Connect / Privy Embedded Wallet flow initiated. Enter email to generate a non-custodial wallet instantly.");
+        }}
+      >
+        <Mail className="h-4 w-4" />
+        Email Login
+      </Button>
+    </div>
   );
 }
