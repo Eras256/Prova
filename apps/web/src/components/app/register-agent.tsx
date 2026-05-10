@@ -40,10 +40,23 @@ export function RegisterAgent() {
 
   const { authenticated, user, login } = usePrivy();
   const { wallets } = useWallets();
-  const embeddedWallet = wallets.find((w: any) => w.walletClientType === 'privy');
+  // Filtrar por chainType === 'solana' para no agarrar el embedded de Ethereum (Privy crea ambos por defecto).
+  const embeddedWallet = wallets.find(
+    (w: { walletClientType?: string; chainType?: string }) =>
+      w.walletClientType === 'privy' && w.chainType === 'solana'
+  );
 
-  // We use either standard Solana Wallet or Privy Embedded Wallet
-  const activePubkey = wallet.publicKey || (embeddedWallet ? new PublicKey(embeddedWallet.address) : null);
+  // Validar que la dirección sea base58 válida antes de instanciar PublicKey
+  const privyPubkey = (() => {
+    if (!embeddedWallet) return null;
+    try {
+      return new PublicKey((embeddedWallet as { address: string }).address);
+    } catch {
+      return null;
+    }
+  })();
+
+  const activePubkey = wallet.publicKey || privyPubkey;
   const isConnected = wallet.connected || authenticated;
   
   const operatorBase58 = activePubkey?.toBase58() ?? null;
