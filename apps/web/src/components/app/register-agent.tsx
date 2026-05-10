@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { Keypair, PublicKey } from '@solana/web3.js';
@@ -83,9 +83,24 @@ export function RegisterAgent() {
   };
 
   const register = async () => {
-    if (!program || readOnly || !activePubkey || !agentKeypair) return;
-    setRegistering(true);
     setError(null);
+    if (!agentKeypair) {
+      setError('Generate an agent keypair first (Step 2).');
+      return;
+    }
+    if (!activePubkey) {
+      setError('No operator wallet detected. Connect Phantom/Solflare or sign in via Privy.');
+      return;
+    }
+    if (!program || readOnly) {
+      setError(
+        authenticated
+          ? 'Your Privy embedded Solana wallet is not ready to sign. Try logging out and back in to trigger wallet creation, or connect Phantom/Solflare instead.'
+          : 'Signing is not available. Connect Phantom or Solflare to continue.'
+      );
+      return;
+    }
+    setRegistering(true);
     try {
       const r = await registerAgent({ program, operator: activePubkey, agentKeypair });
       setResult({ txSignature: r.txSignature, agentPda: r.agentPda.toBase58() });
@@ -175,12 +190,26 @@ export function RegisterAgent() {
                   <span className="break-all font-mono text-xs text-foreground">{wallet.publicKey.toBase58()}</span>
                 </div>
               ) : authenticated && user ? (
-                <div className="flex items-center justify-between border border-border bg-background px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <span className="h-2 w-2 bg-primary" aria-hidden />
-                    <span className="font-mono text-xs text-foreground">{user.email?.address || 'User'}</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between border border-border bg-background px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <span className={`h-2 w-2 ${activePubkey ? 'bg-primary' : 'bg-destructive'}`} aria-hidden />
+                      <span className="font-mono text-xs text-foreground">{user.email?.address || 'User'}</span>
+                    </div>
+                    <span className="bg-primary/10 px-2 py-0.5 font-pixel text-[10px] text-primary">Privy Embedded Wallet</span>
                   </div>
-                  <span className="bg-primary/10 px-2 py-0.5 font-pixel text-[10px] text-primary">Privy Embedded Wallet</span>
+                  {activePubkey ? (
+                    <p className="font-mono text-[11px] text-muted-foreground">
+                      Solana address: <span className="break-all text-foreground">{activePubkey.toBase58()}</span>
+                      {readOnly && (
+                        <span className="ml-2 text-destructive">(signer not ready — log out and back in to provision wallet)</span>
+                      )}
+                    </p>
+                  ) : (
+                    <p className="font-mono text-[11px] text-destructive">
+                      No Solana wallet provisioned for this account yet. Log out and log in again to trigger automatic wallet creation.
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-3">
@@ -449,7 +478,7 @@ export function RegisterAgent() {
           ) : (
             <Button
               onClick={register}
-              disabled={!downloaded || registering || readOnly || hasActiveAgent || hasRevokedAgent}
+              disabled={!downloaded || registering || hasActiveAgent || hasRevokedAgent}
               className="mt-6 gap-2 font-mono uppercase tracking-wider"
             >
               {registering ? (
