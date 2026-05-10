@@ -6,6 +6,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { useCreateWallet as useCreateSolanaWallet } from '@privy-io/react-auth/solana';
 import { Button } from '@prova/ui';
 import {
   ArrowRight,
@@ -40,6 +41,8 @@ export function RegisterAgent() {
 
   const { authenticated, user, login } = usePrivy();
   const { wallets } = useWallets();
+  const { createWallet: createPrivySolanaWallet } = useCreateSolanaWallet();
+  const [creatingWallet, setCreatingWallet] = useState(false);
   // Filtrar por chainType === 'solana' para no agarrar el embedded de Ethereum (Privy crea ambos por defecto).
   const embeddedWallet = wallets.find(
     (w: { walletClientType?: string; chainType?: string }) =>
@@ -81,6 +84,18 @@ export function RegisterAgent() {
         : result
           ? 'success'
           : 'register';
+
+  const provisionPrivyWallet = async () => {
+    setError(null);
+    setCreatingWallet(true);
+    try {
+      await createPrivySolanaWallet();
+    } catch (e) {
+      setError(parseProgramError(e));
+    } finally {
+      setCreatingWallet(false);
+    }
+  };
 
   const generate = () => {
     setAgentKeypair(generateAgentKeypair());
@@ -219,9 +234,27 @@ export function RegisterAgent() {
                       )}
                     </p>
                   ) : (
-                    <p className="font-mono text-[11px] text-destructive">
-                      No Solana wallet provisioned for this account yet. Log out and log in again to trigger automatic wallet creation.
-                    </p>
+                    <div className="space-y-2">
+                      <p className="font-mono text-[11px] text-destructive">
+                        No Solana wallet provisioned for this account yet. Create one with Privy to continue.
+                      </p>
+                      <Button
+                        size="sm"
+                        onClick={provisionPrivyWallet}
+                        disabled={creatingWallet}
+                        className="gap-2 font-mono uppercase tracking-wider"
+                      >
+                        {creatingWallet ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" /> Provisioning…
+                          </>
+                        ) : (
+                          <>
+                            <Wallet className="h-4 w-4" /> Create Solana wallet
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   )}
                 </div>
               ) : (

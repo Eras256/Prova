@@ -8,6 +8,7 @@ import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adap
 import { RPC_URL } from '@/lib/solana/constants';
 import { I18nProvider } from './i18n-provider';
 import { PrivyProvider } from '@privy-io/react-auth';
+import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 
@@ -18,6 +19,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   const wallets = useMemo(() => [new PhantomWalletAdapter(), new SolflareWalletAdapter()], []);
+  const solanaConnectors = useMemo(() => toSolanaWalletConnectors(), []);
 
   const inner = (
     <QueryClientProvider client={queryClient}>
@@ -39,8 +41,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
       appId={privyAppId}
       config={{
         loginMethods: ['email', 'wallet'] as ('email' | 'wallet')[],
-        appearance: { theme: 'dark', accentColor: '#B0FF2C' as `#${string}` },
+        appearance: {
+          theme: 'dark',
+          accentColor: '#B0FF2C' as `#${string}`,
+          walletChainType: 'solana-only',
+          showWalletLoginFirst: false,
+        },
         embeddedWallets: { solana: { createOnLogin: 'users-without-wallets' } },
+        externalWallets: { solana: { connectors: solanaConnectors } },
       }}
     >
       {inner}
