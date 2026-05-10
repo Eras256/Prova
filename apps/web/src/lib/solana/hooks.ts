@@ -3,18 +3,78 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useConnection, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { AnchorProvider, Program, type Idl } from '@coral-xyz/anchor';
-import { Connection, PublicKey } from '@solana/web3.js';
+import { Connection, PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
+import {
+  useWallets as usePrivySolanaWallets,
+  useSignTransaction as usePrivySignTransaction,
+} from '@privy-io/react-auth/solana';
 import idl from './idl.json';
-import { PROGRAM_ID, RPC_URL } from './constants';
+import { PROGRAM_ID, RPC_URL, NETWORK } from './constants';
 import { decodeEventsFromLogs, type DecodedEvent, type AttestationIssued } from './events';
 
 export function useReadOnlyConnection(): Connection {
   return useMemo(() => new Connection(RPC_URL, 'confirmed'), []);
 }
 
+// Mapea el NETWORK de la app al CAIP-2 chain que usa Privy.
+function networkToPrivyChain(
+  network: string
+): 'solana:mainnet' | 'solana:devnet' | 'solana:testnet' {
+  if (network === 'mainnet-beta') return 'solana:mainnet';
+  if (network === 'testnet') return 'solana:testnet';
+  return 'solana:devnet';
+}
+
+// Envuelve el embedded wallet de Privy en la interfaz que espera Anchor (publicKey + sign(All)Transactions).
+// Privy firma serializando a Uint8Array, así que serializamos antes y deserializamos al recibir el resultado.
+function usePrivyAnchorWallet() {
+  const { wallets } = usePrivySolanaWallets();
+  const { signTransaction: privySign } = usePrivySignTransaction();
+
+  return useMemo(() => {
+    const found = wallets.find(
+      (w) => (w as { standardWallet?: { name?: string } }).standardWallet?.name === 'Privy'
+    );
+    if (!found) return null;
+    const privyWallet = found;
+
+    const address = (privyWallet as unknown as { address: string }).address;
+    const publicKey = new PublicKey(address);
+    const chain = networkToPrivyChain(NETWORK);
+
+    async function sign<T extends Transaction | VersionedTransaction>(tx: T): Promise<T> {
+      const isVersioned = tx instanceof VersionedTransaction;
+      const serialized = isVersioned
+        ? tx.serialize()
+        : (tx as Transaction).serialize({ requireAllSignatures: false, verifySignatures: false });
+
+      const { signedTransaction } = await privySign({
+        transaction: serialized,
+        wallet: privyWallet,
+        chain,
+      });
+
+      return (
+        isVersioned
+          ? VersionedTransaction.deserialize(signedTransaction)
+          : Transaction.from(signedTransaction)
+      ) as T;
+    }
+
+    return {
+      publicKey,
+      signTransaction: sign,
+      signAllTransactions: async <T extends Transaction | VersionedTransaction>(txs: T[]) =>
+        Promise.all(txs.map((tx) => sign(tx))),
+    };
+  }, [wallets, privySign]);
+}
+
 export function useProvaProgram(): { program: Program | null; readOnly: boolean } {
   const { connection } = useConnection();
-  const wallet = useAnchorWallet();
+  const standardWallet = useAnchorWallet();
+  const privyWallet = usePrivyAnchorWallet();
+  const wallet = standardWallet ?? privyWallet;
 
   return useMemo(() => {
     if (!wallet) {
@@ -30,7 +90,7 @@ export function useProvaProgram(): { program: Program | null; readOnly: boolean 
       const provider = new AnchorProvider(connection, dummy as never, AnchorProvider.defaultOptions());
       return { program: new Program(idl as Idl, provider), readOnly: true };
     }
-    const provider = new AnchorProvider(connection, wallet, AnchorProvider.defaultOptions());
+    const provider = new AnchorProvider(connection, wallet as never, AnchorProvider.defaultOptions());
     return { program: new Program(idl as Idl, provider), readOnly: false };
   }, [connection, wallet]);
 }
