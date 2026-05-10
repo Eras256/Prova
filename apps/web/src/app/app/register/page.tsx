@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import { RegisterClient } from './register-client';
 
 export const metadata: Metadata = {
   title: 'Register a new agent',
@@ -7,11 +7,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const RegisterAgent = dynamic(
-  () => import('@/components/app/register-agent').then((m) => m.RegisterAgent),
-  { ssr: false }
-);
-
 export default function RegisterAgentPage() {
-  return <RegisterAgent />;
+  return <RegisterClient />;
 }
