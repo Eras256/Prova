@@ -6,22 +6,22 @@ import { useI18n } from '../i18n-provider';
 
 const content = {
   EN: {
-    sectionTitle: 'Begin',
-    headline: ['Your first attestation,', 'in the next', 'two minutes.'],
-    description: 'Install the SDK. Wrap one agent action. Watch the receipt land on Solana. Free for the first 100 — no card, no sales call, no waitlist.',
+    sectionTitle: 'Deploy',
+    headline: ['Make your agent', 'enterprise-ready', 'in two minutes.'],
+    description: 'Install the SDK. Wrap an agent action. Watch the cryptographic receipt land on Solana. Secure your autonomous infrastructure today — no credit card, no waitlist.',
     openQuickStart: 'Open the Quick Start',
-    readDocs: 'Read the docs',
-    questions: 'Questions before you start?',
-    talkToEngineer: 'Talk to an engineer →'
+    readDocs: 'Read the Docs',
+    questions: 'Questions about enterprise integration?',
+    talkToEngineer: 'Talk to a Security Engineer →'
   },
   ES: {
-    sectionTitle: 'Comenzar',
-    headline: ['Tu primera atestación,', 'en los próximos', 'dos minutos.'],
-    description: 'Instala el SDK. Envuelve una acción del agente. Mira cómo el recibo llega a Solana. Gratis para los primeros 100 — sin tarjeta de crédito, llamadas de ventas ni listas de espera.',
+    sectionTitle: 'Desplegar',
+    headline: ['Haz a tu agente', 'listo para empresas', 'en dos minutos.'],
+    description: 'Instala el SDK. Envuelve una acción del agente. Mira cómo el recibo criptográfico llega a Solana. Asegura tu infraestructura autónoma hoy — sin tarjeta de crédito, sin listas de espera.',
     openQuickStart: 'Abrir el Inicio Rápido',
-    readDocs: 'Leer la documentación',
-    questions: '¿Preguntas antes de empezar?',
-    talkToEngineer: 'Habla con un ingeniero →'
+    readDocs: 'Leer la Documentación',
+    questions: '¿Preguntas sobre integración empresarial?',
+    talkToEngineer: 'Habla con un Ingeniero de Seguridad →'
   },
   ZH: {
     sectionTitle: '开始',
@@ -61,7 +61,7 @@ export function FinalCta() {
             <div className="flex items-center gap-2 px-5 py-4 font-mono text-sm">
               <span className="text-muted-foreground">$</span>
               <span className="text-foreground">npm install</span>
-              <span className="text-primary">prova-agent-sdk</span>
+              <a href="https://www.npmjs.com/package/prova-agent-sdk" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4">prova-agent-sdk</a>
               <span className="ml-1 inline-block h-4 w-[7px] animate-blink bg-primary align-middle" aria-hidden />
             </div>
           </div>

@@ -4,62 +4,62 @@ import { useI18n } from '../i18n-provider';
 
 const content = {
   EN: {
-    sectionTitle: 'The fix',
-    headline: ['One signed receipt', 'for every', 'action.'],
-    description: 'Prova issues behavior attestations through the Solana Attestation Service — the same Foundation-backed primitive used for on-chain identity. You get a forensic trail that survives audits, lawsuits, and the next AI policy update.',
+    sectionTitle: 'The Standard',
+    headline: ['Forensic finality', 'for the Machine', 'Economy.'],
+    description: 'Prova issues cryptographic behavior attestations via the Solana Attestation Service. You get an enterprise-grade forensic trail designed to satisfy regulators, survive audits, and secure the Agentic Internet.',
     features: [
       {
         icon: Shield,
-        title: 'Signed by the agent that did the work',
-        description: 'Every attestation carries an Ed25519 signature from the agent key. No shared secrets. No impersonation.',
+        title: 'Cryptographically signed by the autonomous agent',
+        description: 'Every attestation carries an Ed25519 signature from the agent key. No shared secrets. Zero impersonation risk.',
       },
       {
         icon: Lock,
-        title: 'Immutable the moment it lands',
-        description: 'Once on Solana, the receipt cannot be altered, deleted, or backdated. Not by you. Not by us.',
+        title: 'Immutable state finality on Solana',
+        description: 'Once anchored to Solana, the receipt cannot be altered, deleted, or backdated. A permanent source of truth.',
       },
       {
         icon: CheckCircle2,
-        title: 'Verifiable without trusting Prova',
-        description: 'Counterparties, regulators, and your own legal team verify any attestation directly on-chain.',
+        title: 'Decentralized verification standard',
+        description: 'Enterprise counterparties, compliance officers, and legal teams verify any attestation directly on-chain, trustlessly.',
       },
       {
         icon: Network,
-        title: 'Native MCP server — Claude & Cursor ready',
-        description: 'Ask your AI IDE "what did agent X do last week?" and get back verified on-chain data. Compatible with any MCP-enabled tool.',
+        title: 'Native MCP integration for Claude & Cursor',
+        description: 'Provide your LLMs with cryptographic context. Ask "what did agent X execute last week?" and ingest verified on-chain evidence directly.',
       },
     ],
     lines: '9 lines',
-    footer: 'No queue · No batching · No servers to run'
+    footer: 'Sub-second confirmation · MPP compliant · Zero-ops architecture'
   },
   ES: {
-    sectionTitle: 'La solución',
-    headline: ['Un recibo firmado', 'por cada', 'acción.'],
-    description: 'Prova emite atestaciones de comportamiento a través del Solana Attestation Service — la misma primitiva respaldada por la Fundación que se usa para identidad on-chain. Obtienes un rastro forense que sobrevive a auditorías, demandas y la próxima actualización de la política de IA.',
+    sectionTitle: 'El Estándar',
+    headline: ['Finalidad forense', 'para la Economía', 'de Máquinas.'],
+    description: 'Prova emite atestaciones de comportamiento criptográficas vía el Solana Attestation Service. Obtienes un rastro forense de grado empresarial diseñado para satisfacer a reguladores, sobrevivir auditorías y asegurar el Internet de Agentes.',
     features: [
       {
         icon: Shield,
-        title: 'Firmado por el agente que hizo el trabajo',
-        description: 'Cada atestación lleva una firma Ed25519 de la clave del agente. Sin secretos compartidos. Sin suplantaciones.',
+        title: 'Firmado criptográficamente por el agente autónomo',
+        description: 'Cada atestación lleva una firma Ed25519 de la clave del agente. Sin secretos compartidos. Riesgo de suplantación nulo.',
       },
       {
         icon: Lock,
-        title: 'Inmutable en el momento en que aterriza',
-        description: 'Una vez en Solana, el recibo no puede ser alterado, borrado ni fechado con retroactividad. Ni por ti. Ni por nosotros.',
+        title: 'Finalidad de estado inmutable en Solana',
+        description: 'Una vez anclado a Solana, el recibo no puede ser alterado, borrado ni fechado con retroactividad. Una fuente de verdad permanente.',
       },
       {
         icon: CheckCircle2,
-        title: 'Verificable sin confiar en Prova',
-        description: 'Contrapartes, reguladores y tu propio equipo legal verifican cualquier atestación directamente on-chain.',
+        title: 'Estándar de verificación descentralizada',
+        description: 'Contrapartes empresariales, oficiales de cumplimiento y equipos legales verifican cualquier atestación directamente on-chain.',
       },
       {
         icon: Network,
-        title: 'Servidor MCP nativo — Claude y Cursor listos',
-        description: 'Pregunta a tu IDE de IA "¿qué hizo el agente X la semana pasada?" y obtén datos verificados on-chain. Compatible con cualquier herramienta MCP.',
+        title: 'Integración nativa MCP para Claude y Cursor',
+        description: 'Provee a tus LLMs con contexto criptográfico. Pregunta "¿qué ejecutó el Agente X la semana pasada?" e ingiere evidencia verificada directamente.',
       },
     ],
     lines: '9 líneas',
-    footer: 'Sin colas · Sin agrupamiento · Sin servidores que gestionar'
+    footer: 'Confirmación en sub-segundos · Compatible con MPP · Arquitectura Zero-ops'
   },
   ZH: {
     sectionTitle: '解决方案',

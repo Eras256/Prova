@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.0",
+    "@privy-io/react-auth": "^3.23.1",
     "@prova/core": "workspace:*",
     "@prova/ui": "workspace:*",
     "@solana/wallet-adapter-base": "^0.9.27",

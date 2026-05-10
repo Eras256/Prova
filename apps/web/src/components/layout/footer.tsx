@@ -5,7 +5,7 @@ import { useI18n } from '../i18n-provider';
 
 const content = {
   EN: {
-    description: 'A verifiable record of every AI agent action on Solana. Sign every action. Verify any of them, forever.',
+    description: 'The forensic settlement layer for the Agentic Internet. Cryptographic behavior attestations via the Solana Machine Payment Protocol.',
     sections: {
       Product: [
         { label: 'How it works', href: '/product/how' },
@@ -40,10 +40,10 @@ const content = {
       contact: 'Contact'
     },
     disclaimer: 'Independent project. Not affiliated with the Solana Foundation. Solana® is a registered trademark.',
-    compliance: 'Compliant with Solana Foundation Developer Guidelines & Code of Conduct (May 2026).'
+    compliance: 'Compliant with Solana.org Developer Guidelines & Solana Foundation Code of Conduct (May 2026).'
   },
   ES: {
-    description: 'Un registro verificable de cada acción de un agente de IA en Solana. Firma cada acción. Verifica cualquiera de ellas, para siempre.',
+    description: 'La capa de liquidación forense para el Internet de Agentes. Atestaciones de comportamiento criptográficas vía el Machine Payment Protocol de Solana.',
     sections: {
       Producto: [
         { label: 'Cómo funciona', href: '/product/how' },
@@ -78,10 +78,10 @@ const content = {
       contact: 'Contacto'
     },
     disclaimer: 'Proyecto independiente. No afiliado a la Solana Foundation. Solana® es una marca registrada.',
-    compliance: 'Cumple con las Directrices para Desarrolladores y el Código de Conducta de la Solana Foundation (Mayo 2026).'
+    compliance: 'Cumple con las Directrices de Solana.org y el Código de Conducta de la Solana Foundation (Mayo 2026).'
   },
   ZH: {
-    description: 'Solana 上所有 AI 代理操作的链上可验证记录。签署每一次操作。永久验证任何操作。',
+    description: '代理互联网的法证级结算层。通过 Solana 机器支付协议提供密码学行为证明。',
     sections: {
       产品: [
         { label: '工作原理', href: '/product/how' },
@@ -116,7 +116,7 @@ const content = {
       contact: '联系我们'
     },
     disclaimer: '独立项目。不隶属于 Solana 基金会。Solana® 注册商标。',
-    compliance: '符合 Solana 基金会开发者指南和行为准则（2026年5月）。'
+    compliance: '符合 Solana.org 开发者指南与 Solana 基金会行为准则（2026年5月）。'
   }
 };
 

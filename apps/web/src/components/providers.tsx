@@ -7,6 +7,7 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { RPC_URL } from '@/lib/solana/constants';
 import { I18nProvider } from './i18n-provider';
+import { PrivyProvider } from '@privy-io/react-auth';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 
@@ -18,14 +19,30 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const wallets = useMemo(() => [new PhantomWalletAdapter(), new SolflareWalletAdapter()], []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        <ConnectionProvider endpoint={RPC_URL} config={{ commitment: 'confirmed' }}>
-          <WalletProvider wallets={wallets} autoConnect>
-            <WalletModalProvider>{children}</WalletModalProvider>
-          </WalletProvider>
-        </ConnectionProvider>
-      </I18nProvider>
-    </QueryClientProvider>
+    <PrivyProvider
+      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''}
+      config={{
+        loginMethods: ['email', 'wallet'],
+        appearance: {
+          theme: 'dark',
+          accentColor: '#B0FF2C',
+        },
+        embeddedWallets: {
+          solana: {
+            createOnLogin: 'users-without-wallets',
+          },
+        },
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <I18nProvider>
+          <ConnectionProvider endpoint={RPC_URL} config={{ commitment: 'confirmed' }}>
+            <WalletProvider wallets={wallets} autoConnect>
+              <WalletModalProvider>{children}</WalletModalProvider>
+            </WalletProvider>
+          </ConnectionProvider>
+        </I18nProvider>
+      </QueryClientProvider>
+    </PrivyProvider>
   );
 }

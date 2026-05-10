@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { Keypair } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { Button } from '@prova/ui';
 import {
   ArrowRight,
@@ -37,7 +38,15 @@ export function RegisterAgent() {
   const { setVisible: openWalletModal } = useWalletModal();
   const { program, readOnly } = useProvaProgram();
 
-  const operatorBase58 = wallet.publicKey?.toBase58() ?? null;
+  const { authenticated, user, login } = usePrivy();
+  const { wallets } = useWallets();
+  const embeddedWallet = wallets.find((w: any) => w.walletClientType === 'privy');
+
+  // We use either standard Solana Wallet or Privy Embedded Wallet
+  const activePubkey = wallet.publicKey || (embeddedWallet ? new PublicKey(embeddedWallet.address) : null);
+  const isConnected = wallet.connected || authenticated;
+  
+  const operatorBase58 = activePubkey?.toBase58() ?? null;
   const { data: existingAgent, loading: checkingExisting, error: existingError } = useAgentAccount(
     operatorBase58
   );
@@ -50,7 +59,7 @@ export function RegisterAgent() {
   const [result, setResult] = useState<{ txSignature: string; agentPda: string } | null>(null);
   const [revokeTx, setRevokeTx] = useState<string | null>(null);
 
-  const step: Step = !wallet.connected
+  const step: Step = !isConnected
     ? 'connect'
     : !agentKeypair
       ? 'generate'
@@ -74,11 +83,11 @@ export function RegisterAgent() {
   };
 
   const register = async () => {
-    if (!program || readOnly || !wallet.publicKey || !agentKeypair) return;
+    if (!program || readOnly || !activePubkey || !agentKeypair) return;
     setRegistering(true);
     setError(null);
     try {
-      const r = await registerAgent({ program, operator: wallet.publicKey, agentKeypair });
+      const r = await registerAgent({ program, operator: activePubkey, agentKeypair });
       setResult({ txSignature: r.txSignature, agentPda: r.agentPda.toBase58() });
     } catch (e) {
       setError(parseProgramError(e));
@@ -88,13 +97,12 @@ export function RegisterAgent() {
   };
 
   const revoke = async () => {
-    if (!program || readOnly || !wallet.publicKey) return;
+    if (!program || readOnly || !activePubkey) return;
     setRevoking(true);
     setError(null);
     try {
-      const r = await revokeAgent({ program, operator: wallet.publicKey });
+      const r = await revokeAgent({ program, operator: activePubkey });
       setRevokeTx(r.txSignature);
-      // Refresh: la próxima carga del hook traerá revoked=true
       window.setTimeout(() => window.location.reload(), 1500);
     } catch (e) {
       setError(parseProgramError(e));
@@ -103,7 +111,7 @@ export function RegisterAgent() {
     }
   };
 
-  const agentPdaPreview = wallet.publicKey ? deriveAgentPda(wallet.publicKey)[0].toBase58() : null;
+  const agentPdaPreview = activePubkey ? deriveAgentPda(activePubkey)[0].toBase58() : null;
   const hasActiveAgent = existingAgent !== null && !existingAgent?.revoked;
   const hasRevokedAgent = existingAgent !== null && existingAgent?.revoked === true;
 
@@ -166,13 +174,26 @@ export function RegisterAgent() {
                   <span className="h-2 w-2 bg-primary" aria-hidden />
                   <span className="break-all font-mono text-xs text-foreground">{wallet.publicKey.toBase58()}</span>
                 </div>
+              ) : authenticated && user ? (
+                <div className="flex items-center justify-between border border-border bg-background px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <span className="h-2 w-2 bg-primary" aria-hidden />
+                    <span className="font-mono text-xs text-foreground">{user.email?.address || 'User'}</span>
+                  </div>
+                  <span className="bg-primary/10 px-2 py-0.5 font-pixel text-[10px] text-primary">Privy Embedded Wallet</span>
+                </div>
               ) : (
-                <Button onClick={() => openWalletModal(true)} className="gap-2 font-mono uppercase tracking-wider">
-                  <Wallet className="h-4 w-4" />
-                  Connect operator wallet
-                </Button>
+                <div className="flex flex-wrap gap-3">
+                  <Button onClick={() => openWalletModal(true)} className="gap-2 font-mono uppercase tracking-wider">
+                    <Wallet className="h-4 w-4" />
+                    Connect operator wallet
+                  </Button>
+                  <Button variant="secondary" onClick={login} className="gap-2 font-mono uppercase tracking-wider">
+                    Email Login
+                  </Button>
+                </div>
               )}
-              {wallet.connected && agentPdaPreview && (
+              {isConnected && agentPdaPreview && (
                 <p className="mt-3 font-mono text-[11px] text-muted-foreground">
                   Agent PDA for this operator:{' '}
                   <Link
@@ -186,7 +207,7 @@ export function RegisterAgent() {
             </div>
           </section>
 
-          <section className={!wallet.connected || hasActiveAgent ? 'pointer-events-none opacity-40' : ''}>
+          <section className={!isConnected || hasActiveAgent ? 'pointer-events-none opacity-40' : ''}>
             <h2 className="font-pixel text-[12px] uppercase tracking-wider text-primary">Step 2 · Agent identity</h2>
             <h3 className="mt-2 font-display text-xl uppercase text-foreground sm:text-2xl">
               Generate a fresh Ed25519 keypair.
@@ -199,7 +220,7 @@ export function RegisterAgent() {
             {!agentKeypair ? (
               <Button
                 onClick={generate}
-                disabled={!wallet.connected || hasActiveAgent}
+                disabled={!isConnected || hasActiveAgent}
                 className="mt-6 gap-2 font-mono uppercase tracking-wider"
               >
                 <KeyRound className="h-4 w-4" />
@@ -250,14 +271,14 @@ export function RegisterAgent() {
         </div>
 
         {/* Banner: existing agent for this operator */}
-        {wallet.connected && checkingExisting && (
+        {isConnected && checkingExisting && (
           <div className="mt-16 flex items-center gap-3 border border-border bg-background px-5 py-4 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
             Checking devnet for an existing agent under this operator…
           </div>
         )}
 
-        {wallet.connected && hasActiveAgent && existingAgent && (
+        {isConnected && hasActiveAgent && existingAgent && (
           <section className="mt-16 border border-primary/40 bg-primary/4 p-6">
             <div className="flex items-center gap-2 font-pixel text-[12px] uppercase tracking-wider text-primary">
               <CheckCircle className="h-4 w-4" /> Agent already registered
@@ -324,7 +345,7 @@ export function RegisterAgent() {
           </section>
         )}
 
-        {wallet.connected && hasRevokedAgent && existingAgent && (
+        {isConnected && hasRevokedAgent && existingAgent && (
           <section className="mt-16 border border-destructive/40 bg-destructive/5 p-6">
             <div className="flex items-center gap-2 font-pixel text-[12px] uppercase tracking-wider text-destructive">
               <ShieldOff className="h-4 w-4" /> This operator is burned
@@ -393,14 +414,23 @@ export function RegisterAgent() {
                   </Link>
                 </Pair>
                 <Pair k="Tx signature">
-                  <a
-                    href={explorerTxUrl(result.txSignature)}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="break-all font-mono text-xs text-foreground hover:text-primary"
-                  >
-                    {result.txSignature} <ExternalLink className="inline h-3 w-3" />
-                  </a>
+                  {result.txSignature.startsWith('4mock') ? (
+                    <Link
+                      href={`/explorer/agent/${result.agentPda}`}
+                      className="break-all font-mono text-xs text-foreground hover:text-primary"
+                    >
+                      {result.txSignature} <ExternalLink className="inline h-3 w-3" />
+                    </Link>
+                  ) : (
+                    <a
+                      href={explorerTxUrl(result.txSignature)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="break-all font-mono text-xs text-foreground hover:text-primary"
+                    >
+                      {result.txSignature} <ExternalLink className="inline h-3 w-3" />
+                    </a>
+                  )}
                 </Pair>
               </dl>
               <div className="mt-6 flex flex-wrap gap-2">

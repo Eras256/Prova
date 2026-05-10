@@ -15,7 +15,9 @@ export function HeroSection() {
         <div>
           <div className="animate-fade-up">
             <Link
-              href="/changelog"
+              href="https://www.npmjs.com/package/prova-agent-sdk"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group inline-flex items-center gap-2 border border-border bg-surface/60 px-2.5 py-1 text-xs transition-colors hover:border-primary/40"
             >
               <span className="relative flex h-1.5 w-1.5" aria-hidden>

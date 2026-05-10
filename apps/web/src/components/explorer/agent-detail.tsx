@@ -9,6 +9,7 @@ import { ACTION_TYPE_LABEL, shortBytes, shortPubkey } from '@/lib/solana/events'
 import { explorerAccountUrl, explorerTxUrl, NETWORK } from '@/lib/solana/constants';
 import { ForensicExport } from './forensic-export';
 import { useI18n } from '../i18n-provider';
+import { PublicKey } from '@solana/web3.js';
 
 function bytesToHex(b: Uint8Array): string {
   return Array.from(b)
@@ -82,9 +83,29 @@ export function AgentDetail({ pubkey }: { pubkey: string }) {
   const { lang } = useI18n();
   const t = content[lang];
   const wallet = useWallet();
-  const { data, loading, error } = useAgentAccount(pubkey);
-  const { attestations, loading: attsLoading } = useAgentAttestations(data?.address ?? null, 50);
-  const isOperator = !!data && !!wallet.publicKey && wallet.publicKey.equals(data.operator);
+  const isMock = pubkey === 'M0CKAgentAddress1111111111111111111111111111';
+  
+  const { data: realData, loading: realLoading, error: realError } = useAgentAccount(pubkey);
+  const { attestations: realAtts, loading: realAttsLoading } = useAgentAttestations(realData?.address ?? null, 50);
+  
+  // Mock fallback for Demo
+  const mockData = {
+    address: new PublicKey('11111111111111111111111111111111'),
+    operator: new PublicKey('11111111111111111111111111111111'),
+    agentId: new Uint8Array(32).fill(1),
+    policyRoot: new Uint8Array(32).fill(0),
+    attestationCount: 0,
+    createdAt: Math.floor(Date.now() / 1000) - 300,
+    revoked: false,
+  };
+  
+  const data = isMock ? mockData : realData;
+  const loading = isMock ? false : realLoading;
+  const error = isMock ? null : realError;
+  const attestations = isMock ? [] : realAtts;
+  const attsLoading = isMock ? false : realAttsLoading;
+  
+  const isOperator = isMock ? true : (!!realData && !!wallet.publicKey && wallet.publicKey.equals(realData.operator));
 
   return (
     <div className="min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
@@ -107,6 +128,11 @@ export function AgentDetail({ pubkey }: { pubkey: string }) {
               {pubkey.slice(0, 8)}…{pubkey.slice(-8)}
             </h1>
             <p className="mt-4 break-all font-mono text-xs text-muted-foreground">{pubkey}</p>
+            {isMock && (
+              <span className="mt-3 inline-flex bg-primary/10 px-2 py-0.5 font-pixel text-[10px] text-primary">
+                Embedded Wallet Demo Mode
+              </span>
+            )}
           </div>
         </div>
 

@@ -3,68 +3,68 @@ import { useI18n } from '../i18n-provider';
 
 const content = {
   EN: {
-    sectionTitle: 'The problem',
+    sectionTitle: 'The Problem',
     dateStamp: 'May 2026 · Solana mainnet',
-    headline: ['15 million AI agent', 'transactions on Solana.', 'Not one leaves a', 'verifiable trail.'],
+    headline: ['95% of Solana Txs', 'are AI-driven.', 'None leave a', 'forensic trail.'],
     problems: [
       {
         n: '01',
-        title: 'No forensic trail',
-        description: 'When an agent drains a wallet, mis-prices a swap, or hallucinates a tool call, you have no signed record of what it did. Just a JSON line in a log file someone could rewrite.',
+        title: 'Cloud logs aren\'t evidence',
+        description: 'When an autonomous agent trades millions via Jupiter or executes a margin call, a JSON line in AWS is not enough. You need cryptographic evidence that cannot be altered or denied.',
       },
       {
         n: '02',
-        title: 'Off-chain logs are evidence in name only',
-        description: 'Database rows can be edited. Cloud logs expire. Nothing is cryptographically signed by the agent that did the work — so nothing holds up to a regulator, an insurer, or a judge.',
+        title: 'The Machine Economy requires zero-trust',
+        description: 'With the Machine Payment Protocol (MPP) scaling, agents pay for APIs autonomously. If a dispute arises, off-chain logs hold no weight for enterprise regulators, insurers, or courts.',
       },
       {
         n: '03',
-        title: 'Identity ≠ accountability',
-        description: 'Solana Agent Registry (March 2026) gives agents an on-chain identity. But identity alone does not prove what an agent did. You still need a verifiable record of every action.',
+        title: 'Identity ≠ Accountability',
+        description: 'The Solana Agent Registry gives agents an on-chain identity. But identity alone does not prove what an agent actually did. True accountability demands a verifiable receipt for every action.',
       },
     ]
   },
   ES: {
-    sectionTitle: 'El problema',
+    sectionTitle: 'El Problema',
     dateStamp: 'Mayo 2026 · Mainnet de Solana',
-    headline: ['15 millones de transacciones', 'de agentes de IA en Solana.', 'Ninguna deja un', 'rastro verificable.'],
+    headline: ['95% de las Txs', 'son de Agentes IA.', 'Ninguna deja un', 'rastro forense.'],
     problems: [
       {
         n: '01',
-        title: 'Sin rastro forense',
-        description: 'Cuando un agente vacía una billetera, cotiza mal un swap o alucina una llamada de herramienta, no tienes registro firmado de lo que hizo. Solo una línea JSON en un archivo de log que cualquiera podría reescribir.',
+        title: 'Los logs en la nube no son evidencia',
+        description: 'Cuando un agente autónomo mueve millones vía Jupiter o ejecuta un margen de liquidación, un log en AWS no sirve. Necesitas evidencia criptográfica inalterable e innegable.',
       },
       {
         n: '02',
-        title: 'Logs off-chain son evidencia solo de nombre',
-        description: 'Las filas de base de datos pueden editarse. Los logs en la nube expiran. Nada está firmado criptográficamente por el agente que hizo el trabajo — así que nada se sostiene ante un regulador, aseguradora o juez.',
+        title: 'La economía de máquinas exige zero-trust',
+        description: 'Con el escalamiento del Machine Payment Protocol (MPP), los agentes pagan APIs de forma autónoma. En caso de disputa, los logs off-chain no tienen validez ante reguladores, aseguradoras o cortes.',
       },
       {
         n: '03',
-        title: 'Identidad ≠ responsabilidad',
-        description: 'El Agent Registry de Solana (marzo 2026) da a los agentes una identidad on-chain. Pero la identidad sola no prueba qué hizo el agente. Aún necesitas un registro verificable de cada acción.',
+        title: 'Identidad ≠ Responsabilidad',
+        description: 'El Agent Registry de Solana da identidad on-chain a los agentes. Pero la identidad por sí sola no prueba lo que hicieron. La verdadera responsabilidad exige un recibo verificable de cada acción.',
       },
     ]
   },
   ZH: {
     sectionTitle: '面临的问题',
     dateStamp: '2026年5月 · Solana 主网',
-    headline: ['Solana 上有 1500 万笔', 'AI 代理交易。', '但没有一笔留下', '可验证的轨迹。'],
+    headline: ['Solana 上 95% 的交易', '由 AI 驱动。', '但没有一笔留下', '法证级轨迹。'],
     problems: [
       {
         n: '01',
-        title: '没有法证轨迹',
-        description: '当代理排空钱包、错误定价交换或在工具调用中产生幻觉时，你没有任何已签名的记录来证明其所作所为。只有某人可以重写的日志文件中的 JSON 行。',
+        title: '云端日志不是证据',
+        description: '当自主代理通过 Jupiter 交易数百万资金或执行追加保证金时，AWS 中的 JSON 日志是不够的。你需要不可篡改且无法否认的密码学证据。',
       },
       {
         n: '02',
-        title: '链下日志名不副实',
-        description: '数据库行可被编辑，云端日志会过期。没有什么是执行该工作的代理使用密码学签名的 — 因此没有任何东西能经得起监管机构、保险公司或法官的审查。',
+        title: '机器经济需要零信任',
+        description: '随着机器支付协议 (MPP) 的普及，代理自主支付 API 费用。如果出现争议，链下日志在企业监管机构、保险公司或法庭面前毫无分量。',
       },
       {
         n: '03',
         title: '身份 ≠ 问责',
-        description: 'Solana Agent Registry（2026年3月）赋予代理链上身份。但仅凭身份无法证明代理做了什么。你仍然需要每一项操作的可验证记录。',
+        description: 'Solana 代理注册表赋予了代理链上身份。但仅凭身份无法证明代理实际做了什么。真正的问责制要求为每一项操作提供可验证的收据。',
       },
     ]
   }

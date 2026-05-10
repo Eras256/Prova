@@ -6,10 +6,7 @@ const config: DocsThemeConfig = {
   chat: { link: 'https://discord.gg/prova' },
   docsRepositoryBase: 'https://github.com/prova-io/prova/tree/main/apps/docs',
   footer: {
-    text: 'Prova Documentation — Apache 2.0. Prova is NOT affiliated with the Solana Foundation.',
-  },
-  useNextSeoProps() {
-    return { titleTemplate: '%s | Prova Docs' };
+    content: 'Prova Documentation — Apache 2.0. Prova is NOT affiliated with the Solana Foundation.',
   },
 };
 

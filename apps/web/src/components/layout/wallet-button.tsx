@@ -3,81 +3,95 @@
 import { useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { usePrivy } from '@privy-io/react-auth';
 import { Button } from '@prova/ui';
-import { Wallet, LogOut, Mail } from 'lucide-react';
+import { Wallet, LogOut, Mail, User } from 'lucide-react';
 import { shortPubkey } from '@/lib/solana/events';
+import { useI18n } from '../i18n-provider';
 
 export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | 'lg' }) {
   const { publicKey, disconnect, connecting, connected, wallet } = useWallet();
   const { setVisible } = useWalletModal();
+  const { login, logout, authenticated, user, ready } = usePrivy();
   const [mounted, setMounted] = useState(false);
-  
-  // Simulación de estado de login con Phantom Connect / Privy
-  const [isEmailLoginOpen, setIsEmailLoginOpen] = useState(false);
+  const { t } = useI18n();
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    // Limpiar localStorage de la simulación anterior para no confundir
+    localStorage.removeItem('prova_mock_email');
+  }, []);
 
-  if (!mounted) {
+  if (!mounted || !ready) {
     return (
       <div className="flex items-center gap-2">
         <Button size={size} variant="outline" className="gap-2" disabled>
           <Wallet className="h-4 w-4" />
-          Connect wallet
+          {t('connectWallet')}
         </Button>
       </div>
     );
   }
 
-  if (connected && publicKey) {
-    return (
-      <div className="flex items-center gap-1.5">
-        <Button size={size} variant="outline" className="gap-2 font-mono text-xs" onClick={() => setVisible(true)}>
-          {wallet?.adapter.icon && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={wallet.adapter.icon} alt={wallet.adapter.name} className="h-3.5 w-3.5" />
-          )}
-          {shortPubkey(publicKey, 4, 4)}
-        </Button>
-        <Button
-          size={size}
-          variant="ghost"
-          className="px-2"
-          onClick={() => disconnect().catch(() => {})}
-          aria-label="Disconnect wallet"
-        >
-          <LogOut className="h-3.5 w-3.5" />
-        </Button>
-      </div>
-    );
-  }
+  const handleLogout = () => {
+    if (connected) disconnect().catch(() => {});
+    if (authenticated) logout();
+  };
 
   return (
-    <div className="flex items-center gap-2">
-      <Button
-        size={size}
-        variant="outline"
-        className="gap-2"
-        onClick={() => setVisible(true)}
-        disabled={connecting}
-      >
-        <Wallet className="h-4 w-4" />
-        {connecting ? 'Connecting…' : 'Connect Wallet'}
-      </Button>
-      
-      {/* 2026 Standard: Embedded Wallets via Phantom Connect / Privy */}
-      <Button
-        size={size}
-        variant="secondary"
-        className="gap-2 hidden md:flex"
-        onClick={() => {
-          setIsEmailLoginOpen(true);
-          // Aquí se inicializa el flujo de Phantom Connect / Privy
-          alert("Phantom Connect / Privy Embedded Wallet flow initiated. Enter email to generate a non-custodial wallet instantly.");
-        }}
-      >
-        <Mail className="h-4 w-4" />
-        Email Login
-      </Button>
-    </div>
+    <>
+      {(connected && publicKey) || authenticated ? (
+        <div className="flex items-center gap-1.5">
+          <Button size={size} variant="outline" className="gap-2 font-mono text-xs" onClick={() => !authenticated && setVisible(true)}>
+            {authenticated ? (
+              <>
+                <User className="h-3.5 w-3.5" />
+                {user?.email?.address ? user.email.address.split('@')[0] : 'User'}
+              </>
+            ) : (
+              <>
+                {wallet?.adapter.icon && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={wallet.adapter.icon} alt={wallet.adapter.name} className="h-3.5 w-3.5" />
+                )}
+                {publicKey ? shortPubkey(publicKey, 4, 4) : ''}
+              </>
+            )}
+          </Button>
+          <Button
+            size={size}
+            variant="ghost"
+            className="px-2"
+            onClick={handleLogout}
+            aria-label="Disconnect"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <Button
+            size={size}
+            variant="outline"
+            className="gap-2"
+            onClick={() => setVisible(true)}
+            disabled={connecting}
+          >
+            <Wallet className="h-4 w-4" />
+            {connecting ? t('connecting') : t('connectWallet')}
+          </Button>
+          
+          <Button
+            size={size}
+            variant="secondary"
+            className="hidden gap-2 md:flex"
+            onClick={login}
+          >
+            <Mail className="h-4 w-4" />
+            {t('emailLogin')}
+          </Button>
+        </div>
+      )}
+    </>
   );
 }

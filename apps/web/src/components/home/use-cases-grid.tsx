@@ -4,62 +4,62 @@ import { useI18n } from '../i18n-provider';
 
 const content = {
   EN: {
-    sectionTitle: 'For the people who carry the risk',
-    headline: ['One receipt.', 'Four people who finally', 'sleep at night.'],
+    sectionTitle: 'For Enterprise Risk & Compliance',
+    headline: ['Zero-trust execution.', 'Four enterprise teams that', 'can finally scale AI.'],
     cases: [
       {
         icon: Scale,
         persona: 'Compliance',
-        title: 'Pass the AI Act audit on the first try',
-        desc: 'Map every agent action to MetaComp KYA and EU AI Act articles. Export PDF reports your auditor will actually accept.',
+        title: 'Pass JARGUS & EU AI Act audits instantly',
+        desc: 'Map every autonomous action to strict regulatory frameworks. Export cryptographic PDF reports that Tier-1 auditors trust natively.',
       },
       {
         icon: ShieldCheck,
         persona: 'Underwriters',
-        title: 'Price agent risk with real evidence',
-        desc: 'Settle agent-related claims in days, not quarters. Cryptographic proof replaces "the customer says…" forever.',
+        title: 'Price agentic risk with immutable data',
+        desc: 'Settle agent-driven claims via Machine Payment Protocol logs in days, not quarters. Cryptographic proof replaces guesswork.',
       },
       {
         icon: FileSearch,
         persona: 'Legal',
         title: 'Court-admissible by construction',
-        desc: 'On-chain attestations meet the Federal Rules of Evidence 901 standard for authenticity — no expert witness required.',
+        desc: 'On-chain Solana attestations meet the Federal Rules of Evidence 901 standard for authenticity — no expert witness required.',
       },
       {
         icon: BarChart3,
-        persona: 'Risk & ops',
-        title: 'Catch drift before it costs you',
-        desc: 'Stream attestations into Datadog, Splunk, or your own SIEM. Real-time dashboards on what every agent is actually doing.',
+        persona: 'Risk & Ops',
+        title: 'Real-time observability for autonomous systems',
+        desc: 'Stream verified agent attestations directly into Datadog, Splunk, or your SIEM. Catch LLM hallucinations before they cost millions.',
       },
     ]
   },
   ES: {
-    sectionTitle: 'Para las personas que asumen el riesgo',
-    headline: ['Un recibo.', 'Cuatro personas que al fin', 'duermen de noche.'],
+    sectionTitle: 'Para Riesgo y Cumplimiento Empresarial',
+    headline: ['Ejecución Zero-trust.', 'Cuatro equipos que al fin', 'pueden escalar IA.'],
     cases: [
       {
         icon: Scale,
         persona: 'Cumplimiento',
-        title: 'Pasa la auditoría del AI Act a la primera',
-        desc: 'Mapea cada acción a MetaComp KYA y artículos del EU AI Act. Exporta informes PDF que tu auditor sí aceptará.',
+        title: 'Pasa auditorías JARGUS y EU AI Act al instante',
+        desc: 'Mapea cada acción autónoma a marcos regulatorios estrictos. Exporta reportes PDF criptográficos en los que los auditores Tier-1 confían nativamente.',
       },
       {
         icon: ShieldCheck,
         persona: 'Aseguradoras',
-        title: 'Precio del riesgo del agente con evidencia real',
-        desc: 'Resuelve reclamos en días, no en trimestres. Las pruebas criptográficas reemplazan al "el cliente dice..." para siempre.',
+        title: 'Precio del riesgo autónomo con datos inmutables',
+        desc: 'Resuelve reclamos derivados del Machine Payment Protocol en días. La prueba criptográfica reemplaza para siempre las suposiciones.',
       },
       {
         icon: FileSearch,
         persona: 'Legal',
-        title: 'Admisible en la corte por diseño',
-        desc: 'Las atestaciones on-chain cumplen el estándar 901 de Reglas Federales de Evidencia para autenticidad — sin necesidad de testigos expertos.',
+        title: 'Admisible en tribunales por diseño',
+        desc: 'Las atestaciones on-chain en Solana cumplen el estándar 901 de Reglas Federales de Evidencia — sin necesidad de peritos.',
       },
       {
         icon: BarChart3,
         persona: 'Riesgo y Ops',
-        title: 'Detecta desvíos antes de que te cuesten',
-        desc: 'Envía atestaciones a Datadog, Splunk o tu propio SIEM. Paneles en tiempo real sobre lo que realmente hace cada agente.',
+        title: 'Observabilidad en tiempo real de sistemas autónomos',
+        desc: 'Transmite atestaciones verificadas a Datadog, Splunk o tu SIEM. Detecta alucinaciones de LLMs antes de que cuesten millones.',
       },
     ]
   },

@@ -3,54 +3,54 @@ import { useI18n } from '../i18n-provider';
 
 const content = {
   EN: {
-    sectionTitle: 'How it works',
-    headline: ['From agent action', 'to immutable proof', 'in four steps.'],
+    sectionTitle: 'The Architecture',
+    headline: ['From agent intent', 'to cryptographic proof', 'in milliseconds.'],
     steps: [
       {
         n: '01',
-        title: 'Your agent acts',
-        desc: 'A swap, a transfer, a tool call, a model decision — anything you want on the record. Wrap it with `client.attest()` or let the SDK middleware do it for you.',
+        title: 'Your Agent Executes (elizaOS compatible)',
+        desc: 'A DeFi swap via Jupiter, an API payment, or a governance vote. Wrap it with `client.attest()` or use our native elizaOS plugin to secure the intent.',
       },
       {
         n: '02',
-        title: 'The SDK signs and submits',
-        desc: 'The action payload is hashed, signed by the agent key, and written through the Solana Attestation Service. Confirmation in under a second, ~$0.0005 per receipt.',
+        title: 'The SDK Signs via MPP',
+        desc: 'The payload is hashed and signed with the agent\'s Ed25519 key utilizing the Machine Payment Protocol standard. Confirmation in <400ms, ~$0.0005 per receipt.',
       },
       {
         n: '03',
-        title: 'Anyone verifies, anytime',
-        desc: 'The receipt lives on-chain as a PDA. Operators, regulators, insurers, and counterparties verify it without ever talking to Prova. No API key required.',
+        title: 'Trustless Enterprise Verification',
+        desc: 'The receipt is permanently anchored to Solana as a PDA. Auditors, risk teams, and insurers verify it trustlessly without relying on Prova\'s infrastructure.',
       },
       {
         n: '04',
-        title: 'Query from your AI IDE',
-        desc: 'The native MCP server lets Claude, Cursor, or any MCP-enabled tool ask "what did agent X do last week?" and get back verified on-chain data — no manual explorer needed.',
+        title: 'Native MCP Context Engine',
+        desc: 'Our MCP server allows Claude, Cursor, and enterprise LLMs to autonomously query "What did Agent X do on Tuesday?" and receive verified on-chain state instantly.',
       },
     ]
   },
   ES: {
-    sectionTitle: 'Cómo funciona',
-    headline: ['Desde la acción del agente', 'hasta la prueba inmutable', 'en cuatro pasos.'],
+    sectionTitle: 'La Arquitectura',
+    headline: ['Desde la intención del agente', 'hasta la prueba criptográfica', 'en milisegundos.'],
     steps: [
       {
         n: '01',
-        title: 'Tu agente actúa',
-        desc: 'Un swap, una transferencia, una llamada de herramienta, una decisión de modelo — cualquier cosa que quieras dejar registrada. Envuélvelo con `client.attest()` o deja que el middleware del SDK lo haga por ti.',
+        title: 'Tu Agente Ejecuta (Compatible con elizaOS)',
+        desc: 'Un swap DeFi vía Jupiter, un pago de API o un voto de gobernanza. Envuélvelo con `client.attest()` o usa nuestro plugin nativo para elizaOS.',
       },
       {
         n: '02',
-        title: 'El SDK firma y envía',
-        desc: 'El payload de la acción se hashea, se firma con la clave del agente y se escribe a través del Solana Attestation Service. Confirmación en menos de un segundo, ~$0.0005 por recibo.',
+        title: 'El SDK Firma vía MPP',
+        desc: 'El payload se hashea y se firma con la clave Ed25519 del agente utilizando el estándar Machine Payment Protocol. Confirmación en <400ms, ~$0.0005 por recibo.',
       },
       {
         n: '03',
-        title: 'Cualquiera verifica, en cualquier momento',
-        desc: 'El recibo vive on-chain como un PDA. Operadores, reguladores, aseguradoras y contrapartes lo verifican sin tener que hablar nunca con Prova. No se requiere API key.',
+        title: 'Verificación Empresarial Trustless',
+        desc: 'El recibo se ancla permanentemente a Solana como un PDA. Auditores, equipos de riesgo y aseguradoras lo verifican sin depender de la infraestructura de Prova.',
       },
       {
         n: '04',
-        title: 'Consulta desde tu IDE de IA',
-        desc: 'El servidor MCP nativo permite que Claude, Cursor o cualquier herramienta con soporte MCP pregunte "¿qué hizo el agente X la semana pasada?" y obtenga datos verificados on-chain — sin necesidad de abrir el explorador manualmente.',
+        title: 'Motor de Contexto MCP Nativo',
+        desc: 'Nuestro servidor MCP permite que Claude, Cursor y LLMs empresariales consulten de forma autónoma "¿Qué hizo el Agente X el martes?" y reciban el estado on-chain verificado.',
       },
     ]
   },
