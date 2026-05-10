@@ -8,6 +8,7 @@ import { agentsRouter } from './routes/agents';
 import { premiumRouter } from './routes/premium';
 import { webhooksRouter } from './routes/webhooks';
 import { healthRouter } from './routes/health';
+import { adminRouter } from './routes/admin';
 import { errorHandler } from './middleware/error-handler';
 import { rateLimiter } from './middleware/rate-limiter';
 
@@ -45,5 +46,6 @@ app.route('/api/v1/attestations', attestationsRouter);
 app.route('/api/v1/agents', agentsRouter);
 app.route('/api/v1/premium', premiumRouter);
 app.route('/api/v1/webhooks', webhooksRouter);
+app.route('/api/v1/admin', adminRouter);
 
 app.get('/', (c) => c.json({ name: 'Prova API', version: '1.0.0', status: 'ok' }));
