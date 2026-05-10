@@ -1,2 +1,41 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+dist
+build
+.next
+.turbo
+out
+
+# Rust/Anchor (muy pesado)
+target/
+packages/program/target/
+**/*.rs.bk
+Cargo.lock
+
+# Test artifacts
 test-ledger
 packages/program/test-ledger
+coverage
+playwright-report
+test-results
+
+# Environment
+.env
+.env.local
+.env.production
+.env.*.local
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+*.swp
+*.swo
+
+# Misc
+*.log
+.changeset
