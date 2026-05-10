@@ -26,10 +26,10 @@ const content = {
       {
         n: '02',
         icon: Code2,
-        title: 'API reference',
-        desc: 'Every endpoint, with a try-it console powered by your own key.',
+        title: 'API & MCP reference',
+        desc: 'Every endpoint, with a try-it console powered by your own key. Includes native MCP server for AI IDEs.',
         href: '/developers/docs',
-        cta: 'Browse API',
+        cta: 'Browse API & MCP',
       },
       {
         n: '03',
@@ -62,10 +62,10 @@ const content = {
       {
         n: '02',
         icon: Code2,
-        title: 'Referencia de la API',
-        desc: 'Cada endpoint, con una consola de prueba alimentada por tu propia llave.',
+        title: 'Referencia de la API y MCP',
+        desc: 'Cada endpoint, con una consola de prueba alimentada por tu propia llave. Incluye servidor MCP nativo para IDEs de IA.',
         href: '/developers/docs',
-        cta: 'Explorar API',
+        cta: 'Explorar API y MCP',
       },
       {
         n: '03',
@@ -98,10 +98,10 @@ const content = {
       {
         n: '02',
         icon: Code2,
-        title: 'API 参考',
-        desc: '每一个接口，都有使用您自己的密钥驱动的测试控制台。',
+        title: 'API 与 MCP 参考',
+        desc: '每一个接口，都有使用您自己的密钥驱动的测试控制台。包含用于 AI IDE 的原生 MCP 服务器。',
         href: '/developers/docs',
-        cta: '浏览 API',
+        cta: '浏览 API 与 MCP',
       },
       {
         n: '03',

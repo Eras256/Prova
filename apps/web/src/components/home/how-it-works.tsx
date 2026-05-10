@@ -4,7 +4,7 @@ import { useI18n } from '../i18n-provider';
 const content = {
   EN: {
     sectionTitle: 'How it works',
-    headline: ['From agent action', 'to immutable proof', 'in three steps.'],
+    headline: ['From agent action', 'to immutable proof', 'in four steps.'],
     steps: [
       {
         n: '01',
@@ -21,11 +21,16 @@ const content = {
         title: 'Anyone verifies, anytime',
         desc: 'The receipt lives on-chain as a PDA. Operators, regulators, insurers, and counterparties verify it without ever talking to Prova. No API key required.',
       },
+      {
+        n: '04',
+        title: 'Query from your AI IDE',
+        desc: 'The native MCP server lets Claude, Cursor, or any MCP-enabled tool ask "what did agent X do last week?" and get back verified on-chain data — no manual explorer needed.',
+      },
     ]
   },
   ES: {
     sectionTitle: 'Cómo funciona',
-    headline: ['Desde la acción del agente', 'hasta la prueba inmutable', 'en tres pasos.'],
+    headline: ['Desde la acción del agente', 'hasta la prueba inmutable', 'en cuatro pasos.'],
     steps: [
       {
         n: '01',
@@ -42,11 +47,16 @@ const content = {
         title: 'Cualquiera verifica, en cualquier momento',
         desc: 'El recibo vive on-chain como un PDA. Operadores, reguladores, aseguradoras y contrapartes lo verifican sin tener que hablar nunca con Prova. No se requiere API key.',
       },
+      {
+        n: '04',
+        title: 'Consulta desde tu IDE de IA',
+        desc: 'El servidor MCP nativo permite que Claude, Cursor o cualquier herramienta con soporte MCP pregunte "¿qué hizo el agente X la semana pasada?" y obtenga datos verificados on-chain — sin necesidad de abrir el explorador manualmente.',
+      },
     ]
   },
   ZH: {
     sectionTitle: '工作原理',
-    headline: ['从代理操作', '到不可篡改的证明', '只需三步。'],
+    headline: ['从代理操作', '到不可篡改的证明', '只需四步。'],
     steps: [
       {
         n: '01',
@@ -62,6 +72,11 @@ const content = {
         n: '03',
         title: '任何人在任何时候都可以验证',
         desc: '收据作为 PDA 存储在链上。操作员、监管机构、保险公司和交易对手可以在无需与 Prova 交互的情况下进行验证。无需 API 密钥。',
+      },
+      {
+        n: '04',
+        title: '从 AI IDE 直接查询',
+        desc: '原生 MCP 服务器让 Claude、Cursor 或任何支持 MCP 的工具直接询问"代理 X 上周做了什么？"并获得经过验证的链上数据 —— 无需手动打开区块链浏览器。',
       },
     ]
   }

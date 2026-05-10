@@ -38,6 +38,13 @@ Thumbs.db
 # Misc
 *.log
 .changeset
+scratch.js
+scratch.ts
+temp_*.json
+*_key.json
+packages/program/temp_key.json
+packages/program/test-ledger/
+*.tsbuildinfo
 
 # Next.js
 next-env.d.ts
@@ -45,3 +52,6 @@ next-env.d.ts
 # Claude Code local state
 .claude/
 .vercel
+
+# Cursor — mcp.json contiene tokens, cada dev configura el suyo
+.cursor/mcp.json

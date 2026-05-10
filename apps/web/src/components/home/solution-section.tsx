@@ -1,5 +1,5 @@
 'use client';
-import { Shield, Lock, CheckCircle2 } from 'lucide-react';
+import { Shield, Lock, CheckCircle2, Network } from 'lucide-react';
 import { useI18n } from '../i18n-provider';
 
 const content = {
@@ -22,6 +22,11 @@ const content = {
         icon: CheckCircle2,
         title: 'Verifiable without trusting Prova',
         description: 'Counterparties, regulators, and your own legal team verify any attestation directly on-chain.',
+      },
+      {
+        icon: Network,
+        title: 'Native MCP server — Claude & Cursor ready',
+        description: 'Ask your AI IDE "what did agent X do last week?" and get back verified on-chain data. Compatible with any MCP-enabled tool.',
       },
     ],
     lines: '9 lines',
@@ -47,6 +52,11 @@ const content = {
         title: 'Verificable sin confiar en Prova',
         description: 'Contrapartes, reguladores y tu propio equipo legal verifican cualquier atestación directamente on-chain.',
       },
+      {
+        icon: Network,
+        title: 'Servidor MCP nativo — Claude y Cursor listos',
+        description: 'Pregunta a tu IDE de IA "¿qué hizo el agente X la semana pasada?" y obtén datos verificados on-chain. Compatible con cualquier herramienta MCP.',
+      },
     ],
     lines: '9 líneas',
     footer: 'Sin colas · Sin agrupamiento · Sin servidores que gestionar'
@@ -70,6 +80,11 @@ const content = {
         icon: CheckCircle2,
         title: '无需信任 Prova 即可验证',
         description: '交易对手、监管机构和你自己的法律团队都可以直接在链上验证任何证明。',
+      },
+      {
+        icon: Network,
+        title: '原生 MCP 服务器 — Claude 和 Cursor 就绪',
+        description: '向你的 AI IDE 提问"代理 X 上周做了什么？"，即可获得经过验证的链上数据。兼容任何支持 MCP 的工具。',
       },
     ],
     lines: '9 行',

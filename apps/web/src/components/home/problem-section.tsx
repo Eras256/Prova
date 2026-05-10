@@ -5,7 +5,7 @@ const content = {
   EN: {
     sectionTitle: 'The problem',
     dateStamp: 'May 2026 · Solana mainnet',
-    headline: ['24,000 AI agents are', 'live on Solana.', 'Not one can prove', 'what it did yesterday.'],
+    headline: ['15 million AI agent', 'transactions on Solana.', 'Not one leaves a', 'verifiable trail.'],
     problems: [
       {
         n: '01',
@@ -19,15 +19,15 @@ const content = {
       },
       {
         n: '03',
-        title: 'Regulators are already writing the rules',
-        description: 'EU AI Act, MetaComp KYA, and the next round of US state-level frameworks all require operator-side accountability. "We have logs" stops being an answer in 2026.',
+        title: 'Identity ≠ accountability',
+        description: 'Solana Agent Registry (March 2026) gives agents an on-chain identity. But identity alone does not prove what an agent did. You still need a verifiable record of every action.',
       },
     ]
   },
   ES: {
     sectionTitle: 'El problema',
     dateStamp: 'Mayo 2026 · Mainnet de Solana',
-    headline: ['24,000 agentes de IA están', 'en vivo en Solana.', 'Ni uno solo puede probar', 'lo que hizo ayer.'],
+    headline: ['15 millones de transacciones', 'de agentes de IA en Solana.', 'Ninguna deja un', 'rastro verificable.'],
     problems: [
       {
         n: '01',
@@ -41,15 +41,15 @@ const content = {
       },
       {
         n: '03',
-        title: 'Los reguladores ya están escribiendo las reglas',
-        description: 'El EU AI Act, MetaComp KYA y los frameworks estatales en EE.UU. requieren responsabilidad del operador. "Tenemos logs" dejará de ser una respuesta en 2026.',
+        title: 'Identidad ≠ responsabilidad',
+        description: 'El Agent Registry de Solana (marzo 2026) da a los agentes una identidad on-chain. Pero la identidad sola no prueba qué hizo el agente. Aún necesitas un registro verificable de cada acción.',
       },
     ]
   },
   ZH: {
     sectionTitle: '面临的问题',
     dateStamp: '2026年5月 · Solana 主网',
-    headline: ['有 24,000 个 AI 代理', '在 Solana 上活跃。', '但没有一个能证明', '它昨天做了什么。'],
+    headline: ['Solana 上有 1500 万笔', 'AI 代理交易。', '但没有一笔留下', '可验证的轨迹。'],
     problems: [
       {
         n: '01',
@@ -63,8 +63,8 @@ const content = {
       },
       {
         n: '03',
-        title: '监管机构已经开始制定规则',
-        description: '欧盟 AI 法案、MetaComp KYA 和下一轮美国州级框架都要求操作员端负责任。“我们有日志”在2026年将不再是一个可接受的回答。',
+        title: '身份 ≠ 问责',
+        description: 'Solana Agent Registry（2026年3月）赋予代理链上身份。但仅凭身份无法证明代理做了什么。你仍然需要每一项操作的可验证记录。',
       },
     ]
   }

@@ -19,7 +19,7 @@ prova_program = "G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Devnet"
+cluster = "Localnet"
 wallet = "~/.config/solana/prova-deployer.json"
 
 [scripts]
