@@ -80,6 +80,25 @@ export function useLiveAttestations(maxItems = 10): {
   return { attestations, total, connected };
 }
 
+async function fetchTransactionsChunked(
+  connection: Connection,
+  signatures: string[],
+  chunkSize = 8,
+  delayMs = 400
+) {
+  const results: (Awaited<ReturnType<Connection['getTransaction']>>)[] = [];
+  for (let i = 0; i < signatures.length; i += chunkSize) {
+    if (i > 0) await new Promise((r) => setTimeout(r, delayMs));
+    const chunk = signatures.slice(i, i + chunkSize);
+    const txs = await connection.getTransactions(chunk, {
+      commitment: 'confirmed',
+      maxSupportedTransactionVersion: 0,
+    });
+    results.push(...txs);
+  }
+  return results;
+}
+
 // Histórico: lee las últimas N transacciones que tocaron el programa y extrae eventos
 export function useRecentAttestations(limit = 25): {
   attestations: (AttestationIssued & { txSignature: string; slot: number })[];
@@ -99,9 +118,9 @@ export function useRecentAttestations(limit = 25): {
       setError(null);
       try {
         const sigs = await connection.getSignaturesForAddress(PROGRAM_ID, { limit }, 'confirmed');
-        const txs = await connection.getTransactions(
-          sigs.map((s) => s.signature),
-          { commitment: 'confirmed', maxSupportedTransactionVersion: 0 }
+        const txs = await fetchTransactionsChunked(
+          connection,
+          sigs.map((s) => s.signature)
         );
 
         const out: (AttestationIssued & { txSignature: string; slot: number })[] = [];
@@ -140,8 +159,8 @@ export function useAttestationCount(): { count: number | null; loading: boolean 
     let cancelled = false;
     (async () => {
       try {
-        // Approximación: cuenta firmas que tocaron el programa (con un límite alto)
-        const sigs = await connection.getSignaturesForAddress(PROGRAM_ID, { limit: 1000 });
+        // Approximación: cuenta firmas que tocaron el programa
+        const sigs = await connection.getSignaturesForAddress(PROGRAM_ID, { limit: 100 });
         if (!cancelled) setCount(sigs.length);
       } catch {
         if (!cancelled) setCount(null);
@@ -353,9 +372,9 @@ export function useAgentAttestations(agentPda: PublicKey | null, limit = 25): {
       try {
         // Las atestaciones tocan la PDA del agente (account = mut), así que filtramos por ella.
         const sigs = await connection.getSignaturesForAddress(agentPda, { limit }, 'confirmed');
-        const txs = await connection.getTransactions(
-          sigs.map((s) => s.signature),
-          { commitment: 'confirmed', maxSupportedTransactionVersion: 0 }
+        const txs = await fetchTransactionsChunked(
+          connection,
+          sigs.map((s) => s.signature)
         );
         const out: (AttestationIssued & { txSignature: string; slot: number })[] = [];
         txs.forEach((tx, i) => {
