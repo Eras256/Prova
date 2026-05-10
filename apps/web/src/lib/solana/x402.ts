@@ -57,10 +57,10 @@ export function isUnlocked(resourceId: string): boolean {
 
 export async function payX402(
   connection: Connection,
-  wallet: WalletContextState,
+  wallet: { publicKey: PublicKey | null; signTransaction?: (tx: Transaction) => Promise<Transaction> } | null,
   resourceId: string
 ): Promise<X402Receipt> {
-  if (!wallet.publicKey || !wallet.signTransaction) {
+  if (!wallet || !wallet.publicKey || !wallet.signTransaction) {
     throw new Error('Wallet not connected');
   }
 

@@ -8,6 +8,7 @@ import { Lock, Loader2, X, Printer, ExternalLink, Wallet } from 'lucide-react';
 import { payX402, getReceipt, type X402Receipt, X402_DISPLAY_PRICE, X402_LAMPORTS, X402_TREASURY } from '@/lib/solana/x402';
 import { explorerTxUrl, NETWORK } from '@/lib/solana/constants';
 import { shortPubkey } from '@/lib/solana/events';
+import { usePrivyAnchorWallet } from '@/lib/solana/hooks';
 import { useI18n } from '../i18n-provider';
 
 const content = {
@@ -86,7 +87,9 @@ export function ForensicExport({
   const t = content[lang];
   const { connection } = useConnection();
   const wallet = useWallet();
+  const privyWallet = usePrivyAnchorWallet();
   const { setVisible: openWalletModal } = useWalletModal();
+  const activeWallet = wallet.publicKey ? wallet : privyWallet;
 
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -112,14 +115,14 @@ export function ForensicExport({
   const unlocked = receipt !== null;
 
   const handlePay = async () => {
-    if (!wallet.publicKey) {
+    if (!activeWallet?.publicKey) {
       openWalletModal(true);
       return;
     }
     setPaying(true);
     setError(null);
     try {
-      const r = await payX402(connection, wallet, resourceId);
+      const r = await payX402(connection, activeWallet as any, resourceId);
       setReceipt(r);
       setOpen(false);
       window.open(printPath, '_blank', 'noopener,noreferrer');
@@ -192,8 +195,8 @@ export function ForensicExport({
                 <span className="font-pixel text-[11px] uppercase tracking-wider text-foreground">{NETWORK}</span>
               </Row>
               <Row label={t.wallet}>
-                {wallet.publicKey ? (
-                  <span className="font-mono text-xs text-foreground">{shortPubkey(wallet.publicKey, 4, 4)}</span>
+                {activeWallet?.publicKey ? (
+                  <span className="font-mono text-xs text-foreground">{shortPubkey(activeWallet.publicKey, 4, 4)}</span>
                 ) : (
                   <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                     <Wallet className="h-3.5 w-3.5" /> {t.notConnected}
@@ -215,7 +218,7 @@ export function ForensicExport({
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t.confirming}
                   </>
-                ) : !wallet.publicKey ? (
+                ) : !activeWallet?.publicKey ? (
                   <>
                     <Wallet className="mr-2 h-4 w-4" />
                     {t.connectWallet}

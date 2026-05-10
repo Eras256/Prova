@@ -27,7 +27,7 @@ function networkToPrivyChain(
 
 // Envuelve el embedded wallet de Privy en la interfaz que espera Anchor (publicKey + sign(All)Transactions).
 // Privy firma serializando a Uint8Array, así que serializamos antes y deserializamos al recibir el resultado.
-function usePrivyAnchorWallet() {
+export function usePrivyAnchorWallet() {
   const { wallets } = usePrivySolanaWallets();
   const { signTransaction: privySign } = usePrivySignTransaction();
 
