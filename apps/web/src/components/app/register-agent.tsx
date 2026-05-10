@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useEffect, useState } from 'react';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { usePrivy, useConnectWallet } from '@privy-io/react-auth';
 import {
   useCreateWallet as useCreateSolanaWallet,
@@ -40,7 +40,10 @@ type Step = 'connect' | 'generate' | 'review' | 'register' | 'success';
 export function RegisterAgent() {
   const wallet = useWallet();
   const { setVisible: openWalletModal } = useWalletModal();
+  const { connection } = useConnection();
   const { program, readOnly } = useProvaProgram();
+  const [airdropping, setAirdropping] = useState(false);
+  const [balanceLamports, setBalanceLamports] = useState<number | null>(null);
 
   const { authenticated, user, login } = usePrivy();
   const { connectWallet } = useConnectWallet();
@@ -89,6 +92,46 @@ export function RegisterAgent() {
         : result
           ? 'success'
           : 'register';
+
+  // Lee el balance del operator para detectar cuando hace falta airdrop.
+  useEffect(() => {
+    if (!activePubkey) {
+      setBalanceLamports(null);
+      return;
+    }
+    let cancelled = false;
+    connection
+      .getBalance(activePubkey, 'confirmed')
+      .then((b) => {
+        if (!cancelled) setBalanceLamports(b);
+      })
+      .catch(() => {
+        if (!cancelled) setBalanceLamports(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [connection, activePubkey, result, revokeTx]);
+
+  const airdrop = async () => {
+    if (!activePubkey || NETWORK !== 'devnet') return;
+    setError(null);
+    setAirdropping(true);
+    try {
+      const sig = await connection.requestAirdrop(activePubkey, LAMPORTS_PER_SOL);
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+      await connection.confirmTransaction(
+        { signature: sig, blockhash, lastValidBlockHeight },
+        'confirmed'
+      );
+      const b = await connection.getBalance(activePubkey, 'confirmed');
+      setBalanceLamports(b);
+    } catch (e) {
+      setError(parseProgramError(e));
+    } finally {
+      setAirdropping(false);
+    }
+  };
 
   const provisionPrivyWallet = async () => {
     setError(null);
@@ -232,12 +275,43 @@ export function RegisterAgent() {
                     <span className="bg-primary/10 px-2 py-0.5 font-pixel text-[10px] text-primary">Privy Embedded Wallet</span>
                   </div>
                   {activePubkey ? (
-                    <p className="font-mono text-[11px] text-muted-foreground">
-                      Solana address: <span className="break-all text-foreground">{activePubkey.toBase58()}</span>
-                      {readOnly && (
-                        <span className="ml-2 text-destructive">(signer not ready — log out and back in to provision wallet)</span>
+                    <div className="space-y-1.5">
+                      <p className="font-mono text-[11px] text-muted-foreground">
+                        Solana address: <span className="break-all text-foreground">{activePubkey.toBase58()}</span>
+                        {readOnly && (
+                          <span className="ml-2 text-destructive">(signer not ready — log out and back in to provision wallet)</span>
+                        )}
+                      </p>
+                      {NETWORK === 'devnet' && (
+                        <div className="flex items-center gap-3">
+                          <p className="font-mono text-[11px] text-muted-foreground">
+                            Balance:{' '}
+                            <span className={balanceLamports !== null && balanceLamports > 0 ? 'text-foreground' : 'text-destructive'}>
+                              {balanceLamports !== null
+                                ? `${(balanceLamports / LAMPORTS_PER_SOL).toFixed(4)} SOL`
+                                : '…'}
+                            </span>
+                          </p>
+                          {(balanceLamports === 0 || (balanceLamports !== null && balanceLamports < 0.01 * LAMPORTS_PER_SOL)) && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={airdrop}
+                              disabled={airdropping}
+                              className="gap-2 font-mono text-[10px] uppercase tracking-wider"
+                            >
+                              {airdropping ? (
+                                <>
+                                  <Loader2 className="h-3 w-3 animate-spin" /> Airdropping…
+                                </>
+                              ) : (
+                                <>Airdrop 1 SOL (devnet)</>
+                              )}
+                            </Button>
+                          )}
+                        </div>
                       )}
-                    </p>
+                    </div>
                   ) : (
                     <div className="space-y-2">
                       <p className="font-mono text-[11px] text-destructive">
