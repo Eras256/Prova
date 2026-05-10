@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { AttestationBuilder } from '@prova/sdk';
+import { AttestationBuilder } from 'prova-agent-sdk';
 import { ProvaError, AgentNotFoundError, BatchLimitExceededError, AgentRevokedError, InvalidSignatureError, UnauthorizedError } from '@prova/core';
 import { ActionTypeSchema } from '@prova/core';
 
@@ -25,13 +25,11 @@ describe('AttestationBuilder integration', () => {
   });
 
   it('builder throws on missing actionType', () => {
-    const { AttestationBuilder: AB } = await import('@prova/sdk');
-    expect(() => new AB().setPayload({}).build()).toThrow('actionType is required');
+    expect(() => new AttestationBuilder().setPayload({}).build()).toThrow('actionType is required');
   });
 
   it('builder throws on missing payload', () => {
-    const { AttestationBuilder: AB } = await import('@prova/sdk');
-    expect(() => new AB().setActionType('Transaction').build()).toThrow('payload is required');
+    expect(() => new AttestationBuilder().setActionType('Transaction').build()).toThrow('payload is required');
   });
 });
 

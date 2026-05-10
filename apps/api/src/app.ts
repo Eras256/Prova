@@ -9,6 +9,7 @@ import { premiumRouter } from './routes/premium';
 import { webhooksRouter } from './routes/webhooks';
 import { healthRouter } from './routes/health';
 import { adminRouter } from './routes/admin';
+import { statsRouter } from './routes/stats';
 import { errorHandler } from './middleware/error-handler';
 import { rateLimiter } from './middleware/rate-limiter';
 
@@ -42,6 +43,7 @@ app.use('/api/*', rateLimiter());
 app.onError(errorHandler);
 
 app.route('/api/v1/health', healthRouter);
+app.route('/api/v1/stats', statsRouter);
 app.route('/api/v1/attestations', attestationsRouter);
 app.route('/api/v1/agents', agentsRouter);
 app.route('/api/v1/premium', premiumRouter);

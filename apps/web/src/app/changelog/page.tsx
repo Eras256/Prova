@@ -26,7 +26,6 @@ const releases = [
     notes: [
       'Anchor program deployed on devnet',
       'TypeScript SDK — prova-agent-sdk on npm',
-      'Rust SDK — prova-sdk on crates.io',
       'Forensic Explorer (beta)',
       'Hono REST API deployed on Fly.io',
       'Helius polling indexer',

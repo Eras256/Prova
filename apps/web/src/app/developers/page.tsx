@@ -4,7 +4,7 @@ import { DevelopersContent } from './developers-content';
 export const metadata: Metadata = {
   title: 'Developers — ship your first attestation in 2 minutes',
   description:
-    'TypeScript and Rust SDKs, full REST API, copy-paste examples. Everything you need to wrap an AI agent action in a signed, on-chain receipt.',
+    'TypeScript SDK, full REST API, copy-paste examples. Everything you need to wrap an AI agent action in a signed, on-chain receipt.',
   alternates: { canonical: '/developers' },
 };
 

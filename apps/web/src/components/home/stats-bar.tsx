@@ -1,34 +1,100 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n-provider';
 
-const content = {
-  EN: [
-    { value: '< 1s', label: 'Finality', sub: 'On-chain confirmation' },
-    { value: '$0.0005', label: 'Per receipt', sub: '500× cheaper than EVM' },
-    { value: '10,247', label: 'Attestations', sub: 'Across pilot agents' },
-    { value: '52', label: 'Live agents', sub: 'On Devnet' },
-    { value: 'Apache 2.0', label: 'Source', sub: 'Audit it yourself' },
-  ],
-  ES: [
-    { value: '< 1s', label: 'Finalidad', sub: 'Confirmación on-chain' },
-    { value: '$0.0005', label: 'Por recibo', sub: '500× más barato que EVM' },
-    { value: '10,247', label: 'Atestaciones', sub: 'En agentes piloto' },
-    { value: '52', label: 'Agentes en vivo', sub: 'En Devnet' },
-    { value: 'Apache 2.0', label: 'Fuente', sub: 'Audítalo tú mismo' },
-  ],
-  ZH: [
-    { value: '< 1s', label: '最终确认', sub: '链上确认' },
-    { value: '$0.0005', label: '单据成本', sub: '比 EVM 便宜 500 倍' },
-    { value: '10,247', label: '证明总数', sub: '跨越多个试点代理' },
-    { value: '52', label: '活跃代理', sub: '在 Devnet 上' },
-    { value: 'Apache 2.0', label: '源码', sub: '自行审计' },
-  ]
+const API_URL = process.env.NEXT_PUBLIC_PROVA_API_URL ?? 'https://prova-api.fly.dev';
+
+interface Counts {
+  attestations: number;
+  agents: number;
+}
+
+const labels = {
+  EN: {
+    finalityV: '< 1s',
+    finalityL: 'Finality',
+    finalityS: 'On-chain confirmation',
+    feeV: '$0.0005',
+    feeL: 'Per receipt',
+    feeS: '500× cheaper than EVM',
+    attestL: 'Attestations',
+    attestS: 'Indexed on devnet',
+    agentL: 'Live agents',
+    agentS: 'Registered on devnet',
+    sourceV: 'Apache 2.0',
+    sourceL: 'Source',
+    sourceS: 'Audit it yourself',
+  },
+  ES: {
+    finalityV: '< 1s',
+    finalityL: 'Finalidad',
+    finalityS: 'Confirmación on-chain',
+    feeV: '$0.0005',
+    feeL: 'Por recibo',
+    feeS: '500× más barato que EVM',
+    attestL: 'Atestaciones',
+    attestS: 'Indexadas en devnet',
+    agentL: 'Agentes activos',
+    agentS: 'Registrados en devnet',
+    sourceV: 'Apache 2.0',
+    sourceL: 'Fuente',
+    sourceS: 'Audítalo tú mismo',
+  },
+  ZH: {
+    finalityV: '< 1s',
+    finalityL: '最终确认',
+    finalityS: '链上确认',
+    feeV: '$0.0005',
+    feeL: '单据成本',
+    feeS: '比 EVM 便宜 500 倍',
+    attestL: '证明总数',
+    attestS: 'devnet 上已索引',
+    agentL: '活跃代理',
+    agentS: 'devnet 上已注册',
+    sourceV: 'Apache 2.0',
+    sourceL: '源码',
+    sourceS: '自行审计',
+  },
 };
+
+async function fetchCounts(): Promise<Counts> {
+  const res = await fetch(`${API_URL}/api/v1/stats`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
 
 export function StatsBar() {
   const { lang } = useI18n();
-  const stats = content[lang];
+  const t = labels[lang];
+  const [counts, setCounts] = useState<Counts | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const c = await fetchCounts();
+        if (!cancelled) setCounts(c);
+      } catch {
+        // En caso de error, mostramos guiones en lugar de mentir.
+      }
+    }
+    load();
+    const refresh = setInterval(load, 30_000);
+    return () => {
+      cancelled = true;
+      clearInterval(refresh);
+    };
+  }, []);
+
+  const stats = [
+    { value: t.finalityV, label: t.finalityL, sub: t.finalityS },
+    { value: t.feeV, label: t.feeL, sub: t.feeS },
+    { value: counts ? counts.attestations.toLocaleString() : '—', label: t.attestL, sub: t.attestS },
+    { value: counts ? counts.agents.toLocaleString() : '—', label: t.agentL, sub: t.agentS },
+    { value: t.sourceV, label: t.sourceL, sub: t.sourceS },
+  ];
+
   return (
     <section className="border-y border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -43,7 +109,7 @@ export function StatsBar() {
               <dt className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">
                 {s.label}
               </dt>
-              <dd className="font-display text-xl text-foreground sm:text-2xl">
+              <dd className="font-display text-xl text-foreground sm:text-2xl tabular-nums">
                 {s.value}
               </dd>
               <p className="text-xs text-muted-foreground">{s.sub}</p>

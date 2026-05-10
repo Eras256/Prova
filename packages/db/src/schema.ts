@@ -115,6 +115,14 @@ export const webhookDeliveries = pgTable(
   })
 );
 
+// Cursor del indexer — permite reanudar tras reinicio sin reindexar toda la historia.
+export const indexerState = pgTable('indexer_state', {
+  programId: text('program_id').primaryKey(),
+  lastSignature: text('last_signature'),
+  lastSlot: bigint('last_slot', { mode: 'number' }),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 export const agentsRelations = relations(agents, ({ many }) => ({
   attestations: many(attestations),
 }));

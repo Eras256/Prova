@@ -8,13 +8,12 @@ const content = {
   EN: {
     tag: 'Developers',
     headline: ['Wrap an agent action.', 'Get a receipt that', 'survives anything.'],
-    desc: 'Free, open-source SDKs for TypeScript and Rust. No proprietary runtime, no vendor lock-in — a thin wrapper around the Solana Attestation Service.',
+    desc: 'Free, open-source TypeScript SDK. No proprietary runtime, no vendor lock-in — a thin wrapper around the Solana Attestation Service.',
     quickStart: 'Open the Quick Start',
     github: 'Star on GitHub',
     installTag: 'Install',
-    installTitle: 'Same surface across both stacks.',
+    installTitle: 'Five lines from npm to on-chain receipt.',
     tsTag: 'TypeScript / JavaScript',
-    rustTag: 'Rust',
     resources: [
       {
         n: '01',
@@ -36,22 +35,21 @@ const content = {
         n: '03',
         icon: Puzzle,
         title: 'SDK reference',
-        desc: 'TypeScript and Rust. Same primitives, same guarantees.',
+        desc: 'On-chain ProvaClient + REST ProvaApiClient. Two clients, same surface.',
         href: '/developers/sdks',
-        cta: 'View SDKs',
+        cta: 'View SDK',
       },
     ]
   },
   ES: {
     tag: 'Desarrolladores',
     headline: ['Envuelve una acción del agente.', 'Obtén un recibo que', 'sobreviva a cualquier cosa.'],
-    desc: 'SDKs gratuitos y de código abierto para TypeScript y Rust. Sin tiempo de ejecución propietario, sin ataduras a proveedores — un envoltorio ligero alrededor del Servicio de Atestación de Solana.',
+    desc: 'SDK gratuito y de código abierto para TypeScript. Sin tiempo de ejecución propietario, sin ataduras a proveedores — un envoltorio ligero alrededor del Servicio de Atestación de Solana.',
     quickStart: 'Abrir el Inicio Rápido',
     github: 'Destacar en GitHub',
     installTag: 'Instalar',
-    installTitle: 'La misma superficie en ambos stacks.',
+    installTitle: 'Cinco líneas desde npm hasta el recibo on-chain.',
     tsTag: 'TypeScript / JavaScript',
-    rustTag: 'Rust',
     resources: [
       {
         n: '01',
@@ -73,22 +71,21 @@ const content = {
         n: '03',
         icon: Puzzle,
         title: 'Referencia del SDK',
-        desc: 'TypeScript y Rust. Mismas primitivas, mismas garantías.',
+        desc: 'ProvaClient on-chain + ProvaApiClient REST. Dos clientes, misma superficie.',
         href: '/developers/sdks',
-        cta: 'Ver SDKs',
+        cta: 'Ver SDK',
       },
     ]
   },
   ZH: {
     tag: '开发者',
     headline: ['包装代理操作。', '获得一个', '在任何情况下都能存活的收据。'],
-    desc: '免费、开源的 TypeScript 和 Rust SDK。无专有运行环境，无供应商锁定——这只是一个对 Solana 证明服务的轻量封装。',
+    desc: '免费、开源的 TypeScript SDK。无专有运行环境，无供应商锁定——这只是一个对 Solana 证明服务的轻量封装。',
     quickStart: '打开快速入门',
     github: '在 GitHub 上标星',
     installTag: '安装',
-    installTitle: '两种技术栈提供相同的接口。',
+    installTitle: '从 npm 到链上收据只需五行。',
     tsTag: 'TypeScript / JavaScript',
-    rustTag: 'Rust',
     resources: [
       {
         n: '01',
@@ -110,7 +107,7 @@ const content = {
         n: '03',
         icon: Puzzle,
         title: 'SDK 参考',
-        desc: 'TypeScript 和 Rust。相同的原语，相同的保证。',
+        desc: '链上 ProvaClient + REST ProvaApiClient。两个客户端，相同的接口。',
         href: '/developers/sdks',
         cta: '查看 SDK',
       },
@@ -176,21 +173,12 @@ export function DevelopersContent() {
           <h2 className="mt-3 font-display text-xl uppercase text-foreground sm:text-3xl">
             {t.installTitle}
           </h2>
-          <div className="mt-8 grid gap-px bg-border md:grid-cols-2">
-            <div className="bg-background p-6">
-              <div className="flex items-center justify-between">
-                <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.tsTag}</span>
-                <span className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">Node 18+</span>
-              </div>
-              <pre className="mt-3 font-mono text-sm text-foreground">npm install prova-agent-sdk</pre>
+          <div className="mt-8 border border-border bg-background p-6">
+            <div className="flex items-center justify-between">
+              <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.tsTag}</span>
+              <span className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">Node 18+ · v0.1.5 · Apache 2.0</span>
             </div>
-            <div className="bg-background p-6">
-              <div className="flex items-center justify-between">
-                <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.rustTag}</span>
-                <span className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">1.75+</span>
-              </div>
-              <pre className="mt-3 font-mono text-sm text-foreground">{'prova-sdk = "0.1"'}</pre>
-            </div>
+            <pre className="mt-3 font-mono text-sm text-foreground">npm install prova-agent-sdk</pre>
           </div>
         </div>
       </div>

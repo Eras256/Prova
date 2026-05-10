@@ -77,7 +77,7 @@ const content = {
   }
 };
 
-const CODE = `import { ProvaClient, AttestationBuilder } from '@prova/sdk';
+const CODE = `import { ProvaClient, AttestationBuilder } from 'prova-agent-sdk';
 
 const client = new ProvaClient({ rpcUrl, agentKeypair });
 

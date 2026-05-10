@@ -14,8 +14,8 @@ test.describe('Quick Start page', () => {
     }
   });
 
-  test('shows pnpm install command', async ({ page }) => {
+  test('shows npm install command', async ({ page }) => {
     await page.goto('/developers/quick-start');
-    await expect(page.getByText('pnpm add @prova/sdk')).toBeVisible();
+    await expect(page.getByText('npm install prova-agent-sdk')).toBeVisible();
   });
 });

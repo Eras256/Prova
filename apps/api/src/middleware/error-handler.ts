@@ -1,5 +1,6 @@
 import type { ErrorHandler } from 'hono';
 import { HTTPException } from 'hono/http-exception';
+import * as Sentry from '@sentry/node';
 import { ProvaError } from '@prova/core';
 
 export const errorHandler: ErrorHandler = (err, c) => {
@@ -24,6 +25,8 @@ export const errorHandler: ErrorHandler = (err, c) => {
     return c.json({ error: { code: err.code, message: err.message } }, status);
   }
 
+  // Errores no esperados — reportar a Sentry y a stdout para diagnóstico.
+  Sentry.captureException(err, { extra: { path: c.req.path, method: c.req.method } });
   console.error('Unhandled error:', err);
   return c.json({ error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } }, 500);
 };

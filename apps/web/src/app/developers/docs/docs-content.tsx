@@ -22,7 +22,6 @@ const content = {
         title: 'Integration',
         items: [
           { icon: Terminal, name: 'TypeScript SDK Reference', href: '/developers/sdks' },
-          { icon: Terminal, name: 'Rust SDK Reference', href: '/developers/sdks' },
           { icon: FileJson, name: 'REST API Endpoints', href: '/developers/api' },
         ]
       },
@@ -56,7 +55,6 @@ const content = {
         title: 'Integración',
         items: [
           { icon: Terminal, name: 'Referencia del SDK de TypeScript', href: '/developers/sdks' },
-          { icon: Terminal, name: 'Referencia del SDK de Rust', href: '/developers/sdks' },
           { icon: FileJson, name: 'Endpoints de la API REST', href: '/developers/api' },
         ]
       },
@@ -90,7 +88,6 @@ const content = {
         title: '集成',
         items: [
           { icon: Terminal, name: 'TypeScript SDK 参考', href: '/developers/sdks' },
-          { icon: Terminal, name: 'Rust SDK 参考', href: '/developers/sdks' },
           { icon: FileJson, name: 'REST API 接口', href: '/developers/api' },
         ]
       },

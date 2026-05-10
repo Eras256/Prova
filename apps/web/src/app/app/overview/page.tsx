@@ -13,20 +13,22 @@ interface Stats {
 }
 
 async function fetchStats(): Promise<Stats> {
-  const [attsRes, agentsRes] = await Promise.all([
-    fetch(`${API_URL}/api/v1/attestations?limit=1`),
-    fetch(`${API_URL}/api/v1/attestations?limit=1&offset=0`),
+  const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+  const [statsRes, weekRes] = await Promise.all([
+    fetch(`${API_URL}/api/v1/stats`),
+    fetch(`${API_URL}/api/v1/attestations?limit=1&from=${weekAgo}`),
   ]);
 
-  const attsData = attsRes.ok ? await attsRes.json() : { pagination: { total: 0 } };
-
-  const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
-  const weekRes = await fetch(`${API_URL}/api/v1/attestations?limit=1&from=${weekAgo}`);
-  const weekData = weekRes.ok ? await weekRes.json() : { pagination: { total: 0 } };
+  const statsData = statsRes.ok
+    ? ((await statsRes.json()) as { attestations: number; agents: number })
+    : { attestations: 0, agents: 0 };
+  const weekData = weekRes.ok
+    ? ((await weekRes.json()) as { pagination: { total: number } })
+    : { pagination: { total: 0 } };
 
   return {
-    totalAttestations: attsData.pagination?.total ?? 0,
-    activeAgents: 0,
+    totalAttestations: statsData.attestations,
+    activeAgents: statsData.agents,
     week: weekData.pagination?.total ?? 0,
   };
 }

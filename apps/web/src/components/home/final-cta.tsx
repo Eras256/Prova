@@ -60,8 +60,8 @@ export function FinalCta() {
             </div>
             <div className="flex items-center gap-2 px-5 py-4 font-mono text-sm">
               <span className="text-muted-foreground">$</span>
-              <span className="text-foreground">pnpm add</span>
-              <span className="text-primary">@prova/sdk</span>
+              <span className="text-foreground">npm install</span>
+              <span className="text-primary">prova-agent-sdk</span>
               <span className="ml-1 inline-block h-4 w-[7px] animate-blink bg-primary align-middle" aria-hidden />
             </div>
           </div>
