@@ -70,7 +70,7 @@ export interface ProvaApiClientConfig {
  *
  * @example
  * ```typescript
- * const api = new ProvaApiClient({ apiUrl: 'https://api.prova.io', apiKey: 'prova_...' });
+ * const api = new ProvaApiClient({ apiUrl: 'https://prova-api.fly.dev', apiKey: 'prova_...' });
  * const { data, pagination } = await api.listAttestations({ agentPda: '...', limit: 10 });
  * ```
  */

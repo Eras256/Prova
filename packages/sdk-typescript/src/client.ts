@@ -403,24 +403,24 @@ export class ProvaClient {
     );
     const program = new Program(idl as Idl, provider);
 
-    const ed25519Ixs = entries.map((entry) => {
-      const sig = nacl.sign.detached(entry.actionHash, this.agentKeypair.secretKey);
-      return Ed25519Program.createInstructionWithPublicKey({
+    const sigs = entries.map((entry) =>
+      nacl.sign.detached(entry.actionHash, this.agentKeypair.secretKey)
+    );
+
+    const ed25519Ixs = entries.map((entry, i) =>
+      Ed25519Program.createInstructionWithPublicKey({
         publicKey: this.agentKeypair.publicKey.toBytes(),
         message: entry.actionHash,
-        signature: sig,
-      });
-    });
+        signature: sigs[i]!,
+      })
+    );
 
-    const attestationInputs = entries.map((entry) => {
-      const sig = nacl.sign.detached(entry.actionHash, this.agentKeypair.secretKey);
-      return {
-        actionType: actionTypeVariant(entry.actionType ?? 'Transaction'),
-        actionHash: Array.from(entry.actionHash),
-        privacyMode: entry.privacyMode ?? false,
-        signature: Array.from(sig),
-      };
-    });
+    const attestationInputs = entries.map((entry, i) => ({
+      actionType: actionTypeVariant(entry.actionType ?? 'Transaction'),
+      actionHash: Array.from(entry.actionHash),
+      privacyMode: entry.privacyMode ?? false,
+      signature: Array.from(sigs[i]!),
+    }));
 
     const methods = program.methods as unknown as Record<
       string,

@@ -4,7 +4,7 @@ import { HealthServer } from './health';
 async function main() {
   const indexer = new IndexerService({
     heliusApiKey: process.env['HELIUS_API_KEY']!,
-    programId: process.env['SOLANA_PROGRAM_ID'] ?? 'ProvaATTESTxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    programId: process.env['SOLANA_PROGRAM_ID'] ?? 'G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1',
     databaseUrl: process.env['DATABASE_URL']!,
   });
 
