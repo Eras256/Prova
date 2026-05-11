@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Shield, Activity, TrendingUp, AlertTriangle, Loader2 } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_PROVA_API_URL ?? 'https://prova-api.fly.dev';
+const API_URL = process.env.NEXT_PUBLIC_PROVA_API_URL;
+if (!API_URL && typeof window !== 'undefined') {
+  console.warn('NEXT_PUBLIC_PROVA_API_URL is not set. Falling back to default Fly.io deployment.');
+}
+const SAFE_API_URL = API_URL ?? 'https://prova-api.fly.dev';
 
 interface Stats {
   totalAttestations: number;
@@ -15,8 +19,8 @@ interface Stats {
 async function fetchStats(): Promise<Stats> {
   const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
   const [statsRes, weekRes] = await Promise.all([
-    fetch(`${API_URL}/api/v1/stats`),
-    fetch(`${API_URL}/api/v1/attestations?limit=1&from=${weekAgo}`),
+    fetch(`${SAFE_API_URL}/api/v1/stats`),
+    fetch(`${SAFE_API_URL}/api/v1/attestations?limit=1&from=${weekAgo}`),
   ]);
 
   const statsData = statsRes.ok

@@ -11,7 +11,10 @@ export const errorHandler: ErrorHandler = (err, c) => {
     );
   }
 
-  if (err instanceof ProvaError) {
+  // Comprobar si es un ProvaError por instance o por 'name' en caso de mismatch de modulo
+  if (err instanceof ProvaError || (err as Error).name === 'ProvaError') {
+    const code = (err as any).code;
+    const message = (err as any).message;
     const statusMap: Record<string, number> = {
       AGENT_NOT_FOUND: 404,
       ATTESTATION_NOT_FOUND: 404,
@@ -21,8 +24,8 @@ export const errorHandler: ErrorHandler = (err, c) => {
       BATCH_LIMIT_EXCEEDED: 422,
     };
 
-    const status = (statusMap[err.code] ?? 500) as 400 | 401 | 404 | 422 | 500;
-    return c.json({ error: { code: err.code, message: err.message } }, status);
+    const status = (statusMap[code] ?? 500) as 400 | 401 | 404 | 422 | 500;
+    return c.json({ error: { code: code, message: message } }, status);
   }
 
   // Errores no esperados — reportar a Sentry y a stdout para diagnóstico.

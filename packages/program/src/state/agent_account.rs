@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[account]
+#[derive(InitSpace)]
 pub struct AgentAccount {
     pub operator: Pubkey,
     pub agent_id: [u8; 32],
@@ -12,6 +13,6 @@ pub struct AgentAccount {
 }
 
 impl AgentAccount {
-    pub const LEN: usize = 8 + 32 + 32 + 32 + 8 + 8 + 1 + 1;
+    pub const LEN: usize = 8 + Self::INIT_SPACE;
     pub const SEED: &'static [u8] = b"prova_agent";
 }

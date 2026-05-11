@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { Keypair } from '@solana/web3.js';
+import { PublicKey, Keypair } from '@solana/web3.js';
+import { usePrivy } from '@privy-io/react-auth';
+import { useWallets as usePrivySolanaWallets } from '@privy-io/react-auth/solana';
 import { Button } from '@prova/ui';
 import {
   ArrowRight,
@@ -119,7 +121,13 @@ export function IssueAttestation() {
   const wallet = useWallet();
   const { setVisible: openWalletModal } = useWalletModal();
   const { program, readOnly } = useProvaProgram();
-  const operatorBase58 = wallet.publicKey?.toBase58() ?? null;
+  const { authenticated } = usePrivy();
+  const { wallets: solanaWallets } = usePrivySolanaWallets();
+  const embeddedWallet = solanaWallets.find(w => w.standardWallet?.name === 'Privy');
+  const privyPubkey = embeddedWallet ? new PublicKey(embeddedWallet.address) : null;
+  const activePubkey = wallet.publicKey || privyPubkey;
+  
+  const operatorBase58 = activePubkey?.toBase58() ?? null;
   const { data: agent, loading: loadingAgent } = useAgentAccount(operatorBase58);
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -186,14 +194,14 @@ export function IssueAttestation() {
   };
 
   const issue = async () => {
-    if (!program || readOnly || !wallet.publicKey || !agentKeypair || !actionHash) return;
+    if (!program || readOnly || !activePubkey || !agentKeypair || !actionHash) return;
     setIssuing(true);
     setError(null);
     setResult(null);
     try {
       const r = await issueAttestation({
         program,
-        operator: wallet.publicKey,
+        operator: activePubkey,
         agentKeypair,
         actionHash,
         actionType,
@@ -207,6 +215,8 @@ export function IssueAttestation() {
     }
   };
 
+  const isConnected = wallet.connected || authenticated;
+
   const canIssue =
     !!agentKeypair &&
     !!actionHash &&
@@ -214,7 +224,7 @@ export function IssueAttestation() {
     !agent.revoked &&
     !readOnly &&
     !issuing &&
-    wallet.connected;
+    isConnected;
 
   return (
     <div className="min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
@@ -240,7 +250,7 @@ export function IssueAttestation() {
         </div>
 
         {/* Pre-checks */}
-        {!wallet.connected && (
+        {!isConnected && (
           <section className="mt-16 border border-border bg-background p-6">
             <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.step0.tag}</p>
             <h2 className="mt-2 font-display text-xl uppercase text-foreground">{t.step0.title}</h2>
@@ -251,14 +261,14 @@ export function IssueAttestation() {
           </section>
         )}
 
-        {wallet.connected && loadingAgent && (
+        {isConnected && loadingAgent && (
           <div className="mt-16 flex items-center gap-3 border border-border bg-background px-5 py-4 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
             {t.loadingAgent}
           </div>
         )}
 
-        {wallet.connected && !loadingAgent && !agent && (
+        {isConnected && !loadingAgent && !agent && (
           <section className="mt-16 border border-destructive/40 bg-destructive/5 p-6">
             <div className="flex items-center gap-2 font-pixel text-[12px] uppercase tracking-wider text-destructive">
               <Inbox className="h-4 w-4" /> {t.noAgent.tag}
@@ -274,7 +284,7 @@ export function IssueAttestation() {
           </section>
         )}
 
-        {wallet.connected && agent?.revoked && (
+        {isConnected && agent?.revoked && (
           <section className="mt-16 border border-destructive/40 bg-destructive/5 p-6">
             <div className="flex items-center gap-2 font-pixel text-[12px] uppercase tracking-wider text-destructive">
               <AlertTriangle className="h-4 w-4" /> {t.revoked.tag}
@@ -285,12 +295,12 @@ export function IssueAttestation() {
           </section>
         )}
 
-        {wallet.connected && agent && !agent.revoked && (
+        {isConnected && agent && !agent.revoked && (
           <>
             {/* Agent summary */}
             <dl className="mt-16 grid gap-px border border-border bg-border md:grid-cols-3">
               <Field label={t.agentSummary.operator}>
-                <span className="break-all font-mono text-xs text-foreground">{wallet.publicKey?.toBase58()}</span>
+                <span className="break-all font-mono text-xs text-foreground">{activePubkey?.toBase58()}</span>
               </Field>
               <Field label={t.agentSummary.pda}>
                 <Link
@@ -557,7 +567,7 @@ export function IssueAttestation() {
                   {t.anatomy[0]}<code className="text-foreground">{shortPubkey(agentKeypair.publicKey, 4, 4)}</code>{' '}
                   {t.anatomy[1]}
                   {t.anatomy.length > 2 ? t.anatomy[2] : ''}
-                  <code className="text-foreground">{wallet.publicKey && shortPubkey(wallet.publicKey, 4, 4)}</code>.
+                  <code className="text-foreground">{activePubkey && shortPubkey(activePubkey, 4, 4)}</code>.
                 </p>
               )}
             </section>
