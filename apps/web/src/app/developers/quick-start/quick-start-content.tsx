@@ -1,4 +1,5 @@
 'use client';
+import { ExternalLink } from 'lucide-react';
 import { useI18n } from '@/components/i18n-provider';
 
 const content = {
@@ -231,7 +232,15 @@ export function QuickStartContent() {
           </div>
           <div className="bg-background p-8">
             <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.apiTitle}</p>
-            <pre className="mt-3 font-mono text-sm text-foreground">https://prova-api.fly.dev</pre>
+            <a
+              href="https://prova-api.fly.dev/api/v1/health"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-3 flex items-center gap-1.5 font-mono text-sm text-foreground hover:text-primary"
+            >
+              https://prova-api.fly.dev
+              <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
+            </a>
             <p className="mt-2 font-mono text-xs text-muted-foreground">GET /api/v1/attestations</p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">GET /api/v1/agents/:id</p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">GET /api/v1/health</p>

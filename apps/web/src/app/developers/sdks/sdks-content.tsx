@@ -1,13 +1,14 @@
 'use client';
+import { ExternalLink } from 'lucide-react';
 import { useI18n } from '@/components/i18n-provider';
 
 const content = {
   EN: {
     tag: 'SDK Reference',
     headline: ['Two clients.', 'One attestation layer.'],
-    desc: 'prova-agent-sdk v0.1.5 ships two independent clients. ProvaClient writes receipts on-chain via Solana. ProvaApiClient queries the indexed data via REST — no wallet required.',
+    desc: 'prova-agent-sdk v0.1.6 ships two independent clients. ProvaClient writes receipts on-chain via Solana. ProvaApiClient queries the indexed data via REST — no wallet required.',
     install: 'npm install prova-agent-sdk',
-    version: 'v0.1.5 · Apache 2.0 · Node 18+',
+    version: 'v0.1.6 · Apache 2.0 · Node 18+',
     clientATag: 'On-chain',
     clientATitle: 'ProvaClient',
     clientADesc: 'Writes signed BehaviorAttestation accounts to Solana via the Anchor program. Requires an agent keypair and an RPC URL.',
@@ -83,9 +84,9 @@ console.log('Tamper-proof:', valid); // true`,
   ES: {
     tag: 'Referencia del SDK',
     headline: ['Dos clientes.', 'Una capa de atestación.'],
-    desc: 'prova-agent-sdk v0.1.5 incluye dos clientes independientes. ProvaClient escribe recibos on-chain en Solana. ProvaApiClient consulta los datos indexados mediante REST — sin wallet requerida.',
+    desc: 'prova-agent-sdk v0.1.6 incluye dos clientes independientes. ProvaClient escribe recibos on-chain en Solana. ProvaApiClient consulta los datos indexados mediante REST — sin wallet requerida.',
     install: 'npm install prova-agent-sdk',
-    version: 'v0.1.5 · Apache 2.0 · Node 18+',
+    version: 'v0.1.6 · Apache 2.0 · Node 18+',
     clientATag: 'On-chain',
     clientATitle: 'ProvaClient',
     clientADesc: 'Escribe cuentas BehaviorAttestation firmadas en Solana mediante el programa Anchor. Requiere un keypair del agente y una URL de RPC.',
@@ -161,9 +162,9 @@ console.log('A prueba de manipulación:', valid); // true`,
   ZH: {
     tag: 'SDK 参考',
     headline: ['两个客户端。', '一个证明层。'],
-    desc: 'prova-agent-sdk v0.1.5 包含两个独立客户端。ProvaClient 通过 Solana 将收据写入链上。ProvaApiClient 通过 REST 查询索引数据——无需钱包。',
+    desc: 'prova-agent-sdk v0.1.6 包含两个独立客户端。ProvaClient 通过 Solana 将收据写入链上。ProvaApiClient 通过 REST 查询索引数据——无需钱包。',
     install: 'npm install prova-agent-sdk',
-    version: 'v0.1.5 · Apache 2.0 · Node 18+',
+    version: 'v0.1.6 · Apache 2.0 · Node 18+',
     clientATag: '链上',
     clientATitle: 'ProvaClient',
     clientADesc: '通过 Anchor 程序将签名的 BehaviorAttestation 账户写入 Solana。需要代理密钥对和 RPC URL。',
@@ -285,7 +286,15 @@ export function SdksContent() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">{t.desc}</p>
             <div className="mt-8 border border-border bg-surface p-4">
               <pre className="font-mono text-sm text-primary/90">{t.install}</pre>
-              <p className="mt-2 font-mono text-xs text-muted-foreground">{t.version}</p>
+              <a
+                href="https://www.npmjs.com/package/prova-agent-sdk"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-2 flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-primary"
+              >
+                {t.version}
+                <ExternalLink className="h-2.5 w-2.5 shrink-0" />
+              </a>
             </div>
           </div>
         </div>

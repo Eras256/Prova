@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Button } from '@prova/ui';
-import { ArrowRight, Github, BookOpen, Code2, Puzzle } from 'lucide-react';
+import { ArrowRight, Github, BookOpen, Code2, Puzzle, ExternalLink } from 'lucide-react';
 import { useI18n } from '@/components/i18n-provider';
 
 const content = {
@@ -176,11 +176,27 @@ export function DevelopersContent() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <div className="border border-border bg-background p-6">
               <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">REST API & MCP</span>
-              <pre className="mt-3 font-mono text-sm text-foreground">https://prova-api.fly.dev</pre>
+              <a
+                href="https://prova-api.fly.dev/api/v1/health"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-3 flex items-center gap-1.5 font-mono text-sm text-foreground hover:text-primary"
+              >
+                https://prova-api.fly.dev
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
+              </a>
             </div>
             <div className="border border-border bg-background p-6">
-              <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">WebSocket Indexer</span>
-              <pre className="mt-3 font-mono text-sm text-foreground">wss://prova-indexer.fly.dev</pre>
+              <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">npm package</span>
+              <a
+                href="https://www.npmjs.com/package/prova-agent-sdk"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-3 flex items-center gap-1.5 font-mono text-sm text-foreground hover:text-primary"
+              >
+                npmjs.com/package/prova-agent-sdk
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
+              </a>
             </div>
           </div>
         </div>
@@ -193,7 +209,15 @@ export function DevelopersContent() {
           <div className="mt-8 border border-border bg-background p-6">
             <div className="flex items-center justify-between">
               <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.tsTag}</span>
-              <span className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">Node 18+ · v0.1.5 · Apache 2.0</span>
+              <a
+                href="https://www.npmjs.com/package/prova-agent-sdk"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="flex items-center gap-1 font-pixel text-[12px] uppercase tracking-wider text-muted-foreground hover:text-primary"
+              >
+                Node 18+ · v0.1.6 · Apache 2.0
+                <ExternalLink className="h-2.5 w-2.5" />
+              </a>
             </div>
             <pre className="mt-3 font-mono text-sm text-foreground">npm install prova-agent-sdk</pre>
           </div>
