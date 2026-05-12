@@ -60,7 +60,7 @@ const content = {
 export function AttestationFeed() {
   const { lang } = useI18n();
   const t = content[lang];
-  const { attestations, loading, error } = useRecentAttestations(50);
+  const { attestations, loading, error } = useRecentAttestations(20);
 
   return (
     <div className="border border-border bg-background">

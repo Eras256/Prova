@@ -151,8 +151,8 @@ export function useLiveAttestations(maxItems = 10): {
 async function fetchTransactionsChunked(
   connection: Connection,
   signatures: string[],
-  chunkSize = 8,
-  delayMs = 400
+  chunkSize = 4,
+  delayMs = 600
 ) {
   const results: (Awaited<ReturnType<Connection['getTransaction']>>)[] = [];
   for (let i = 0; i < signatures.length; i += chunkSize) {
