@@ -74,7 +74,7 @@ export function usePrivyAnchorWallet() {
       signAllTransactions: async <T extends Transaction | VersionedTransaction>(txs: T[]) =>
         Promise.all(txs.map((tx) => sign(tx))),
     };
-  }, [wallets]);
+  }, [wallets, ready]);
 }
 
 export function useProvaProgram(): { program: Program | null; readOnly: boolean } {

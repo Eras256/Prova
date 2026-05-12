@@ -13,20 +13,9 @@ import { PrivyProvider } from '@privy-io/react-auth';
 // NOTE: Full Privy wallet integration (embedded wallets + social) is roadmapped for Q3.
 // For now, Privy is email-only; wallet connections use the standard Solana Wallet Adapter.
 
-import { NETWORK } from '@/lib/solana/constants';
-
 import '@solana/wallet-adapter-react-ui/styles.css';
 
-const PRIVY_CHAIN: 'solana:mainnet' | 'solana:devnet' | 'solana:testnet' =
-  NETWORK === 'mainnet-beta'
-    ? 'solana:mainnet'
-    : NETWORK === 'testnet'
-      ? 'solana:testnet'
-      : 'solana:devnet';
-
-
 export function Providers({ children }: { children: React.ReactNode }) {
-
 
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, retry: 2 } } })
