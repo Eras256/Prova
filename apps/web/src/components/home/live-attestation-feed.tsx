@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useLiveAttestations } from '@/lib/solana/hooks';
 import { ACTION_TYPE_LABEL, shortPubkey, shortBytes, type AttestationIssued } from '@/lib/solana/events';
@@ -13,6 +14,7 @@ type Entry = {
   schema: string;
   action: string;
   ts: number;
+  txSignature?: string;
 };
 
 interface ApiAttestation {
@@ -29,13 +31,14 @@ interface ApiResponse {
   pagination: { total: number };
 }
 
-function liveToEntry(a: AttestationIssued): Entry {
+function liveToEntry(a: AttestationIssued & { txSignature: string }): Entry {
   return {
     id: `att_${shortBytes(a.actionHash, 4, 4)}`,
     agent: shortPubkey(a.agent, 4, 4),
     schema: ACTION_TYPE_LABEL[a.actionType].toLowerCase().replace(/\s+/g, '.'),
     action: a.privacyMode ? `${ACTION_TYPE_LABEL[a.actionType]} (vanish)` : ACTION_TYPE_LABEL[a.actionType],
     ts: a.timestamp ? a.timestamp * 1000 : Date.now(),
+    txSignature: a.txSignature,
   };
 }
 
@@ -152,7 +155,12 @@ export function LiveAttestationFeed() {
               key={`${e.id}-${e.ts}`}
               className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-5 py-3.5 text-sm animate-fade-in"
             >
-              <span className="font-mono text-xs text-primary">{e.id}</span>
+              <Link
+                href={e.txSignature ? `/explorer/tx/${e.txSignature}` : '/explorer'}
+                className="font-mono text-xs text-primary hover:underline"
+              >
+                {e.id}
+              </Link>
               <div className="min-w-0">
                 <div className="truncate text-foreground">{e.action}</div>
                 <div className="mt-0.5 flex items-center gap-2 truncate font-mono text-[11px] text-muted-foreground">
