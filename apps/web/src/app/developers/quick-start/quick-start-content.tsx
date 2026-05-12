@@ -340,7 +340,7 @@ export function QuickStartContent() {
               className="grid gap-6 border-b border-border py-10 lg:grid-cols-[auto_1fr] lg:gap-16 lg:py-12"
             >
               <span className="font-mono text-xs text-primary">{s.step}</span>
-              <div>
+              <div className="min-w-0">
                 <h2 className="font-display text-base uppercase text-foreground lg:text-lg">{s.title}</h2>
                 <div className="mt-4 overflow-x-auto border border-border bg-surface p-5">
                   <pre className="font-mono text-sm leading-relaxed text-primary/90">{s.code}</pre>
