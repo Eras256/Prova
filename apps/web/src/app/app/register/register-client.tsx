@@ -19,7 +19,7 @@ class RegisterErrorBoundary extends React.Component<
   static getDerivedStateFromError(error: Error) {
     return { error };
   }
-  render() {
+  override render() {
     if (this.state.error) {
       return (
         <div className="min-h-screen flex items-center justify-center px-4">
