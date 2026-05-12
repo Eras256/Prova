@@ -1,34 +1,94 @@
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = { title: 'Contact', description: 'Get in touch with the Prova team.' };
+import { useI18n } from '@/components/i18n-provider';
+
+const content = {
+  EN: {
+    tag: 'Contact',
+    headline: ['Get in touch.'],
+    desc: "Have a question, partnership idea, or enterprise inquiry? We'd love to hear from you.",
+    channels: [
+      { label: 'General',           email: 'hello@prova.io' },
+      { label: 'Security',          email: 'security@prova.io' },
+      { label: 'Enterprise Sales',  email: 'sales@prova.io' },
+      { label: 'Press',             email: 'press@prova.io' },
+    ],
+    communityLabel: 'Community',
+  },
+  ES: {
+    tag: 'Contacto',
+    headline: ['Escríbenos.'],
+    desc: '¿Tienes una pregunta, idea de asociación o consulta empresarial? Nos encantaría escucharte.',
+    channels: [
+      { label: 'General',             email: 'hello@prova.io' },
+      { label: 'Seguridad',           email: 'security@prova.io' },
+      { label: 'Ventas Enterprise',   email: 'sales@prova.io' },
+      { label: 'Prensa',              email: 'press@prova.io' },
+    ],
+    communityLabel: 'Comunidad',
+  },
+  ZH: {
+    tag: '联系我们',
+    headline: ['联系我们。'],
+    desc: '有问题、合作想法或企业咨询？我们很乐意倾听。',
+    channels: [
+      { label: '通用',      email: 'hello@prova.io' },
+      { label: '安全',      email: 'security@prova.io' },
+      { label: '企业销售',  email: 'sales@prova.io' },
+      { label: '媒体',      email: 'press@prova.io' },
+    ],
+    communityLabel: '社区',
+  },
+};
 
 export default function ContactPage() {
+  const { lang } = useI18n();
+  const t = content[lang];
+
   return (
     <div className="min-h-screen px-4 py-24 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="text-4xl font-bold text-white">Contact</h1>
-        <p className="mt-4 text-muted-foreground">Have a question, partnership idea, or enterprise inquiry? We&apos;d love to hear from you.</p>
-
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {[
-            { label: 'General', email: 'hello@prova.io' },
-            { label: 'Security', email: 'security@prova.io' },
-            { label: 'Enterprise Sales', email: 'sales@prova.io' },
-            { label: 'Press', email: 'press@prova.io' },
-          ].map((c) => (
-            <div key={c.label} className="rounded-xl border border-border bg-surface p-5">
-              <p className="text-sm font-medium text-white">{c.label}</p>
-              <a href={`mailto:${c.email}`} className="mt-1 text-sm text-primary hover:underline">{c.email}</a>
-            </div>
-          ))}
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
+          <div>
+            <p className="font-pixel text-[13px] uppercase tracking-wider text-primary">{t.tag}</p>
+          </div>
+          <div>
+            <h1 className="font-display text-3xl uppercase leading-none text-foreground sm:text-5xl">
+              {t.headline[0]}
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">{t.desc}</p>
+          </div>
         </div>
 
-        <div className="mt-12 rounded-xl border border-border bg-surface p-6">
-          <h3 className="font-semibold text-white">Community</h3>
-          <div className="mt-3 flex gap-4 text-sm">
-            <a href="https://discord.gg/prova" className="text-muted-foreground hover:text-white">Discord</a>
-            <a href="https://x.com/prova_io" className="text-muted-foreground hover:text-white">X (Twitter)</a>
-            <a href="https://github.com/Eras256/Prova" className="text-muted-foreground hover:text-white">GitHub</a>
+        <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
+          <div aria-hidden />
+          <div className="space-y-6">
+            <div className="grid gap-px bg-border sm:grid-cols-2">
+              {t.channels.map((c) => (
+                <div key={c.label} className="bg-background px-5 py-5">
+                  <p className="font-pixel text-[11px] uppercase tracking-wider text-muted-foreground">
+                    {c.label}
+                  </p>
+                  <a
+                    href={`mailto:${c.email}`}
+                    className="mt-1 block font-mono text-sm text-primary hover:text-foreground"
+                  >
+                    {c.email}
+                  </a>
+                </div>
+              ))}
+            </div>
+
+            <div className="border border-border bg-surface p-5">
+              <p className="font-pixel text-[12px] uppercase tracking-wider text-foreground">
+                {t.communityLabel}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <a href="https://discord.gg/prova" className="font-mono text-muted-foreground hover:text-foreground">Discord</a>
+                <a href="https://x.com/prova_io" className="font-mono text-muted-foreground hover:text-foreground">X (Twitter)</a>
+                <a href="https://github.com/Eras256/Prova" className="font-mono text-muted-foreground hover:text-foreground">GitHub</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

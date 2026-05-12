@@ -1,11 +1,23 @@
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Changelog — Prova',
-  description: 'Product updates and release notes.',
-};
+import { useI18n } from '@/components/i18n-provider';
 
 const releases = [
+  {
+    version: '0.1.6',
+    date: '2026-05-11',
+    type: 'Feature',
+    notes: [
+      'Solana Actions / Blinks endpoint — share any receipt as a Blink on Twitter/X',
+      'API Keys self-service UI at /app/api-keys (Privy JWT-gated)',
+      'x402 on-chain payment verification (real tx check, replay protection)',
+      'RPC proxy at /api/rpc — Helius API key no longer exposed in browser bundle',
+      'Jupiter/DeFi attestation pattern added to quick-start (step 06)',
+      'register-agent.tsx fully translated EN/ES/ZH',
+      'Overview dashboard and API-keys page translated EN/ES/ZH',
+      'CI: Anchor tests now block on failure (removed continue-on-error)',
+    ],
+  },
   {
     version: '0.1.5',
     date: '2026-05-09',
@@ -35,26 +47,47 @@ const releases = [
   },
 ];
 
+const content = {
+  EN: {
+    tag: 'Changelog',
+    headline: ['What shipped.', 'When it shipped.'],
+  },
+  ES: {
+    tag: 'Changelog',
+    headline: ['Qué se desplegó.', 'Cuándo se desplegó.'],
+  },
+  ZH: {
+    tag: '更新日志',
+    headline: ['已发布的内容。', '发布时间。'],
+  },
+};
+
 export default function ChangelogPage() {
+  const { lang } = useI18n();
+  const t = content[lang];
+
   return (
     <div className="min-h-screen px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
           <div>
-            <p className="font-pixel text-[13px] uppercase tracking-wider text-primary">Changelog</p>
+            <p className="font-pixel text-[13px] uppercase tracking-wider text-primary">{t.tag}</p>
           </div>
           <div>
             <h1 className="font-display text-3xl uppercase leading-none text-foreground sm:text-5xl">
-              What shipped.<br />
-              <span className="text-muted-foreground">When it shipped.</span>
+              <span className="block">{t.headline[0]}</span>
+              <span className="mt-1 block text-muted-foreground">{t.headline[1]}</span>
             </h1>
           </div>
         </div>
 
         <ol className="mt-20 border-t border-border">
           {releases.map((r) => (
-            <li key={r.version} className="grid gap-6 border-b border-border py-10 lg:grid-cols-[auto_1fr] lg:gap-16 lg:py-12">
-              <div className="min-w-[120px]">
+            <li
+              key={r.version}
+              className="grid gap-6 border-b border-border py-10 lg:grid-cols-[auto_1fr] lg:gap-16 lg:py-12"
+            >
+              <div className="min-w-[130px]">
                 <p className="font-display text-xl uppercase text-foreground">v{r.version}</p>
                 <p className="mt-1 font-mono text-[11px] text-muted-foreground">{r.date}</p>
                 <span className="mt-2 inline-block border border-primary/40 px-2 py-0.5 font-pixel text-[10px] uppercase tracking-wider text-primary">
@@ -64,7 +97,7 @@ export default function ChangelogPage() {
               <ul className="space-y-2">
                 {r.notes.map((n) => (
                   <li key={n} className="flex items-baseline gap-3 text-sm text-muted-foreground">
-                    <span className="shrink-0 text-primary">+</span>
+                    <span className="shrink-0 text-primary" aria-hidden>+</span>
                     {n}
                   </li>
                 ))}

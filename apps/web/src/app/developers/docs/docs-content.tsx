@@ -151,7 +151,7 @@ export function DocsContent() {
           {/* Section 1: Lifecycle */}
           <section>
             <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="flex h-10 w-10 items-center justify-center bg-primary/10 text-primary">
                 <Layers className="h-5 w-5" />
               </div>
               <h2 className="text-2xl font-display uppercase text-white">{t.sections.lifecycle.title}</h2>
@@ -168,7 +168,7 @@ export function DocsContent() {
           {/* Section 2: Security */}
           <section>
             <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="flex h-10 w-10 items-center justify-center bg-primary/10 text-primary">
                 <Shield className="h-5 w-5" />
               </div>
               <h2 className="text-2xl font-display uppercase text-white">{t.sections.security.title}</h2>
@@ -186,7 +186,7 @@ export function DocsContent() {
           {/* Section 3: Architecture */}
           <section>
             <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="flex h-10 w-10 items-center justify-center bg-primary/10 text-primary">
                 <Code className="h-5 w-5" />
               </div>
               <h2 className="text-2xl font-display uppercase text-white">{t.sections.architecture.title}</h2>
@@ -203,7 +203,7 @@ export function DocsContent() {
           {/* Section 4: Compliance */}
           <section>
             <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="flex h-10 w-10 items-center justify-center bg-primary/10 text-primary">
                 <CheckCircle className="h-5 w-5" />
               </div>
               <h2 className="text-2xl font-display uppercase text-white">{t.sections.compliance.title}</h2>

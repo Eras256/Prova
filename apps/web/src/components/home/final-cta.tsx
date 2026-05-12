@@ -67,13 +67,13 @@ export function FinalCta() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="lg" className="group h-12 flex-1 gap-2 px-6 text-sm font-semibold uppercase tracking-wider">
+            <Button asChild size="lg" className="group h-12 flex-1 gap-2 px-6 text-sm font-mono uppercase tracking-wider">
               <Link href="/developers/quick-start">
                 {t.openQuickStart}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="h-12 flex-1 px-6 text-sm font-semibold uppercase tracking-wider">
+            <Button asChild size="lg" variant="outline" className="h-12 flex-1 px-6 text-sm font-mono uppercase tracking-wider">
               <Link href="/developers/docs">{t.readDocs}</Link>
             </Button>
           </div>

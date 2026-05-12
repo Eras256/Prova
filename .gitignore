@@ -49,8 +49,9 @@ packages/program/test-ledger/
 # Next.js
 next-env.d.ts
 
-# Claude Code local state
+# Claude Code — estado local y instrucciones del agente
 .claude/
+CLAUDE.md
 .vercel
 
 # Cursor — mcp.json contiene tokens, cada dev configura el suyo

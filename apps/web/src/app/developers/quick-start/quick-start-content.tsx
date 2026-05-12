@@ -20,29 +20,40 @@ const content = {
 import { Keypair } from '@solana/web3.js';
 
 const client = new ProvaClient({
-  rpcUrl: process.env.SOLANA_RPC_URL,
+  rpcUrl: process.env.SOLANA_RPC_URL,   // Helius devnet recommended
   agentKeypair: Keypair.fromSecretKey(agentSecretKey),
 });`,
       },
       {
         step: '03',
         title: 'Issue an attestation',
-        code: `import { AttestationBuilder } from 'prova-agent-sdk';
-
-const receipt = await client.attest(
-  AttestationBuilder.transaction(txSignature, {
-    operation: 'swap',
-    amountUsd: 500,
-  })
+        code: `// Hash any structured action payload — deterministic, collision-resistant
+const actionHash = await ProvaClient.hashAction(
+  JSON.stringify({ operation: 'transfer', amount: '500', token: 'USDC' })
 );
 
-console.log('Receipt:', receipt.id);`,
+const receipt = await client.attest({
+  operatorKeypair,   // wallet that registered this agent
+  actionHash,
+  actionType: 'Transaction',
+  privacyMode: false,
+});
+
+console.log('Receipt tx:', receipt.txSignature);
+console.log('Explorer:  ', receipt.explorerUrl);`,
       },
       {
         step: '04',
-        title: 'Verify from anywhere',
-        code: `const result = await client.verify(receipt.id);
-console.log(result.valid); // true`,
+        title: 'Batch-attest up to 100 actions in one tx',
+        code: `// One Solana transaction → up to 100 receipts (ComputeBudget auto-scaled)
+const batch = await client.batchAttest({
+  operatorKeypair,
+  attestations: [
+    { actionHash: hash1, actionType: 'ToolCall' },
+    { actionHash: hash2, actionType: 'Decision', privacyMode: true },
+    { actionHash: hash3, actionType: 'ModelInvocation' },
+  ],
+});`,
       },
       {
         step: '05',
@@ -51,18 +62,58 @@ console.log(result.valid); // true`,
 
 const api = new ProvaApiClient({
   apiUrl: 'https://prova-api.fly.dev',
-  apiKey: 'prova_...',          // optional for public endpoints
+  apiKey: 'prova_...',   // generate at /app/api-keys
 });
 
-const { data } = await api.listAttestations({
-  agentPda: receipt.id,
-  limit: 20,
-});`,
+const { data } = await api.listAttestations({ limit: 20 });`,
+      },
+      {
+        step: '06',
+        title: 'DeFi Agent — attest any on-chain protocol action',
+        code: `// Pattern: wrap any protocol interaction in a Prova receipt.
+// Works with Jupiter swaps, pump.fun buys, Orca LPs, or any Solana program.
+// No modification to the protocol — Prova is a receipt layer on top.
+
+// 1. Build the structured payload for the action your agent just performed
+const swapPayload = {
+  protocol:    'jupiter',
+  operation:   'exactInSwap',
+  inputMint:   'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
+  outputMint:  'So11111111111111111111111111111111111111112',   // SOL
+  inputAmount: '100000000',  // 100 USDC (6 decimals)
+  slippageBps: 50,
+  routePlan:   ['Orca', 'Raydium'],
+  agentId:     operatorKeypair.publicKey.toBase58(),
+  timestamp:   Date.now(),
+};
+
+// 2. Hash the payload — same hash every time for the same action params
+const actionHash = await ProvaClient.hashAction(JSON.stringify(swapPayload));
+
+// 3. Attest — one Ed25519 proof sealed on Solana
+const receipt = await client.attest({
+  operatorKeypair,
+  actionHash,
+  actionType: 'Transaction',
+  privacyMode: false,   // set true for Vanish mode (hash on-chain, payload off-chain)
+});
+
+// → Auditors, regulators, and users can now verify what your agent swapped,
+//   when, and with which parameters — without trusting your logs.
+console.log('DeFi receipt:', receipt.explorerUrl);`,
       },
     ],
     onchainTitle: 'What lands on-chain',
-    onchainDesc: 'Each attest() call creates a BehaviorAttestation account on Solana via the Anchor program. It stores the action hash, type, Ed25519 signature, and timestamp — SAS-compatible and verifiable by anyone.',
+    onchainDesc: 'Each attest() call creates a BehaviorAttestation account on Solana via the Anchor program. It stores the action hash, type, Ed25519 signature, and timestamp — SAS-compatible and verifiable by anyone. Share the tx signature as a Solana Blink to make it visible in any compatible wallet or Twitter/X client.',
     apiTitle: 'REST API base URL',
+    blinkTitle: 'Share as a Solana Blink',
+    blinkCode: `// After attestation, make the receipt shareable as a Blink:
+const blinkUrl =
+  \`https://prova-solana.vercel.app/api/actions/verify?tx=\${receipt.txSignature}\`;
+
+// Paste this URL in Twitter/X to render the receipt as an interactive card.
+// Supported by Phantom, Backpack, Solflare, and all Dialect-compatible clients.
+console.log('Blink:', blinkUrl);`,
   },
   ES: {
     tag: 'Inicio Rápido',
@@ -88,22 +139,30 @@ const client = new ProvaClient({
       {
         step: '03',
         title: 'Emitir una atestación',
-        code: `import { AttestationBuilder } from 'prova-agent-sdk';
-
-const receipt = await client.attest(
-  AttestationBuilder.transaction(txSignature, {
-    operation: 'swap',
-    amountUsd: 500,
-  })
+        code: `const actionHash = await ProvaClient.hashAction(
+  JSON.stringify({ operation: 'transfer', amount: '500', token: 'USDC' })
 );
 
-console.log('Recibo:', receipt.id);`,
+const receipt = await client.attest({
+  operatorKeypair,
+  actionHash,
+  actionType: 'Transaction',
+  privacyMode: false,
+});
+
+console.log('Recibo tx:', receipt.txSignature);`,
       },
       {
         step: '04',
-        title: 'Verificar desde cualquier lugar',
-        code: `const result = await client.verify(receipt.id);
-console.log(result.valid); // true`,
+        title: 'Batch: hasta 100 atestaciones en 1 tx',
+        code: `const batch = await client.batchAttest({
+  operatorKeypair,
+  attestations: [
+    { actionHash: hash1, actionType: 'ToolCall' },
+    { actionHash: hash2, actionType: 'Decision', privacyMode: true },
+    { actionHash: hash3, actionType: 'ModelInvocation' },
+  ],
+});`,
       },
       {
         step: '05',
@@ -112,18 +171,51 @@ console.log(result.valid); // true`,
 
 const api = new ProvaApiClient({
   apiUrl: 'https://prova-api.fly.dev',
-  apiKey: 'prova_...',          // opcional para endpoints públicos
+  apiKey: 'prova_...',   // genera en /app/api-keys
 });
 
-const { data } = await api.listAttestations({
-  agentPda: receipt.id,
-  limit: 20,
-});`,
+const { data } = await api.listAttestations({ limit: 20 });`,
+      },
+      {
+        step: '06',
+        title: 'Agente DeFi — atestar cualquier acción on-chain',
+        code: `// Patrón: envuelve cualquier interacción con un protocolo en un recibo Prova.
+// Compatible con Jupiter, pump.fun, Orca, Raydium — sin modificar el protocolo.
+
+const swapPayload = {
+  protocol:    'jupiter',
+  operation:   'exactInSwap',
+  inputMint:   'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
+  outputMint:  'So11111111111111111111111111111111111111112',   // SOL
+  inputAmount: '100000000',
+  slippageBps: 50,
+  agentId:     operatorKeypair.publicKey.toBase58(),
+  timestamp:   Date.now(),
+};
+
+const actionHash = await ProvaClient.hashAction(JSON.stringify(swapPayload));
+
+const receipt = await client.attest({
+  operatorKeypair,
+  actionHash,
+  actionType: 'Transaction',
+  privacyMode: false,
+});
+
+// → Auditores, reguladores y usuarios pueden verificar qué swap hizo el agente,
+//   cuándo y con qué parámetros — sin depender de tus logs.
+console.log('Recibo DeFi:', receipt.explorerUrl);`,
       },
     ],
     onchainTitle: 'Qué queda on-chain',
-    onchainDesc: 'Cada llamada a attest() crea una cuenta BehaviorAttestation en Solana a través del programa Anchor. Almacena el hash de la acción, el tipo, la firma Ed25519 y la marca de tiempo — compatible con SAS y verificable por cualquiera.',
+    onchainDesc: 'Cada llamada a attest() crea una cuenta BehaviorAttestation en Solana a través del programa Anchor. Almacena el hash de la acción, tipo, firma Ed25519 y timestamp — compatible con SAS y verificable por cualquiera. Comparte la firma de tx como un Solana Blink.',
     apiTitle: 'URL base de la API REST',
+    blinkTitle: 'Compartir como Solana Blink',
+    blinkCode: `const blinkUrl =
+  \`https://prova-solana.vercel.app/api/actions/verify?tx=\${receipt.txSignature}\`;
+
+// Pega esta URL en Twitter/X para mostrar el recibo como tarjeta interactiva.
+console.log('Blink:', blinkUrl);`,
   },
   ZH: {
     tag: '快速入门',
@@ -149,22 +241,30 @@ const client = new ProvaClient({
       {
         step: '03',
         title: '发出证明',
-        code: `import { AttestationBuilder } from 'prova-agent-sdk';
-
-const receipt = await client.attest(
-  AttestationBuilder.transaction(txSignature, {
-    operation: 'swap',
-    amountUsd: 500,
-  })
+        code: `const actionHash = await ProvaClient.hashAction(
+  JSON.stringify({ operation: 'transfer', amount: '500', token: 'USDC' })
 );
 
-console.log('收据：', receipt.id);`,
+const receipt = await client.attest({
+  operatorKeypair,
+  actionHash,
+  actionType: 'Transaction',
+  privacyMode: false,
+});
+
+console.log('收据 tx:', receipt.txSignature);`,
       },
       {
         step: '04',
-        title: '在任何地方验证',
-        code: `const result = await client.verify(receipt.id);
-console.log(result.valid); // true`,
+        title: '批量证明：一笔交易最多 100 条',
+        code: `const batch = await client.batchAttest({
+  operatorKeypair,
+  attestations: [
+    { actionHash: hash1, actionType: 'ToolCall' },
+    { actionHash: hash2, actionType: 'Decision', privacyMode: true },
+    { actionHash: hash3, actionType: 'ModelInvocation' },
+  ],
+});`,
       },
       {
         step: '05',
@@ -173,18 +273,40 @@ console.log(result.valid); // true`,
 
 const api = new ProvaApiClient({
   apiUrl: 'https://prova-api.fly.dev',
-  apiKey: 'prova_...',          // 公共接口可选
+  apiKey: 'prova_...',
 });
 
-const { data } = await api.listAttestations({
-  agentPda: receipt.id,
-  limit: 20,
-});`,
+const { data } = await api.listAttestations({ limit: 20 });`,
+      },
+      {
+        step: '06',
+        title: 'DeFi 代理 — 证明任何链上操作',
+        code: `// 模式：将任何协议交互封装在 Prova 收据中。
+// 兼容 Jupiter、pump.fun、Orca — 无需修改协议。
+
+const swapPayload = {
+  protocol:    'jupiter',
+  operation:   'exactInSwap',
+  inputMint:   'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+  outputMint:  'So11111111111111111111111111111111111111112',
+  inputAmount: '100000000',
+  agentId:     operatorKeypair.publicKey.toBase58(),
+  timestamp:   Date.now(),
+};
+
+const actionHash = await ProvaClient.hashAction(JSON.stringify(swapPayload));
+const receipt = await client.attest({ operatorKeypair, actionHash, actionType: 'Transaction' });
+
+console.log('DeFi 收据:', receipt.explorerUrl);`,
       },
     ],
     onchainTitle: '链上存储的内容',
-    onchainDesc: '每次调用 attest() 都会通过 Anchor 程序在 Solana 上创建一个 BehaviorAttestation 账户。该账户存储操作哈希、类型、Ed25519 签名和时间戳——与 SAS 兼容，任何人均可验证。',
+    onchainDesc: '每次调用 attest() 都会通过 Anchor 程序在 Solana 上创建一个 BehaviorAttestation 账户，存储操作哈希、类型、Ed25519 签名和时间戳。',
     apiTitle: 'REST API 基础 URL',
+    blinkTitle: '以 Solana Blink 形式分享',
+    blinkCode: `const blinkUrl =
+  \`https://prova-solana.vercel.app/api/actions/verify?tx=\${receipt.txSignature}\`;
+console.log('Blink:', blinkUrl);`,
   },
 };
 
@@ -244,6 +366,14 @@ export function QuickStartContent() {
             <p className="mt-2 font-mono text-xs text-muted-foreground">GET /api/v1/attestations</p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">GET /api/v1/agents/:id</p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">GET /api/v1/health</p>
+          </div>
+        </div>
+
+        {/* Blink sharing */}
+        <div className="mt-6 border border-border bg-background p-8">
+          <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.blinkTitle}</p>
+          <div className="mt-4 overflow-x-auto border border-border bg-surface p-5">
+            <pre className="font-mono text-sm leading-relaxed text-primary/90">{t.blinkCode}</pre>
           </div>
         </div>
       </div>

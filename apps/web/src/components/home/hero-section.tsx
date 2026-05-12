@@ -46,13 +46,13 @@ export function HeroSection() {
           </p>
 
           <div className="mt-10 flex animate-fade-up flex-col gap-3 [animation-delay:280ms] sm:flex-row sm:items-center">
-            <Button asChild size="lg" className="group h-12 gap-2 px-6 text-sm font-semibold uppercase tracking-wider">
+            <Button asChild size="lg" className="group h-12 gap-2 px-6 text-sm font-mono uppercase tracking-wider">
               <Link href="/developers/quick-start">
                 {t('shipFirst')}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="h-12 px-6 text-sm font-semibold uppercase tracking-wider">
+            <Button asChild size="lg" variant="outline" className="h-12 px-6 text-sm font-mono uppercase tracking-wider">
               <Link href="/explorer">{t('seeFeed')}</Link>
             </Button>
           </div>
