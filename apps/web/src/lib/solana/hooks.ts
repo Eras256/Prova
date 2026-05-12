@@ -9,11 +9,11 @@ import {
   useSignTransaction as usePrivySignTransaction,
 } from '@privy-io/react-auth/solana';
 import idl from './idl.json';
-import { PROGRAM_ID, RPC_URL, NETWORK } from './constants';
+import { PROGRAM_ID, RPC_URL, WSS_URL, NETWORK } from './constants';
 import { decodeEventsFromLogs, type DecodedEvent, type AttestationIssued } from './events';
 
 export function useReadOnlyConnection(): Connection {
-  return useMemo(() => new Connection(RPC_URL, 'confirmed'), []);
+  return useMemo(() => new Connection(RPC_URL, { commitment: 'confirmed', wsEndpoint: WSS_URL }), []);
 }
 
 // Mapea el NETWORK de la app al CAIP-2 chain que usa Privy.

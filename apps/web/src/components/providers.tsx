@@ -25,21 +25,14 @@ const PRIVY_CHAIN: 'solana:mainnet' | 'solana:devnet' | 'solana:testnet' =
 
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  console.log("DEBUG URLs:", { RPC_URL, WSS_URL });
+
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, retry: 2 } } })
   );
 
   const wallets = useMemo(() => [new PhantomWalletAdapter(), new SolflareWalletAdapter()], []);
   const solanaConnectors = useMemo(() => toSolanaWalletConnectors(), []);
-  const solanaRpcs = useMemo(
-    () => ({
-      [PRIVY_CHAIN]: {
-        rpc: createSolanaRpc(RPC_URL),
-        rpcSubscriptions: createSolanaRpcSubscriptions(WSS_URL),
-      },
-    }),
-    []
-  );
 
   const inner = (
     <QueryClientProvider client={queryClient}>
@@ -69,7 +62,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         },
         embeddedWallets: { solana: { createOnLogin: 'users-without-wallets' } },
         externalWallets: { solana: { connectors: solanaConnectors } },
-        solana: { rpcs: solanaRpcs },
+        // Remove custom solana RPCs to prevent Privy from failing to reach localhost proxy during auth
       }}
     >
       {inner}
