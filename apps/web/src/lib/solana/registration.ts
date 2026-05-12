@@ -27,6 +27,9 @@ export async function registerAgent(params: {
   const agentId = Array.from(agentKeypair.publicKey.toBytes());
   const policy = Array.from(policyRoot);
 
+  // Derive the agent PDA — Anchor 0.31+ requires ALL accounts explicitly
+  const [agentPda] = deriveAgentPda(operator);
+
   // Anchor expone los métodos dinámicamente desde el IDL — Idl genérico no los tipea
   const methods = program.methods as unknown as Record<
     string,
@@ -37,12 +40,12 @@ export async function registerAgent(params: {
   const txSignature = await methods
     .registerAgent!(agentId, policy)
     .accounts({
+      agent: agentPda,
       operator,
       systemProgram: SystemProgram.programId,
     })
     .rpc({ commitment: 'confirmed' });
 
-  const [agentPda] = deriveAgentPda(operator);
   return { txSignature, agentPda, agentKeypair };
 }
 
@@ -51,6 +54,7 @@ export async function revokeAgent(params: {
   operator: PublicKey;
 }): Promise<{ txSignature: string }> {
   const { program, operator } = params;
+  const [agentPda] = deriveAgentPda(operator);
   const methods = program.methods as unknown as Record<
     string,
     () => {
@@ -59,7 +63,7 @@ export async function revokeAgent(params: {
   >;
   const txSignature = await methods
     .revokeAgent!()
-    .accounts({ operator })
+    .accounts({ agent: agentPda, operator })
     .rpc({ commitment: 'confirmed' });
   return { txSignature };
 }

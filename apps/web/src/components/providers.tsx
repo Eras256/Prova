@@ -11,7 +11,7 @@ import { RPC_URL, WSS_URL } from '@/lib/solana/constants';
 import { I18nProvider } from './i18n-provider';
 import { PrivyProvider } from '@privy-io/react-auth';
 import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
-import { createSolanaRpc, createSolanaRpcSubscriptions } from '@solana/kit';
+
 import { NETWORK } from '@/lib/solana/constants';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -25,7 +25,7 @@ const PRIVY_CHAIN: 'solana:mainnet' | 'solana:devnet' | 'solana:testnet' =
 
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  console.log("DEBUG URLs:", { RPC_URL, WSS_URL });
+
 
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, retry: 2 } } })
