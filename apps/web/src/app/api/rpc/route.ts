@@ -38,10 +38,15 @@ export async function POST(req: NextRequest) {
 
   const body = await req.text();
 
-  // Validación básica: solo acepta JSON-RPC válido para evitar uso como open proxy
+  // Validación básica: solo acepta JSON-RPC válido (o array de ellos) para evitar uso como open proxy
   try {
-    const parsed = JSON.parse(body) as { jsonrpc?: string };
-    if (parsed.jsonrpc !== '2.0') throw new Error('not jsonrpc');
+    const parsed = JSON.parse(body);
+    const isRpc = (obj: any) => obj && obj.jsonrpc === '2.0';
+    if (Array.isArray(parsed)) {
+      if (!parsed.every(isRpc)) throw new Error('invalid batch');
+    } else {
+      if (!isRpc(parsed)) throw new Error('not jsonrpc');
+    }
   } catch {
     return Response.json({ error: 'Invalid JSON-RPC request' }, { status: 400 });
   }
