@@ -114,12 +114,12 @@ export function SolutionSection() {
     <section className="border-t border-border px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-16 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
-          <div>
+          <div className="min-w-0">
             <p className="font-pixel text-[13px] uppercase tracking-wider text-primary">{t.sectionTitle}</p>
             <h2 className="mt-3 font-display text-2xl uppercase leading-none text-foreground sm:text-4xl lg:text-5xl">
               <span className="block">{t.headline[0]}</span>
               <span className="block">{t.headline[1]}</span>
-              <span className="block bg-primary px-2 text-primary-foreground">{t.headline[2]}</span>
+              <span className="inline-block bg-primary px-2 text-primary-foreground">{t.headline[2]}</span>
             </h2>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
               {t.description}
@@ -138,7 +138,7 @@ export function SolutionSection() {
             </div>
           </div>
 
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="min-w-0 lg:sticky lg:top-24 lg:self-start">
             <div className="overflow-hidden border border-border bg-surface">
               <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
                 <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">attest.ts</span>
