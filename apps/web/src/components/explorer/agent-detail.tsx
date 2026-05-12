@@ -1,12 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Loader2, AlertTriangle, ShieldOff, KeyRound } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Loader2, AlertTriangle, ShieldOff, KeyRound, RefreshCw } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Button } from '@prova/ui';
 import { useAgentAccount, useAgentAttestations } from '@/lib/solana/hooks';
-import { ACTION_TYPE_LABEL, shortBytes, shortPubkey } from '@/lib/solana/events';
-import { explorerAccountUrl, explorerTxUrl, NETWORK } from '@/lib/solana/constants';
+import { ACTION_TYPE_LABEL, shortPubkey } from '@/lib/solana/events';
+import { explorerAccountUrl, NETWORK } from '@/lib/solana/constants';
 import { ForensicExport } from './forensic-export';
 import { useI18n } from '../i18n-provider';
 import { PublicKey } from '@solana/web3.js';
@@ -84,10 +85,12 @@ export function AgentDetail({ pubkey }: { pubkey: string }) {
   const t = content[lang];
   const wallet = useWallet();
   const isMock = pubkey === 'M0CKAgentAddress1111111111111111111111111111';
-  
+
+  const [refreshKey, setRefreshKey] = useState(0);
+
   const { data: realData, loading: realLoading, error: realError } = useAgentAccount(pubkey);
-  const { attestations: realAtts, loading: realAttsLoading } = useAgentAttestations(realData?.address ?? null, 50);
-  
+  const { attestations: realAtts, loading: realAttsLoading } = useAgentAttestations(realData?.address ?? null, 50, refreshKey);
+
   // Mock fallback for Demo
   const mockData = {
     address: new PublicKey('11111111111111111111111111111111'),
@@ -98,13 +101,13 @@ export function AgentDetail({ pubkey }: { pubkey: string }) {
     createdAt: Math.floor(Date.now() / 1000) - 300,
     revoked: false,
   };
-  
+
   const data = isMock ? mockData : realData;
   const loading = isMock ? false : realLoading;
   const error = isMock ? null : realError;
   const attestations = isMock ? [] : realAtts;
   const attsLoading = isMock ? false : realAttsLoading;
-  
+
   const isOperator = isMock ? true : (!!realData && !!wallet.publicKey && wallet.publicKey.equals(realData.operator));
 
   return (
@@ -213,6 +216,16 @@ export function AgentDetail({ pubkey }: { pubkey: string }) {
                       </Link>
                     </Button>
                   )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setRefreshKey((k) => k + 1)}
+                    disabled={attsLoading}
+                    className="gap-1.5 font-mono text-xs uppercase tracking-wider"
+                  >
+                    <RefreshCw className={`h-3 w-3 ${attsLoading ? 'animate-spin' : ''}`} />
+                    Refresh
+                  </Button>
                   <ForensicExport
                     resourceId={`agent:${data.address.toBase58()}`}
                     resourceLabel={`${t.agent} ${shortPubkey(data.address, 4, 4)} — ${data.attestationCount} attestations`}
@@ -227,9 +240,35 @@ export function AgentDetail({ pubkey }: { pubkey: string }) {
                   {t.loadingAtts}
                 </div>
               ) : attestations.length === 0 ? (
-                <p className="mt-6 border border-border bg-background px-5 py-12 text-center text-sm text-muted-foreground">
-                  {t.noAtts}
-                </p>
+                <div className="mt-6 border border-border bg-background px-5 py-12 text-center">
+                  {data.attestationCount > 0 ? (
+                    <div className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        {data.attestationCount} attestation{data.attestationCount !== 1 ? 's' : ''} recorded on-chain — event log not yet indexed.
+                      </p>
+                      <div className="flex flex-wrap items-center justify-center gap-3">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setRefreshKey((k) => k + 1)}
+                          className="gap-1.5 font-mono text-xs uppercase tracking-wider"
+                        >
+                          <RefreshCw className="h-3 w-3" /> Retry
+                        </Button>
+                        <a
+                          href={explorerAccountUrl(data.address.toBase58())}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="font-mono text-xs text-muted-foreground underline hover:text-foreground"
+                        >
+                          View on Solana Explorer ↗
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{t.noAtts}</p>
+                  )}
+                </div>
               ) : (
                 <ol className="mt-6 divide-y divide-border border border-border bg-background">
                   {attestations.map((a) => (

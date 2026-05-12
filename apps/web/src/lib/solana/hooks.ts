@@ -104,12 +104,12 @@ export function useProvaProgram(): { program: Program | null; readOnly: boolean 
 
 // Suscripción en vivo a logs del programa, decodifica AttestationIssued
 export function useLiveAttestations(maxItems = 10): {
-  attestations: AttestationIssued[];
+  attestations: (AttestationIssued & { txSignature: string })[];
   total: number;
   connected: boolean;
 } {
   const connection = useReadOnlyConnection();
-  const [attestations, setAttestations] = useState<AttestationIssued[]>([]);
+  const [attestations, setAttestations] = useState<(AttestationIssued & { txSignature: string })[]>([]);
   const [total, setTotal] = useState(0);
   const [connected, setConnected] = useState(false);
 
@@ -126,7 +126,8 @@ export function useLiveAttestations(maxItems = 10): {
             const events = decodeEventsFromLogs(logsResult.logs);
             for (const ev of events) {
               if (ev.name !== 'AttestationIssued') continue;
-              setAttestations((prev) => [ev.data, ...prev].slice(0, maxItems));
+              const eventWithSig = { ...ev.data, txSignature: logsResult.signature };
+              setAttestations((prev) => [eventWithSig, ...prev].slice(0, maxItems));
               setTotal((t) => t + 1);
             }
           },
@@ -416,7 +417,8 @@ export function useAgentAccount(pubkey: string | null): {
 }
 
 // Lista atestaciones emitidas por un agent PDA específico (filtrando por su pubkey en logs).
-export function useAgentAttestations(agentPda: PublicKey | null, limit = 25): {
+// refreshKey: incrementar para forzar un nuevo fetch (usado por el botón "Refresh" del UI).
+export function useAgentAttestations(agentPda: PublicKey | null, limit = 25, refreshKey = 0): {
   attestations: (AttestationIssued & { txSignature: string; slot: number })[];
   loading: boolean;
   error: string | null;
@@ -465,7 +467,7 @@ export function useAgentAttestations(agentPda: PublicKey | null, limit = 25): {
     return () => {
       cancelled = true;
     };
-  }, [connection, agentPda, limit]);
+  }, [connection, agentPda, limit, refreshKey]);
 
   return { attestations: data, loading, error };
 }
