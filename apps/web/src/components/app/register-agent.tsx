@@ -680,15 +680,9 @@ export function RegisterAgent() {
                   </Link>
                 </Pair>
                 <Pair k={t.txSig}>
-                  {result.txSignature.startsWith('4mock') ? (
-                    <Link href={`/explorer/agent/${result.agentPda}`} className="break-all font-mono text-xs text-foreground hover:text-primary">
-                      {result.txSignature} <ExternalLink className="inline h-3 w-3" />
-                    </Link>
-                  ) : (
-                    <a href={explorerTxUrl(result.txSignature)} target="_blank" rel="noreferrer noopener" className="break-all font-mono text-xs text-foreground hover:text-primary">
-                      {result.txSignature} <ExternalLink className="inline h-3 w-3" />
-                    </a>
-                  )}
+                  <a href={explorerTxUrl(result.txSignature)} target="_blank" rel="noreferrer noopener" className="break-all font-mono text-xs text-foreground hover:text-primary">
+                    {result.txSignature} <ExternalLink className="inline h-3 w-3" />
+                  </a>
                 </Pair>
               </dl>
               <div className="mt-6 flex flex-wrap gap-2">

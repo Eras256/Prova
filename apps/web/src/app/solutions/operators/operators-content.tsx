@@ -88,6 +88,12 @@ export function OperatorsContent() {
               <Button asChild className="font-mono uppercase tracking-wider"><Link href="/developers/quick-start">{t.getStarted}</Link></Button>
               <Button variant="outline" asChild className="font-mono uppercase tracking-wider"><Link href="/pricing">{t.viewPricing}</Link></Button>
             </div>
+            
+            <div className="mt-8 border border-border p-4 text-xs text-muted-foreground">
+              <p>
+                <strong>Disclaimer:</strong> JARGUS audits are internal and do not substitute audits from top-tier firms. Prova operates in full accordance with the Solana.org Developer Guidelines and the Solana Foundation Code of Conduct updated as of May 2026.
+              </p>
+            </div>
           </div>
         </div>
       </div>

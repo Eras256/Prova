@@ -106,6 +106,7 @@ console.log('DeFi receipt:', receipt.explorerUrl);`,
     onchainTitle: 'What lands on-chain',
     onchainDesc: 'Each attest() call creates a BehaviorAttestation account on Solana via the Anchor program. It stores the action hash, type, Ed25519 signature, and timestamp — SAS-compatible and verifiable by anyone. Share the tx signature as a Solana Blink to make it visible in any compatible wallet or Twitter/X client.',
     apiTitle: 'REST API base URL',
+    sdkTitle: 'SDK Packages',
     blinkTitle: 'Share as a Solana Blink',
     blinkCode: `// After attestation, make the receipt shareable as a Blink:
 const blinkUrl =
@@ -210,6 +211,7 @@ console.log('Recibo DeFi:', receipt.explorerUrl);`,
     onchainTitle: 'Qué queda on-chain',
     onchainDesc: 'Cada llamada a attest() crea una cuenta BehaviorAttestation en Solana a través del programa Anchor. Almacena el hash de la acción, tipo, firma Ed25519 y timestamp — compatible con SAS y verificable por cualquiera. Comparte la firma de tx como un Solana Blink.',
     apiTitle: 'URL base de la API REST',
+    sdkTitle: 'Paquetes SDK',
     blinkTitle: 'Compartir como Solana Blink',
     blinkCode: `const blinkUrl =
   \`https://prova-solana.vercel.app/api/actions/verify?tx=\${receipt.txSignature}\`;
@@ -303,6 +305,7 @@ console.log('DeFi 收据:', receipt.explorerUrl);`,
     onchainTitle: '链上存储的内容',
     onchainDesc: '每次调用 attest() 都会通过 Anchor 程序在 Solana 上创建一个 BehaviorAttestation 账户，存储操作哈希、类型、Ed25519 签名和时间戳。',
     apiTitle: 'REST API 基础 URL',
+    sdkTitle: 'SDK 包',
     blinkTitle: '以 Solana Blink 形式分享',
     blinkCode: `const blinkUrl =
   \`https://prova-solana.vercel.app/api/actions/verify?tx=\${receipt.txSignature}\`;
@@ -347,7 +350,7 @@ export function QuickStartContent() {
           ))}
         </ol>
 
-        <div className="mt-20 grid gap-px bg-border md:grid-cols-2">
+        <div className="mt-20 grid gap-px bg-border md:grid-cols-3">
           <div className="bg-background p-8">
             <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.onchainTitle}</p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t.onchainDesc}</p>
@@ -358,7 +361,7 @@ export function QuickStartContent() {
               href="https://prova-api.fly.dev/api/v1/health"
               target="_blank"
               rel="noreferrer noopener"
-              className="mt-3 flex items-center gap-1.5 font-mono text-sm text-foreground hover:text-primary"
+              className="mt-3 flex items-center gap-1.5 font-mono text-sm break-all text-foreground hover:text-primary"
             >
               https://prova-api.fly.dev
               <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
@@ -366,6 +369,35 @@ export function QuickStartContent() {
             <p className="mt-2 font-mono text-xs text-muted-foreground">GET /api/v1/attestations</p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">GET /api/v1/agents/:id</p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground">GET /api/v1/health</p>
+          </div>
+          <div className="bg-background p-8">
+            <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.sdkTitle}</p>
+            <div className="mt-3 space-y-4">
+              <div>
+                <p className="font-mono text-xs text-muted-foreground">TypeScript / Node.js</p>
+                <a
+                  href="https://www.npmjs.com/package/prova-agent-sdk"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="mt-1 flex items-center gap-1.5 font-mono text-sm break-all text-foreground hover:text-primary"
+                >
+                  npmjs.com/package/prova-agent-sdk
+                  <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
+                </a>
+              </div>
+              <div>
+                <p className="font-mono text-xs text-muted-foreground">Rust</p>
+                <a
+                  href="https://crates.io/crates/prova-agent-sdk"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="mt-1 flex items-center gap-1.5 font-mono text-sm break-all text-foreground hover:text-primary"
+                >
+                  crates.io/crates/prova-agent-sdk
+                  <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 

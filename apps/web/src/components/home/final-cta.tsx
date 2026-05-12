@@ -58,11 +58,18 @@ export function FinalCta() {
               <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">terminal</span>
               <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">~/your-agent</span>
             </div>
-            <div className="flex items-center gap-2 px-5 py-4 font-mono text-sm">
-              <span className="text-muted-foreground">$</span>
-              <span className="text-foreground">npm install</span>
-              <a href="https://www.npmjs.com/package/prova-agent-sdk" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4">prova-agent-sdk</a>
-              <span className="ml-1 inline-block h-4 w-[7px] animate-blink bg-primary align-middle" aria-hidden />
+            <div className="flex flex-col gap-2 px-5 py-4 font-mono text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">$</span>
+                <span className="text-foreground">npm install</span>
+                <a href="https://www.npmjs.com/package/prova-agent-sdk" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4">prova-agent-sdk</a>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">$</span>
+                <span className="text-foreground">cargo add</span>
+                <a href="https://crates.io/crates/prova-agent-sdk" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4">prova-agent-sdk</a>
+                <span className="ml-1 inline-block h-4 w-[7px] animate-blink bg-primary align-middle" aria-hidden />
+              </div>
             </div>
           </div>
 

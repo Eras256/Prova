@@ -4,6 +4,19 @@ import { useI18n } from '@/components/i18n-provider';
 
 const releases = [
   {
+    version: '0.2.0',
+    date: '2026-05-12',
+    type: 'Major',
+    notes: [
+      'Production Devnet Release — 100% real on-chain interactions',
+      'Rust SDK published to crates.io (prova-agent-sdk v0.1.0)',
+      'New Solutions portal: Compliance, Legal, Auditors',
+      'New Developers portal: API & MCP Reference, Examples',
+      'Unified JARGUS internal audit disclaimers across all endpoints',
+      'Removed all demo-mode stubs from frontend and SDK',
+    ],
+  },
+  {
     version: '0.1.6',
     date: '2026-05-11',
     type: 'Feature',

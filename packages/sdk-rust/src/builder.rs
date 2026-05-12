@@ -31,8 +31,8 @@ impl AttestationBuilder {
 
     pub fn build(self) -> Result<AttestationPayload, ProvaError> {
         Ok(AttestationPayload {
-            action_type: self.action_type.ok_or_else(|| ProvaError::RpcError("action_type required".into()))?,
-            payload: self.payload.ok_or_else(|| ProvaError::RpcError("payload required".into()))?,
+            action_type: self.action_type.ok_or_else(|| ProvaError::InvalidInput("action_type required".into()))?,
+            payload: self.payload.ok_or_else(|| ProvaError::InvalidInput("payload required".into()))?,
             metadata: self.metadata,
         })
     }

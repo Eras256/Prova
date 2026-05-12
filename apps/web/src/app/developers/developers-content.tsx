@@ -173,7 +173,7 @@ export function DevelopersContent() {
           <h2 className="mt-3 font-display text-xl uppercase text-foreground sm:text-3xl">
             Production Services
           </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
             <div className="border border-border bg-background p-6">
               <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">REST API & MCP</span>
               <a
@@ -192,9 +192,21 @@ export function DevelopersContent() {
                 href="https://www.npmjs.com/package/prova-agent-sdk"
                 target="_blank"
                 rel="noreferrer noopener"
-                className="mt-3 flex items-center gap-1.5 font-mono text-sm text-foreground hover:text-primary"
+                className="mt-3 flex items-center gap-1.5 font-mono text-sm break-all text-foreground hover:text-primary"
               >
                 npmjs.com/package/prova-agent-sdk
+                <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
+              </a>
+            </div>
+            <div className="border border-border bg-background p-6">
+              <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">crates.io package</span>
+              <a
+                href="https://crates.io/crates/prova-agent-sdk"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-3 flex items-center gap-1.5 font-mono text-sm break-all text-foreground hover:text-primary"
+              >
+                crates.io/crates/prova-agent-sdk
                 <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
               </a>
             </div>
@@ -213,13 +225,29 @@ export function DevelopersContent() {
                 href="https://www.npmjs.com/package/prova-agent-sdk"
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex items-center gap-1 font-pixel text-[12px] uppercase tracking-wider text-muted-foreground hover:text-primary"
+                className="flex items-center gap-1 font-pixel text-[12px] uppercase tracking-wider text-muted-foreground hover:text-primary text-right"
               >
-                Node 18+ · v0.1.6 · Apache 2.0
-                <ExternalLink className="h-2.5 w-2.5" />
+                Node 18+ · v0.1.6
+                <ExternalLink className="hidden h-2.5 w-2.5 sm:block" />
               </a>
             </div>
-            <pre className="mt-3 font-mono text-sm text-foreground">npm install prova-agent-sdk</pre>
+            <pre className="mt-3 overflow-x-auto font-mono text-sm text-foreground">npm install prova-agent-sdk</pre>
+          </div>
+
+          <div className="mt-4 border border-border bg-background p-6">
+            <div className="flex items-center justify-between">
+              <span className="font-pixel text-[12px] uppercase tracking-wider text-primary">Rust</span>
+              <a
+                href="https://crates.io/crates/prova-agent-sdk"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="flex items-center gap-1 font-pixel text-[12px] uppercase tracking-wider text-muted-foreground hover:text-primary text-right"
+              >
+                Rust 1.70+ · v0.1.0
+                <ExternalLink className="hidden h-2.5 w-2.5 sm:block" />
+              </a>
+            </div>
+            <pre className="mt-3 overflow-x-auto font-mono text-sm text-foreground">cargo add prova-agent-sdk</pre>
           </div>
         </div>
       </div>
