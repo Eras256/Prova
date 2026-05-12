@@ -289,6 +289,21 @@ export function RegisterAgent() {
           ? 'success'
           : 'register';
 
+  // Handler global para rechazos de Promise no capturados que puedan venir del SDK de Privy
+  // durante la firma. Se registra al montar para que exista antes de cualquier clic.
+  useEffect(() => {
+    const handleRejection = (ev: PromiseRejectionEvent) => {
+      ev.preventDefault();
+      const reason = ev.reason;
+      const msg = reason instanceof Error ? reason.message : String(reason ?? 'Unknown error');
+      // Solo actuamos si hay una operación de registro activa.
+      setError((prev) => prev ?? `Transaction failed: ${msg}`);
+      setRegistering(false);
+    };
+    window.addEventListener('unhandledrejection', handleRejection);
+    return () => window.removeEventListener('unhandledrejection', handleRejection);
+  }, []);
+
   // Lee el balance del operator para detectar cuando hace falta airdrop.
   useEffect(() => {
     if (!activePubkey) {
@@ -355,49 +370,42 @@ export function RegisterAgent() {
   };
 
   const register = async () => {
-    setError(null);
-    if (!agentKeypair) {
-      setError('Generate an agent keypair first (Step 2).');
-      return;
-    }
-    if (!activePubkey) {
-      setError('No operator wallet detected. Connect Phantom/Solflare or sign in via Privy.');
-      return;
-    }
-    if (!program || readOnly) {
-      setError(
-        authenticated
-          ? 'Your Privy embedded Solana wallet is not ready to sign. Try logging out and back in to trigger wallet creation, or connect Phantom/Solflare instead.'
-          : 'Signing is not available. Connect Phantom or Solflare to continue.'
-      );
-      return;
-    }
-    setRegistering(true);
-
-    // Intercept uncaught errors/rejections to prevent full-page crash
-    const catchAll = (ev: PromiseRejectionEvent | ErrorEvent) => {
-      ev.preventDefault?.();
-      const msg = 'message' in ev ? ev.message : String((ev as PromiseRejectionEvent).reason);
-      setError(`Transaction failed: ${msg}`);
-      setRegistering(false);
-    };
-    window.addEventListener('unhandledrejection', catchAll as EventListener);
-    window.addEventListener('error', catchAll as EventListener);
-
+    // Capa exterior: captura cualquier error imprevisto (incluyendo los que escapen
+    // del try/catch interior — por ejemplo errores síncronos en los guards).
     try {
-      const r = await registerAgent({ program, operator: activePubkey, agentKeypair });
-      setResult({ txSignature: r.txSignature, agentPda: r.agentPda.toBase58() });
-    } catch (e) {
-      console.error('[Prova] Registration error:', e);
-      try {
-        setError(parseProgramError(e));
-      } catch {
-        setError(String(e));
+      setError(null);
+      if (!agentKeypair) {
+        setError('Generate an agent keypair first (Step 2).');
+        return;
       }
-    } finally {
+      if (!activePubkey) {
+        setError('No operator wallet detected. Connect Phantom/Solflare or sign in via Privy.');
+        return;
+      }
+      if (!program || readOnly) {
+        setError(
+          authenticated
+            ? 'Your Privy embedded Solana wallet is not ready to sign. Try logging out and back in to trigger wallet creation, or connect Phantom/Solflare instead.'
+            : 'Signing is not available. Connect Phantom or Solflare to continue.'
+        );
+        return;
+      }
+      setRegistering(true);
+
+      try {
+        const r = await registerAgent({ program, operator: activePubkey, agentKeypair });
+        setResult({ txSignature: r.txSignature, agentPda: r.agentPda.toBase58() });
+      } catch (e) {
+        console.error('[Prova] Registration error:', e);
+        const msg = (() => { try { return parseProgramError(e); } catch { return String(e); } })();
+        setError(msg);
+      } finally {
+        setRegistering(false);
+      }
+    } catch (outer) {
+      console.error('[Prova] Unexpected registration error:', outer);
+      setError(outer instanceof Error ? outer.message : String(outer ?? 'Unexpected error'));
       setRegistering(false);
-      window.removeEventListener('unhandledrejection', catchAll as EventListener);
-      window.removeEventListener('error', catchAll as EventListener);
     }
   };
 

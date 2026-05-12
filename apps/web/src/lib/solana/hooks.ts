@@ -4,10 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useConnection, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { AnchorProvider, Program, type Idl } from '@coral-xyz/anchor';
 import { Connection, PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
-import {
-  useWallets as usePrivySolanaWallets,
-  useSignTransaction as usePrivySignTransaction,
-} from '@privy-io/react-auth/solana';
+import { useWallets as usePrivySolanaWallets } from '@privy-io/react-auth/solana';
 import idl from './idl.json';
 import { PROGRAM_ID, RPC_URL, WSS_URL, NETWORK } from './constants';
 import { decodeEventsFromLogs, type DecodedEvent, type AttestationIssued } from './events';
@@ -27,20 +24,31 @@ function networkToPrivyChain(
 
 // Envuelve el embedded wallet de Privy en la interfaz que espera Anchor (publicKey + sign(All)Transactions).
 // Privy firma serializando a Uint8Array, así que serializamos antes y deserializamos al recibir el resultado.
+// Tipo mínimo para el método signTransaction del wallet de Privy v3.
+type PrivySignable = {
+  signTransaction: (input: {
+    transaction: Uint8Array;
+    chain?: string;
+  }) => Promise<{ signedTransaction: Uint8Array }>;
+};
+
 export function usePrivyAnchorWallet() {
-  const { wallets } = usePrivySolanaWallets();
-  const { signTransaction: privySign } = usePrivySignTransaction();
+  const { wallets, ready } = usePrivySolanaWallets();
 
   return useMemo(() => {
+    // No proceder hasta que Privy haya cargado todos los wallets.
+    if (!ready) return null;
     const found = wallets.find(
       (w) => (w as { standardWallet?: { name?: string } }).standardWallet?.name === 'Privy'
     );
     if (!found) return null;
-    const privyWallet = found;
 
-    const address = (privyWallet as unknown as { address: string }).address;
+    const address = (found as unknown as { address: string }).address;
     const publicKey = new PublicKey(address);
     const chain = networkToPrivyChain(NETWORK);
+    // Usamos signTransaction directamente en el wallet (Privy v3 ConnectedStandardSolanaWallet)
+    // en lugar del hook useSignTransaction para evitar problemas de estado durante renders concurrentes.
+    const privyWallet = found as unknown as PrivySignable;
 
     async function sign<T extends Transaction | VersionedTransaction>(tx: T): Promise<T> {
       const isVersioned = tx instanceof VersionedTransaction;
@@ -48,9 +56,8 @@ export function usePrivyAnchorWallet() {
         ? tx.serialize()
         : (tx as Transaction).serialize({ requireAllSignatures: false, verifySignatures: false });
 
-      const { signedTransaction } = await privySign({
+      const { signedTransaction } = await privyWallet.signTransaction({
         transaction: serialized,
-        wallet: privyWallet,
         chain,
       });
 
@@ -67,7 +74,7 @@ export function usePrivyAnchorWallet() {
       signAllTransactions: async <T extends Transaction | VersionedTransaction>(txs: T[]) =>
         Promise.all(txs.map((tx) => sign(tx))),
     };
-  }, [wallets, privySign]);
+  }, [wallets]);
 }
 
 export function useProvaProgram(): { program: Program | null; readOnly: boolean } {

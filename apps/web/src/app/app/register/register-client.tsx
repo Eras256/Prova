@@ -8,6 +8,18 @@ const RegisterAgent = dynamic(
   { ssr: false }
 );
 
+// Convierte cualquier valor lanzado (Error, string, null, objeto…) en un Error con mensaje.
+function toError(raw: unknown): Error {
+  if (raw instanceof Error) return raw;
+  if (typeof raw === 'string' && raw) return new Error(raw);
+  try {
+    const msg = JSON.stringify(raw);
+    return new Error(msg ?? 'Unknown error');
+  } catch {
+    return new Error('Unknown error');
+  }
+}
+
 class RegisterErrorBoundary extends React.Component<
   { children: React.ReactNode },
   { error: Error | null }
@@ -16,17 +28,21 @@ class RegisterErrorBoundary extends React.Component<
     super(props);
     this.state = { error: null };
   }
-  static getDerivedStateFromError(error: Error) {
-    return { error };
+
+  // React puede llamar esto con cualquier valor lanzado, no sólo Error instances.
+  static getDerivedStateFromError(raw: unknown) {
+    return { error: toError(raw) };
   }
+
   override render() {
-    if (this.state.error) {
+    const { error } = this.state;
+    if (error) {
       return (
         <div className="min-h-screen flex items-center justify-center px-4">
           <div className="max-w-lg border border-destructive/40 bg-destructive/5 p-8">
             <h2 className="font-display text-xl uppercase text-foreground">Registration Error</h2>
-            <p className="mt-4 font-mono text-sm text-destructive break-words">
-              {this.state.error.message}
+            <p className="mt-4 font-mono text-sm text-destructive wrap-break-word">
+              {error.message}
             </p>
             <button
               onClick={() => {
