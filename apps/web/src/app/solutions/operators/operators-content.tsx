@@ -57,25 +57,38 @@ export function OperatorsContent() {
   const t = content[lang];
   return (
     <div className="min-h-screen px-4 py-24 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl">
-        <p className="mb-3 text-sm font-medium uppercase tracking-wider text-primary">{t.tag}</p>
-        <h1 className="text-4xl font-bold text-white">{t.title}</h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          {t.desc}
-        </p>
-
-        <div className="mt-12 space-y-3">
-          {t.benefits.map((b) => (
-            <div key={b} className="flex items-start gap-3">
-              <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-secondary" />
-              <p className="text-muted-foreground">{b}</p>
-            </div>
-          ))}
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
+          <div>
+            <p className="font-pixel text-[13px] uppercase tracking-wider text-primary">{t.tag}</p>
+          </div>
+          <div>
+            <h1 className="font-display text-3xl uppercase leading-none text-foreground sm:text-5xl">
+              {t.title}
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+              {t.desc}
+            </p>
+          </div>
         </div>
 
-        <div className="mt-12 flex gap-4">
-          <Button asChild><Link href="/developers/quick-start">{t.getStarted}</Link></Button>
-          <Button variant="outline" asChild><Link href="/pricing">{t.viewPricing}</Link></Button>
+        <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
+          <div aria-hidden />
+          <div>
+            <div className="space-y-3">
+              {t.benefits.map((b) => (
+                <div key={b} className="flex items-start gap-3">
+                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <p className="text-sm text-muted-foreground">{b}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 flex flex-wrap gap-4">
+              <Button asChild className="font-mono uppercase tracking-wider"><Link href="/developers/quick-start">{t.getStarted}</Link></Button>
+              <Button variant="outline" asChild className="font-mono uppercase tracking-wider"><Link href="/pricing">{t.viewPricing}</Link></Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

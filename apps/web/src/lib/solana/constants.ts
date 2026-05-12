@@ -8,15 +8,15 @@ export const PROGRAM_ID = new PublicKey(
 // En el servidor (SSR / RSC) usamos la URL directa via HELIUS_RPC_URL (sin prefijo NEXT_PUBLIC_).
 function resolveRpcUrl(): string {
   const direct =
-    process.env['HELIUS_RPC_URL'] ??
-    process.env['NEXT_PUBLIC_SOLANA_RPC_URL'] ??
+    process.env.HELIUS_RPC_URL ??
+    process.env.NEXT_PUBLIC_SOLANA_RPC_URL ??
     'https://api.devnet.solana.com';
 
   if (typeof window === 'undefined') return direct;
 
   // En el browser, usar el proxy relativo si está disponible.
   // Requiere que /api/rpc esté desplegada (Next.js dev y producción).
-  return '/api/rpc';
+  return window.location.origin + '/api/rpc';
 }
 
 export const RPC_URL = resolveRpcUrl();
@@ -25,8 +25,8 @@ export const RPC_URL = resolveRpcUrl();
 // (el proxy HTTP no soporta WebSocket nativo).
 export const WSS_URL = (() => {
   const direct =
-    process.env['HELIUS_RPC_URL'] ??
-    process.env['NEXT_PUBLIC_SOLANA_RPC_URL'] ??
+    process.env.HELIUS_RPC_URL ??
+    process.env.NEXT_PUBLIC_SOLANA_RPC_URL ??
     'https://api.devnet.solana.com';
   return direct.replace(/^https?:\/\//, (m) => (m === 'https://' ? 'wss://' : 'ws://'));
 })();

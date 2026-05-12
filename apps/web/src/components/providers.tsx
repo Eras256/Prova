@@ -44,7 +44,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const inner = (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
-        <ConnectionProvider endpoint={RPC_URL} config={{ commitment: 'confirmed' }}>
+        <ConnectionProvider endpoint={RPC_URL} config={{ commitment: 'confirmed', wsEndpoint: WSS_URL }}>
           <WalletProvider wallets={wallets} autoConnect>
             <WalletModalProvider>{children}</WalletModalProvider>
           </WalletProvider>

@@ -39,6 +39,7 @@ const content = {
     copied: 'Copied',
     anotherBtn: 'Generate another',
     endpointsLabel: 'API endpoints',
+    keyNameLabel: 'Key name (optional)',
   },
   ES: {
     tag: 'API Keys',
@@ -61,6 +62,7 @@ const content = {
     copied: 'Copiada',
     anotherBtn: 'Generar otra',
     endpointsLabel: 'Endpoints de la API',
+    keyNameLabel: 'Nombre de clave (opcional)',
   },
   ZH: {
     tag: 'API 密钥',
@@ -83,6 +85,7 @@ const content = {
     copied: '已复制',
     anotherBtn: '再生成一个',
     endpointsLabel: 'API 端点',
+    keyNameLabel: '密钥名称（可选）',
   },
 };
 
@@ -204,7 +207,7 @@ const { data } = await api.listAttestations({ limit: 20 });`}
                 <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end">
                   <div className="flex-1">
                     <label className="font-pixel text-[11px] uppercase tracking-wider text-muted-foreground">
-                      Key name (optional)
+                      {t.keyNameLabel}
                     </label>
                     <input
                       value={keyName}
