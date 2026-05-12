@@ -103,6 +103,11 @@ export function Navbar() {
               </Link>
             ))}
             <div className="pt-4 flex flex-col gap-3">
+              <Button variant="outline" asChild className="w-full">
+                <Link href="/app/register" onClick={() => setIsMobileMenuOpen(false)}>
+                  {t('registerAgent')}
+                </Link>
+              </Button>
               <WalletButton size="default" />
               <Button asChild className="w-full">
                 <Link href="/developers/quick-start" onClick={() => setIsMobileMenuOpen(false)}>
