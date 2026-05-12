@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@prova/ui';
 import { ArrowRight } from 'lucide-react';
 import { LiveAttestationFeed } from './live-attestation-feed';
@@ -72,11 +73,23 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div className="animate-fade-up [animation-delay:420ms] lg:pl-4">
-          <LiveAttestationFeed />
-          <p className="mt-4 text-center font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">
-            {t('feedFooter')}
-          </p>
+        <div className="relative flex flex-col items-center justify-center animate-fade-up [animation-delay:420ms] lg:pl-4">
+          <div className="mb-12 flex w-full justify-center opacity-80 transition-opacity hover:opacity-100">
+            <Image 
+              src="/ProvaLogo.png" 
+              alt="Prova Logo" 
+              width={400} 
+              height={100} 
+              className="w-72 sm:w-96 object-contain"
+              priority
+            />
+          </div>
+          <div className="w-full">
+            <LiveAttestationFeed />
+            <p className="mt-4 text-center font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">
+              {t('feedFooter')}
+            </p>
+          </div>
         </div>
       </div>
     </section>
