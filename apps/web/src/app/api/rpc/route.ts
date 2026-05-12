@@ -8,7 +8,7 @@ export const runtime = 'edge';
 
 // Simple per-IP rate limiting using a Map (resets on each cold start, which is fine for edge)
 const rateMap = new Map<string, { count: number; reset: number }>();
-const RATE_LIMIT = 20; // requests per window
+const RATE_LIMIT = 100; // requests per window
 const RATE_WINDOW = 10_000; // 10 seconds
 
 function isRateLimited(ip: string): boolean {
