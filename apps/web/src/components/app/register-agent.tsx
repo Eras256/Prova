@@ -373,13 +373,31 @@ export function RegisterAgent() {
       return;
     }
     setRegistering(true);
+
+    // Intercept uncaught errors/rejections to prevent full-page crash
+    const catchAll = (ev: PromiseRejectionEvent | ErrorEvent) => {
+      ev.preventDefault?.();
+      const msg = 'message' in ev ? ev.message : String((ev as PromiseRejectionEvent).reason);
+      setError(`Transaction failed: ${msg}`);
+      setRegistering(false);
+    };
+    window.addEventListener('unhandledrejection', catchAll as EventListener);
+    window.addEventListener('error', catchAll as EventListener);
+
     try {
       const r = await registerAgent({ program, operator: activePubkey, agentKeypair });
       setResult({ txSignature: r.txSignature, agentPda: r.agentPda.toBase58() });
     } catch (e) {
-      setError(parseProgramError(e));
+      console.error('[Prova] Registration error:', e);
+      try {
+        setError(parseProgramError(e));
+      } catch {
+        setError(String(e));
+      }
     } finally {
       setRegistering(false);
+      window.removeEventListener('unhandledrejection', catchAll as EventListener);
+      window.removeEventListener('error', catchAll as EventListener);
     }
   };
 
