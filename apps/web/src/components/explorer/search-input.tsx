@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input, Button } from '@prova/ui';
-import { Search } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import { PublicKey } from '@solana/web3.js';
 import { useI18n } from '../i18n-provider';
 
@@ -25,16 +25,19 @@ const content = {
   EN: {
     placeholder: 'Search by transaction signature, agent pubkey, or operator address…',
     searchBtn: 'Search',
+    loadingBtn: 'Loading…',
     detected: 'detected:'
   },
   ES: {
     placeholder: 'Buscar por firma de transacción, pubkey de agente o dirección de operador…',
     searchBtn: 'Buscar',
+    loadingBtn: 'Cargando…',
     detected: 'detectado:'
   },
   ZH: {
     placeholder: '通过交易签名、代理公钥或操作员地址搜索…',
     searchBtn: '搜索',
+    loadingBtn: '加载中…',
     detected: '检测到：'
   }
 };
@@ -43,6 +46,7 @@ export function SearchInput() {
   const { lang } = useI18n();
   const t = content[lang];
   const [query, setQuery] = useState('');
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const kind = query.trim() ? detect(query) : null;
 
@@ -51,9 +55,11 @@ export function SearchInput() {
     const q = query.trim();
     if (!q) return;
     const k = detect(q);
-    if (k === 'signature') router.push(`/explorer/tx/${encodeURIComponent(q)}`);
-    else if (k === 'pubkey') router.push(`/explorer/agent/${encodeURIComponent(q)}`);
-    else router.push(`/explorer/search?q=${encodeURIComponent(q)}`);
+    startTransition(() => {
+      if (k === 'signature') router.push(`/explorer/tx/${encodeURIComponent(q)}`);
+      else if (k === 'pubkey') router.push(`/explorer/agent/${encodeURIComponent(q)}`);
+      else router.push(`/explorer/search?q=${encodeURIComponent(q)}`);
+    });
   };
 
   return (
@@ -66,10 +72,16 @@ export function SearchInput() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.placeholder}
             className="border-border bg-background pl-10 font-mono text-sm placeholder:text-muted-foreground"
+            disabled={isPending}
           />
         </div>
-        <Button type="submit" disabled={!query.trim()} className="font-mono uppercase tracking-wider">
-          {t.searchBtn}
+        <Button 
+          type="submit" 
+          disabled={!query.trim() || isPending} 
+          className="font-mono uppercase tracking-wider gap-2"
+        >
+          {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+          {isPending ? t.loadingBtn : t.searchBtn}
         </Button>
       </div>
       <div className="mt-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
