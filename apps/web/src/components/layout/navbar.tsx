@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@prova/ui';
 import { LanguageSelector } from './language-selector';
@@ -36,13 +37,14 @@ export function Navbar() {
           aria-label="Prova — home"
           className="group flex shrink-0 items-center gap-2.5"
         >
-          <span
-            aria-hidden
-            className="flex h-6 w-6 items-center justify-center bg-primary font-display text-sm leading-none text-primary-foreground"
-          >
-            P
-          </span>
-          <span className="font-display text-base uppercase tracking-tight text-foreground">PROVA</span>
+          <Image 
+            src="/ProvaLogo.png" 
+            alt="Prova Logo" 
+            width={110} 
+            height={24} 
+            className="h-6 w-auto object-contain" 
+            priority
+          />
         </Link>
 
         {/* Desktop Links */}

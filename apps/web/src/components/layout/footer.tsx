@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Separator } from '@prova/ui';
 import { useI18n } from '../i18n-provider';
 
@@ -130,13 +131,13 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" aria-label="Prova — home" className="flex items-center gap-2.5">
-              <span
-                aria-hidden
-                className="flex h-5 w-5 items-center justify-center bg-primary font-display text-xs leading-none text-primary-foreground"
-              >
-                P
-              </span>
-              <span className="font-display text-sm uppercase tracking-tight text-foreground">PROVA</span>
+              <Image 
+                src="/ProvaLogo.png" 
+                alt="Prova Logo" 
+                width={100} 
+                height={20} 
+                className="h-5 w-auto object-contain" 
+              />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               {t.description}
