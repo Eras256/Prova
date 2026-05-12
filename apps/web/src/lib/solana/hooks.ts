@@ -158,10 +158,16 @@ async function fetchTransactionsChunked(
   for (let i = 0; i < signatures.length; i += chunkSize) {
     if (i > 0) await new Promise((r) => setTimeout(r, delayMs));
     const chunk = signatures.slice(i, i + chunkSize);
-    const txs = await connection.getTransactions(chunk, {
-      commitment: 'confirmed',
-      maxSupportedTransactionVersion: 0,
-    });
+    // Use Promise.all over getTransaction to avoid JSON-RPC batching,
+    // which is blocked (403) by Helius on free-tier plans.
+    const txs = await Promise.all(
+      chunk.map((sig) =>
+        connection.getTransaction(sig, {
+          commitment: 'confirmed',
+          maxSupportedTransactionVersion: 0,
+        })
+      )
+    );
     results.push(...txs);
   }
   return results;
