@@ -10,7 +10,8 @@ import { RPC_URL, WSS_URL } from '@/lib/solana/constants';
 // Las suscripciones WebSocket usan WSS_URL (Helius directo — el proxy /api/rpc es HTTP-only).
 import { I18nProvider } from './i18n-provider';
 import { PrivyProvider } from '@privy-io/react-auth';
-import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
+// NOTE: Full Privy wallet integration (embedded wallets + social) is roadmapped for Q3.
+// For now, Privy is email-only; wallet connections use the standard Solana Wallet Adapter.
 
 import { NETWORK } from '@/lib/solana/constants';
 
@@ -32,7 +33,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   const wallets = useMemo(() => [new PhantomWalletAdapter(), new SolflareWalletAdapter()], []);
-  const solanaConnectors = useMemo(() => toSolanaWalletConnectors(), []);
 
   const inner = (
     <QueryClientProvider client={queryClient}>
@@ -53,16 +53,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <PrivyProvider
       appId={privyAppId}
       config={{
-        loginMethods: ['email', 'wallet'] as ('email' | 'wallet')[],
+        loginMethods: ['email'],
         appearance: {
           theme: 'dark',
           accentColor: '#B0FF2C' as `#${string}`,
-          walletChainType: 'solana-only',
-          showWalletLoginFirst: false,
         },
         embeddedWallets: { solana: { createOnLogin: 'users-without-wallets' } },
-        externalWallets: { solana: { connectors: solanaConnectors } },
-        // Remove custom solana RPCs to prevent Privy from failing to reach localhost proxy during auth
+        // Full Privy wallet + external wallet integration is roadmapped for Q3.
+        // Wallet connections are handled by the standard Solana Wallet Adapter.
       }}
     >
       {inner}

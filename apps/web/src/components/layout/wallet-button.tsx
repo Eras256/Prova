@@ -2,17 +2,28 @@
 
 import { useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { usePrivy } from '@privy-io/react-auth';
-import { useWallets as usePrivySolanaWallets } from '@privy-io/react-auth/solana';
 import { Button } from '@prova/ui';
-import { Wallet, LogOut, User } from 'lucide-react';
+import { Wallet, LogOut, User, Mail } from 'lucide-react';
 import { shortPubkey } from '@/lib/solana/events';
 import { useI18n } from '../i18n-provider';
 
+/**
+ * WalletButton — Dual connection strategy:
+ *
+ * 1. "Connect Wallet" opens the standard Solana Wallet Adapter modal
+ *    (Phantom, Solflare, MetaMask Snap, etc.)
+ *
+ * 2. "Email Login" opens Privy in email-only mode for enterprise
+ *    non-custodial embedded wallets.
+ *
+ * NOTE: Full Privy integration (wallet + email unified) is planned for Q3.
+ */
 export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | 'lg' }) {
   const { publicKey: standardPubkey, disconnect, connected } = useWallet();
-  const { login, logout, authenticated, user, ready } = usePrivy();
-  const { wallets } = usePrivySolanaWallets();
+  const { setVisible: openWalletModal } = useWalletModal();
+  const { login: privyLogin, logout: privyLogout, authenticated, user, ready } = usePrivy();
   const [mounted, setMounted] = useState(false);
   const { t } = useI18n();
 
@@ -22,38 +33,39 @@ export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | '
 
   if (!mounted || !ready) {
     return (
-      <Button size={size} variant="outline" className="gap-2" disabled>
-        <Wallet className="h-4 w-4" />
-        {t('connectWallet')}
-      </Button>
+      <div className="flex items-center gap-1.5">
+        <Button size={size} variant="outline" className="gap-2" disabled>
+          <Wallet className="h-4 w-4" />
+          {t('connectWallet')}
+        </Button>
+        <Button size={size} variant="ghost" className="gap-2 opacity-50" disabled>
+          <Mail className="h-4 w-4" />
+          {t('emailLogin')}
+        </Button>
+      </div>
     );
   }
 
-  const privySolanaWallet = wallets.find(
-    (w) => (w as { standardWallet?: { name?: string } }).standardWallet?.name === 'Privy'
-  );
-  const privyAddress = privySolanaWallet
-    ? (privySolanaWallet as unknown as { address: string }).address
-    : null;
+  // ---------------------------------------------------------------------------
+  // Connected state — show the active identity (wallet or email) + logout
+  // ---------------------------------------------------------------------------
+  const isWalletConnected = connected && standardPubkey;
+  const isPrivyConnected = authenticated;
 
-  const isConnected = (connected && standardPubkey) || authenticated;
+  if (isWalletConnected || isPrivyConnected) {
+    const label = isWalletConnected
+      ? shortPubkey(standardPubkey, 4, 4)
+      : user?.email?.address?.split('@')[0] ?? 'User';
 
-  const handleLogout = () => {
-    if (connected) disconnect().catch(() => {});
-    if (authenticated) logout();
-  };
-
-  if (isConnected) {
-    const label = authenticated
-      ? user?.email?.address?.split('@')[0] ?? (privyAddress ? shortPubkey(privyAddress, 4, 4) : 'User')
-      : standardPubkey
-        ? shortPubkey(standardPubkey, 4, 4)
-        : '';
+    const handleLogout = () => {
+      if (connected) disconnect().catch(() => {});
+      if (authenticated) privyLogout();
+    };
 
     return (
       <div className="flex items-center gap-1.5">
         <Button size={size} variant="outline" className="gap-2 font-mono text-xs">
-          {authenticated ? <User className="h-3.5 w-3.5" /> : <Wallet className="h-3.5 w-3.5" />}
+          {isWalletConnected ? <Wallet className="h-3.5 w-3.5" /> : <User className="h-3.5 w-3.5" />}
           {label}
         </Button>
         <Button
@@ -69,15 +81,44 @@ export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | '
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // Disconnected state — two buttons: Wallet Adapter modal + Privy email-only
+  // ---------------------------------------------------------------------------
+
+  /** Opens the standard Solana Wallet Adapter modal (Phantom, Solflare, etc.) */
+  const handleConnectWallet = () => {
+    openWalletModal(true);
+  };
+
+  /**
+   * Opens Privy login restricted to email only.
+   * Full Privy integration (embedded wallets + social logins) is roadmapped for Q3.
+   */
+  const handleEmailLogin = () => {
+    privyLogin({ loginMethods: ['email'] });
+  };
+
   return (
-    <Button
-      size={size}
-      variant="outline"
-      className="gap-2"
-      onClick={login}
-    >
-      <Wallet className="h-4 w-4" />
-      {t('connectWallet')}
-    </Button>
+    <div className="flex items-center gap-1.5">
+      <Button
+        size={size}
+        variant="outline"
+        className="gap-2"
+        onClick={handleConnectWallet}
+      >
+        <Wallet className="h-4 w-4" />
+        {t('connectWallet')}
+      </Button>
+      <Button
+        size={size}
+        variant="ghost"
+        className="gap-2"
+        onClick={handleEmailLogin}
+        title="Full Privy integration — Q3"
+      >
+        <Mail className="h-4 w-4" />
+        {t('emailLogin')}
+      </Button>
+    </div>
   );
 }
