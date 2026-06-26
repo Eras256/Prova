@@ -1,0 +1,66 @@
+{
+  "name": "prova-agent-kit",
+  "version": "0.1.1",
+  "license": "Apache-2.0",
+  "author": "Prova Labs",
+  "description": "Prova adapter for Solana Agent Kit — emit verifiable on-chain receipts for every action a SAK agent executes",
+  "homepage": "https://prova-solana.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eras256/Prova.git",
+    "directory": "packages/sdk-agent-kit"
+  },
+  "keywords": [
+    "solana",
+    "solana-agent-kit",
+    "ai-agents",
+    "attestation",
+    "prova",
+    "accountability"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist",
+    "prepublishOnly": "pnpm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "prova-agent-sdk": "^0.1.6",
+    "solana-agent-kit": "^2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@solana/web3.js": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@prova/config-typescript": "workspace:*",
+    "@types/node": "^22.10.7",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
