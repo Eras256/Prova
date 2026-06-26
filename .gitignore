@@ -46,14 +46,39 @@ packages/program/temp_key.json
 packages/program/test-ledger/
 *.tsbuildinfo
 
-# Next.js
 next-env.d.ts
 
-# Claude Code — estado local y instrucciones del agente
+# Agent memory — estado local, estrategia, nunca en el repo público
 .claude/
 CLAUDE.md
+claude.md
+PROJECT.md
+.agents/
 .vercel
 
-# Cursor — mcp.json contiene tokens, cada dev configura el suyo
+# IDE rules — cada dev configura el suyo
 .cursor/mcp.json
+.cursorrules
+.windsurfrules
+.clinerules
+.mcp.json
+
+# Internal infrastructure docs
+tokens.md
+Fly.md
+Vercel.md
+
+# Session/strategy docs — privados, NUNCA al repo público
+MILESTONE-1-roadmap-producto.md
+MILESTONE-2-business-foundation.md
+STATUS.md
+NOTION-resumen-mentoria.md
+VALIDACION-design-partners.md
+SDK-TESTING-GUIDE.md
+SPIKE-solana-agent-kit-integration.md
+
+# Build artifacts
+packages/program/.anchor/
+
+# Environment
 .env*.local

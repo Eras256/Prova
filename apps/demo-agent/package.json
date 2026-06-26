@@ -1,0 +1,26 @@
+{
+  "name": "@prova/demo-agent",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Agente de referencia que genera atestaciones reales en Devnet 24/7 usando prova-agent-sdk",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0",
+    "prova-agent-sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@prova/config-typescript": "workspace:*",
+    "@types/node": "^22.10.7",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

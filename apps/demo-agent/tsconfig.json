@@ -1,0 +1,12 @@
+{
+  "extends": "@prova/config-typescript/node",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "noEmit": false,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "verbatimModuleSyntax": false
+  },
+  "include": ["src"]
+}
