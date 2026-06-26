@@ -4,6 +4,7 @@
 
 [![CI](https://github.com/Eras256/Prova/actions/workflows/ci.yml/badge.svg)](https://github.com/Eras256/Prova/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/prova-agent-sdk?label=prova-agent-sdk)](https://www.npmjs.com/package/prova-agent-sdk)
+[![npm](https://img.shields.io/npm/v/prova-agent-kit?label=prova-agent-kit)](https://www.npmjs.com/package/prova-agent-kit)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE)
 
 Prova wraps any AI agent action in a signed, on-chain receipt — verifiable by anyone, tamper-proof, sub-cent. Built on the [Solana Attestation Service (SAS)](https://attest.solana.com).
@@ -70,6 +71,7 @@ apps/
 packages/
   program/      Anchor smart contract (Solana devnet: G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1)
   sdk-typescript/  prova-agent-sdk (npm, Apache 2.0)
+  sdk-agent-kit/   prova-agent-kit (npm) — Solana Agent Kit v2 adapter
   sdk-rust/     prova-sdk (Rust crate)
   db/           Drizzle ORM schema + Supabase Postgres migrations
   core/         Shared types, errors, constants
@@ -139,6 +141,29 @@ const { data } = await api.listAttestations({ limit: 20 });
 ```
 
 Generate an API key at `/app/api-keys` (requires sign-in).
+
+---
+
+## Solana Agent Kit
+
+Already building with [Solana Agent Kit](https://github.com/sendaifun/solana-agent-kit)? Add verifiable receipts to every action your agent takes — in one line.
+
+```bash
+npm install prova-agent-kit
+```
+
+```ts
+import { attachProva, attesterFromProvaClient } from 'prova-agent-kit';
+import { ProvaClient } from 'prova-agent-sdk';
+
+const prova = new ProvaClient({ rpcUrl, agentKeypair });
+const attester = attesterFromProvaClient(prova, ProvaClient.hashAction, operatorKeypair);
+
+// Wrap your SAK agent — every action it executes is now attested on-chain.
+attachProva(agent, { attester });
+```
+
+`attachProva()` intercepts each action through SAK's `executeAction` funnel; `ProvaWallet` can also decorate the agent's `BaseWallet` to capture the real on-chain signature. Attestations are batched and fire-and-forget — they never block or break your agent.
 
 ---
 
