@@ -76,9 +76,11 @@ NOTION-resumen-mentoria.md
 VALIDACION-design-partners.md
 SDK-TESTING-GUIDE.md
 SPIKE-solana-agent-kit-integration.md
+frontier.md
 
 # Build artifacts
 packages/program/.anchor/
 
 # Environment
 .env*.local
+.env*
