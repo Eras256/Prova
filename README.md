@@ -7,7 +7,9 @@
 [![npm](https://img.shields.io/npm/v/prova-agent-kit?label=prova-agent-kit)](https://www.npmjs.com/package/prova-agent-kit)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE)
 
-Prova wraps any AI agent action in a signed, on-chain receipt — verifiable by anyone, tamper-proof, sub-cent. Built on the [Solana Attestation Service (SAS)](https://attest.solana.com).
+Prova wraps any AI agent action in a signed, on-chain receipt — verifiable by anyone, tamper-proof, sub-cent. Powered by a **purpose-built Anchor program** with native Ed25519 verification.
+
+> **Prova vs. [SAS](https://attest.solana.com):** SAS provides generic attestation rails. Prova is the full **agent-accountability stack** on top of that concept — an SDK that wraps your agent, an agent/operator model, typed action receipts (ToolCall, ModelInvocation, Decision…), an explorer, and verification. Prova runs its own Anchor program (not the SAS on-chain program).
 
 > **Disclaimer:** Prova is an independent software project and is NOT affiliated with, endorsed by, or sponsored by the Solana Foundation. Solana® is a registered trademark of the Solana Foundation.
 
