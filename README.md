@@ -56,9 +56,11 @@ AI Agent
 Key properties:
 - **Ed25519 pre-verify**: The Solana runtime validates the agent signature natively — no off-chain trust required.
 - **Batch attestations**: Up to 100 receipts per transaction with dynamic `ComputeBudget` priority fees.
-- **Privacy mode (Vanish)**: Hash on-chain, payload off-chain — selective disclosure without ZK overhead.
+- **Privacy mode (Vanish)**: The `action_hash` is committed on-chain while the full payload stays off-chain (`metadataUri`) — selective disclosure. *Confidential / encrypted metadata (to privately record an agent's reasoning) is on the roadmap.*
 - **x402 micropayments**: Explorer one-off queries at `$0.01` via HTTP 402 + on-chain SOL transfer.
 - **Solana Actions / Blinks**: Any receipt is shareable as a Blink (`/api/actions/verify?tx=<sig>`).
+
+> **Storage model — why events, not one PDA per attestation:** each attestation's cryptographic commitment (`action_hash` + Ed25519 signature) is written on-chain via the `AttestationIssued` event and is permanent. The agent's PDA holds a running `attestation_count` + `policy_root`, not per-attestation data. A PDA per receipt would incur rent on every action and wouldn't scale to high-frequency agents (thousands/day); events + an indexer keep it cheap and queryable, while the on-chain commitment stays verifiable regardless of RPC log retention.
 
 ---
 
