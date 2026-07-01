@@ -56,10 +56,14 @@ export interface ProvaAttester {
 
 /** Configuración del batching de atestaciones. */
 export interface BatchOptions {
-  /** Nº máximo de atestaciones por transacción (1–100). Default 25. */
+  /** Nº máximo de atestaciones por transacción (1–100). Al alcanzarlo, flush inmediato. Default 25. */
   maxSize?: number;
-  /** Flush automático cada N ms. Default 10000. 0 = sin flush por tiempo. */
-  flushIntervalMs?: number;
+  /**
+   * Debounce: hace flush este nº de ms tras la ÚLTIMA acción. Así una ráfaga de
+   * tool calls (multi-tool-calling) se agrupa en UNA sola tx on-chain apenas
+   * termina la ráfaga. Default 1000. 0 = flush inmediato en cada acción (sin batch).
+   */
+  flushDelayMs?: number;
 }
 
 /** Opciones de `attachProva`. */

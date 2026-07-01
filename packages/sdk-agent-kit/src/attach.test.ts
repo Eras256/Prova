@@ -29,7 +29,7 @@ describe('attachProva', () => {
 
     const handle = attachProva(agent, {
       attester,
-      batch: { maxSize: 1, flushIntervalMs: 0 },
+      batch: { maxSize: 1, flushDelayMs: 0 },
     });
 
     const result = await agent.actions[0]!.handler(agent, { amount: 10 });
@@ -72,7 +72,7 @@ describe('attachProva', () => {
     const handle = attachProva(agent, {
       attester,
       rules: (name) => name === 'trade',
-      batch: { maxSize: 1, flushIntervalMs: 0 },
+      batch: { maxSize: 1, flushDelayMs: 0 },
     });
 
     await agent.actions[0]!.handler(agent, {});

@@ -50,16 +50,18 @@ const agent = new SolanaAgentKit(new ProvaWallet(realWallet, { attester }), RPC_
 ```
 
 ### No bloquea al agente
-Las atestaciones son **fire-and-forget con batching**: un fallo de Prova nunca rompe ni frena una acción del agente. Los items se acumulan y se envían con `batchAttest` (hasta 100/tx) cada `maxSize` items o `flushIntervalMs` ms.
+Las atestaciones son **fire-and-forget con batching por debounce**: un fallo de Prova nunca rompe ni frena una acción del agente. Una ráfaga de tool calls (multi-tool-calling) se agrupa y se envía en **UNA sola tx** (`batchAttest`, hasta 100) apenas la ráfaga se detiene (`flushDelayMs`), o al llegar a `maxSize`.
 
 ```typescript
 attachProva(agent, {
   attester,
   rules: (name) => name !== 'fetchPrice',      // qué acciones atestar (default: todas)
-  batch: { maxSize: 25, flushIntervalMs: 10_000 },
+  batch: { maxSize: 25, flushDelayMs: 1000 },   // agrupa la ráfaga y envía ~1s tras la última acción
   onError: (err, ctx) => logger.warn(ctx.action, err),
 });
 ```
+
+> **Importante:** llama a `handle.stop()` cuando el agente termine su turno para garantizar el flush final de lo pendiente.
 
 ## Modelo de claves
 Prova atesta con **su propio par operador/agente de Devnet**, independiente del wallet de trading del agente. Ventajas: no necesita la private key de trading, funciona con wallets Privy/Turnkey, y el operador Prova es la identidad que avala al agente. Registra el agente una vez con `prova.registerAgent({ operatorKeypair })`.
