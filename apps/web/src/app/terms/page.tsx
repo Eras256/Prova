@@ -28,7 +28,7 @@ const content = {
       {
         title: '5. Contact',
         body: null,
-        email: 'legal@prova.io',
+        email: 'xvaiosx7@gmail.com',
       },
     ],
   },
@@ -57,7 +57,7 @@ const content = {
       {
         title: '5. Contacto',
         body: null,
-        email: 'legal@prova.io',
+        email: 'xvaiosx7@gmail.com',
       },
     ],
   },
@@ -86,7 +86,7 @@ const content = {
       {
         title: '5. 联系方式',
         body: null,
-        email: 'legal@prova.io',
+        email: 'xvaiosx7@gmail.com',
       },
     ],
   },

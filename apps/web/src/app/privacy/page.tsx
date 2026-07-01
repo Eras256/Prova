@@ -19,12 +19,12 @@ const content = {
       },
       {
         title: '3. LFPDPPP Compliance (Mexico)',
-        body: 'Prova complies with the Ley Federal de Protección de Datos Personales en Posesión de los Particulares. For ARCO requests (Access, Rectification, Cancellation, Opposition), contact: privacy@prova.io.',
+        body: 'Prova complies with the Ley Federal de Protección de Datos Personales en Posesión de los Particulares. For ARCO requests (Access, Rectification, Cancellation, Opposition), contact: xvaiosx7@gmail.com.',
       },
       {
         title: '4. Contact',
         body: null,
-        email: 'privacy@prova.io',
+        email: 'xvaiosx7@gmail.com',
       },
     ],
   },
@@ -44,12 +44,12 @@ const content = {
       },
       {
         title: '3. Cumplimiento LFPDPPP (México)',
-        body: 'Prova cumple con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares. Para solicitudes ARCO (Acceso, Rectificación, Cancelación, Oposición), contacta: privacy@prova.io.',
+        body: 'Prova cumple con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares. Para solicitudes ARCO (Acceso, Rectificación, Cancelación, Oposición), contacta: xvaiosx7@gmail.com.',
       },
       {
         title: '4. Contacto',
         body: null,
-        email: 'privacy@prova.io',
+        email: 'xvaiosx7@gmail.com',
       },
     ],
   },
@@ -69,12 +69,12 @@ const content = {
       },
       {
         title: '3. LFPDPPP 合规（墨西哥）',
-        body: 'Prova 遵守《联邦个人数据保护法》。如需 ARCO 请求（访问、更正、取消、反对），请联系：privacy@prova.io。',
+        body: 'Prova 遵守《联邦个人数据保护法》。如需 ARCO 请求（访问、更正、取消、反对），请联系：xvaiosx7@gmail.com。',
       },
       {
         title: '4. 联系方式',
         body: null,
-        email: 'privacy@prova.io',
+        email: 'xvaiosx7@gmail.com',
       },
     ],
   },

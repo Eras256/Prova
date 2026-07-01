@@ -245,7 +245,7 @@ CI/CD: GitHub Actions → typecheck gates all deploys.
 
 ## Security
 
-Report vulnerabilities to **security@prova.io** — do NOT open public GitHub issues.
+Report vulnerabilities to **xvaiosx7@gmail.com** — do NOT open public GitHub issues.
 
 ---
 

@@ -107,8 +107,8 @@ export default function SecurityPage() {
             </p>
             <p className="mt-3 text-sm text-muted-foreground">
               {t.reportLabel}{' '}
-              <a href="mailto:security@prova.io" className="font-mono text-primary hover:text-foreground">
-                security@prova.io
+              <a href="mailto:xvaiosx7@gmail.com" className="font-mono text-primary hover:text-foreground">
+                xvaiosx7@gmail.com
               </a>
             </p>
           </div>
