@@ -174,15 +174,19 @@ async function fetchTransactionsChunked(
 }
 
 // Histórico: lee las últimas N transacciones que tocaron el programa y extrae eventos
-export function useRecentAttestations(limit = 25): {
+export function useRecentAttestations(limit = 25, before?: string): {
   attestations: (AttestationIssued & { txSignature: string; slot: number })[];
   loading: boolean;
   error: string | null;
+  hasMore: boolean;
+  lastSignature: string | null;
 } {
   const connection = useReadOnlyConnection();
   const [data, setData] = useState<(AttestationIssued & { txSignature: string; slot: number })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [lastSignature, setLastSignature] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -191,7 +195,11 @@ export function useRecentAttestations(limit = 25): {
       setLoading(true);
       setError(null);
       try {
-        const sigs = await connection.getSignaturesForAddress(PROGRAM_ID, { limit }, 'confirmed');
+        const sigs = await connection.getSignaturesForAddress(
+          PROGRAM_ID,
+          before ? { limit, before } : { limit },
+          'confirmed'
+        );
         const txs = await fetchTransactionsChunked(
           connection,
           sigs.map((s) => s.signature)
@@ -208,7 +216,12 @@ export function useRecentAttestations(limit = 25): {
           }
         });
 
-        if (!cancelled) setData(out);
+        if (!cancelled) {
+          setData(out);
+          setHasMore(sigs.length === limit);
+          const lastSig = sigs[sigs.length - 1];
+          setLastSignature(lastSig ? lastSig.signature : null);
+        }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load');
       } finally {
@@ -219,9 +232,9 @@ export function useRecentAttestations(limit = 25): {
     return () => {
       cancelled = true;
     };
-  }, [connection, limit]);
+  }, [connection, limit, before]);
 
-  return { attestations: data, loading, error };
+  return { attestations: data, loading, error, hasMore, lastSignature };
 }
 
 export function useAttestationCount(): { count: number | null; loading: boolean } {

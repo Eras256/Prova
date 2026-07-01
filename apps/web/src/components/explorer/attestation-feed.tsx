@@ -1,7 +1,7 @@
-'use client';
-
+import { useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle, Loader2, Inbox, AlertTriangle } from 'lucide-react';
+import { CheckCircle, Loader2, Inbox, AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@prova/ui';
 import { useRecentAttestations } from '@/lib/solana/hooks';
 import { ACTION_TYPE_LABEL, shortPubkey, shortBytes } from '@/lib/solana/events';
 import { explorerTxUrl, NETWORK } from '@/lib/solana/constants';
@@ -25,7 +25,10 @@ const content = {
     agent: 'agent',
     hash: 'hash',
     vanish: 'vanish',
-    verified: 'verified'
+    verified: 'verified',
+    prev: 'Previous',
+    next: 'Next',
+    page: 'Page'
   },
   ES: {
     title: 'Atestaciones recientes',
@@ -39,7 +42,10 @@ const content = {
     agent: 'agente',
     hash: 'hash',
     vanish: 'vanish',
-    verified: 'verificado'
+    verified: 'verificado',
+    prev: 'Anterior',
+    next: 'Siguiente',
+    page: 'Página'
   },
   ZH: {
     title: '最近的证明',
@@ -53,14 +59,34 @@ const content = {
     agent: '代理',
     hash: '哈希',
     vanish: 'vanish',
-    verified: '已验证'
+    verified: '已验证',
+    prev: '上一页',
+    next: '下一页',
+    page: '页码'
   }
 };
 
 export function AttestationFeed() {
   const { lang } = useI18n();
   const t = content[lang];
-  const { attestations, loading, error } = useRecentAttestations(20);
+  const [beforeCursor, setBeforeCursor] = useState<string | undefined>(undefined);
+  const [pageStack, setPageStack] = useState<string[]>([]);
+
+  const { attestations, loading, error, hasMore, lastSignature } = useRecentAttestations(20, beforeCursor);
+
+  const handleNext = () => {
+    if (lastSignature) {
+      setPageStack((prev) => [...prev, beforeCursor || '']);
+      setBeforeCursor(lastSignature);
+    }
+  };
+
+  const handlePrev = () => {
+    const prevStack = [...pageStack];
+    const prevBefore = prevStack.pop();
+    setPageStack(prevStack);
+    setBeforeCursor(prevBefore || undefined);
+  };
 
   return (
     <div className="border border-border bg-background">
@@ -101,49 +127,79 @@ export function AttestationFeed() {
           </Link>
         </div>
       ) : (
-        <ol className="divide-y divide-border">
-          {attestations.map((a) => (
-            <li
-              key={`${a.txSignature}-${shortBytes(a.actionHash)}`}
-              className="grid gap-3 px-5 py-4 text-sm sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6"
+        <>
+          <ol className="divide-y divide-border">
+            {attestations.map((a) => (
+              <li
+                key={`${a.txSignature}-${shortBytes(a.actionHash)}`}
+                className="grid gap-3 px-5 py-4 text-sm sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6"
+              >
+                <span className="font-mono text-xs text-muted-foreground tabular-nums">{t.slot} {a.slot}</span>
+
+                <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
+                  <a
+                    href={explorerTxUrl(a.txSignature)}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-foreground hover:text-primary"
+                  >
+                    {a.txSignature.slice(0, 8)}…{a.txSignature.slice(-4)}
+                  </a>
+                  <span className="text-muted-foreground">·</span>
+                  <span className="text-muted-foreground">
+                    {t.agent} <span className="text-foreground">{shortPubkey(a.agent, 4, 4)}</span>
+                  </span>
+                  <span className="text-muted-foreground">·</span>
+                  <span className="text-muted-foreground">
+                    {t.hash} <span className="text-foreground">{shortBytes(a.actionHash, 4, 4)}</span>
+                  </span>
+                  {a.privacyMode && (
+                    <span className="font-pixel text-[10px] uppercase tracking-wider text-primary">{t.vanish}</span>
+                  )}
+                </div>
+
+                <span className="font-pixel text-[11px] uppercase tracking-wider text-muted-foreground">
+                  {ACTION_TYPE_LABEL[a.actionType]}
+                </span>
+
+                <span className="flex items-center gap-1.5 text-xs text-primary">
+                  <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  <span className="font-mono uppercase tracking-wider">{t.verified}</span>
+                  <span className="hidden text-muted-foreground sm:inline"> · {formatTs(a.timestamp)}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+
+          {/* Pagination Footer */}
+          <div className="flex items-center justify-between border-t border-border px-5 py-4">
+            <Button
+              onClick={handlePrev}
+              disabled={pageStack.length === 0}
+              variant="outline"
+              size="sm"
+              className="gap-1 font-mono text-xs uppercase tracking-wider border-border"
             >
-              <span className="font-mono text-xs text-muted-foreground tabular-nums">{t.slot} {a.slot}</span>
-
-              <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
-                <a
-                  href={explorerTxUrl(a.txSignature)}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="text-foreground hover:text-primary"
-                >
-                  {a.txSignature.slice(0, 8)}…{a.txSignature.slice(-4)}
-                </a>
-                <span className="text-muted-foreground">·</span>
-                <span className="text-muted-foreground">
-                  {t.agent} <span className="text-foreground">{shortPubkey(a.agent, 4, 4)}</span>
-                </span>
-                <span className="text-muted-foreground">·</span>
-                <span className="text-muted-foreground">
-                  {t.hash} <span className="text-foreground">{shortBytes(a.actionHash, 4, 4)}</span>
-                </span>
-                {a.privacyMode && (
-                  <span className="font-pixel text-[10px] uppercase tracking-wider text-primary">{t.vanish}</span>
-                )}
-              </div>
-
-              <span className="font-pixel text-[11px] uppercase tracking-wider text-muted-foreground">
-                {ACTION_TYPE_LABEL[a.actionType]}
-              </span>
-
-              <span className="flex items-center gap-1.5 text-xs text-primary">
-                <CheckCircle className="h-3.5 w-3.5" strokeWidth={1.5} />
-                <span className="font-mono uppercase tracking-wider">{t.verified}</span>
-                <span className="hidden text-muted-foreground sm:inline"> · {formatTs(a.timestamp)}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
+              <ChevronLeft className="h-4 w-4" />
+              {t.prev}
+            </Button>
+            <span className="font-mono text-xs text-muted-foreground">
+              {t.page} {pageStack.length + 1}
+            </span>
+            <Button
+              onClick={handleNext}
+              disabled={!hasMore}
+              variant="outline"
+              size="sm"
+              className="gap-1 font-mono text-xs uppercase tracking-wider border-border"
+            >
+              {t.next}
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </>
       )}
     </div>
   );
 }
+
