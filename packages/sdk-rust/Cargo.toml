@@ -1,6 +1,6 @@
 [package]
 name = "prova-agent-sdk"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Behavior attestation SDK for AI agents on Solana — wrap any agent action in a cryptographic receipt"
 license = "Apache-2.0"

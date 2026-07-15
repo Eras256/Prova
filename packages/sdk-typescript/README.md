@@ -226,9 +226,9 @@ await prova.attest({
 
 ## Links
 
-- [Explorer](https://prova.io/explorer)
-- [Documentation](https://prova.io/developers)
-- [SDK Reference](https://prova.io/developers/sdks)
+- [Explorer](https://www.theprova.xyz/explorer)
+- [Documentation](https://www.theprova.xyz/developers)
+- [SDK Reference](https://www.theprova.xyz/developers/sdks)
 - [GitHub](https://github.com/Eras256/Prova)
 
 ## License
