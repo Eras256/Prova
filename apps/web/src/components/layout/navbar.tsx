@@ -19,6 +19,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const links = [
+    { label: t('home'), href: '/' },
     { label: t('product'), href: '/product' },
     { label: t('explorer'), href: '/explorer' },
     { label: t('developers'), href: '/developers' },
