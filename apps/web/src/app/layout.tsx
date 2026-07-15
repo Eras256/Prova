@@ -24,7 +24,7 @@ const pixelify = Pixelify_Sans({
   display: 'swap',
 });
 
-const SITE_URL = 'https://prova.io';
+const SITE_URL = 'https://www.theprova.xyz';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

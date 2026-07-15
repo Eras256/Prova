@@ -4,7 +4,7 @@
   "description": "Behavior attestation SDK for AI agents on Solana — wrap any agent action in a cryptographic receipt",
   "license": "Apache-2.0",
   "author": "Prova Labs",
-  "homepage": "https://prova-solana.vercel.app",
+  "homepage": "https://www.theprova.xyz",
   "repository": {
     "type": "git",
     "url": "https://github.com/Eras256/Prova.git",

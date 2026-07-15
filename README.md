@@ -176,7 +176,7 @@ attachProva(agent, { attester });
 Every attestation receipt can be shared as a Blink:
 
 ```
-https://prova-solana.vercel.app/api/actions/verify?tx=<txSignature>
+https://www.theprova.xyz/api/actions/verify?tx=<txSignature>
 ```
 
 Paste in Twitter/X or any Dialect-compatible wallet to render the receipt as an interactive card.
@@ -206,7 +206,7 @@ const receipt = await client.attest({ operatorKeypair, actionHash, actionType: '
 
 | Service | Platform | URL |
 |---------|----------|-----|
-| Web (Next.js) | Vercel | https://prova-solana.vercel.app |
+| Web (Next.js) | Vercel | https://www.theprova.xyz |
 | API (Hono) | Fly.io | https://prova-api.fly.dev |
 | Indexer | Fly.io | Internal |
 | DB | Supabase Postgres | — |

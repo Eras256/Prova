@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "author": "Prova Labs",
   "description": "Prova adapter for Solana Agent Kit — emit verifiable on-chain receipts for every action a SAK agent executes",
-  "homepage": "https://prova-solana.vercel.app",
+  "homepage": "https://www.theprova.xyz",
   "repository": {
     "type": "git",
     "url": "https://github.com/Eras256/Prova.git",

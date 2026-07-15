@@ -110,7 +110,7 @@ console.log('DeFi receipt:', receipt.explorerUrl);`,
     blinkTitle: 'Share as a Solana Blink',
     blinkCode: `// After attestation, make the receipt shareable as a Blink:
 const blinkUrl =
-  \`https://prova-solana.vercel.app/api/actions/verify?tx=\${receipt.txSignature}\`;
+  \`https://www.theprova.xyz/api/actions/verify?tx=\${receipt.txSignature}\`;
 
 // Paste this URL in Twitter/X to render the receipt as an interactive card.
 // Supported by Phantom, Backpack, Solflare, and all Dialect-compatible clients.
@@ -214,7 +214,7 @@ console.log('Recibo DeFi:', receipt.explorerUrl);`,
     sdkTitle: 'Paquetes SDK',
     blinkTitle: 'Compartir como Solana Blink',
     blinkCode: `const blinkUrl =
-  \`https://prova-solana.vercel.app/api/actions/verify?tx=\${receipt.txSignature}\`;
+  \`https://www.theprova.xyz/api/actions/verify?tx=\${receipt.txSignature}\`;
 
 // Pega esta URL en Twitter/X para mostrar el recibo como tarjeta interactiva.
 console.log('Blink:', blinkUrl);`,
@@ -308,7 +308,7 @@ console.log('DeFi 收据:', receipt.explorerUrl);`,
     sdkTitle: 'SDK 包',
     blinkTitle: '以 Solana Blink 形式分享',
     blinkCode: `const blinkUrl =
-  \`https://prova-solana.vercel.app/api/actions/verify?tx=\${receipt.txSignature}\`;
+  \`https://www.theprova.xyz/api/actions/verify?tx=\${receipt.txSignature}\`;
 console.log('Blink:', blinkUrl);`,
   },
 };

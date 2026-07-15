@@ -16,6 +16,8 @@ import { rateLimiter } from './middleware/rate-limiter';
 export const app = new Hono();
 
 const ALLOWED_ORIGINS = [
+  'https://www.theprova.xyz',
+  'https://theprova.xyz',
   'https://prova.io',
   'https://www.prova.io',
   'https://prova-solana.vercel.app',

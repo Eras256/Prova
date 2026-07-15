@@ -4,7 +4,7 @@
  * Spec: https://solana.com/docs/advanced/actions
  *
  * Uso como Blink:
- *   https://prova-solana.vercel.app/api/actions/verify?tx=<txSignature>
+ *   https://www.theprova.xyz/api/actions/verify?tx=<txSignature>
  *
  * Compártelo en Twitter/X para que cualquier wallet compatible muestre
  * el receipt on-chain directamente en el feed.
@@ -22,9 +22,10 @@ const CORS = {
 };
 
 const BASE_URL =
-  process.env['NEXT_PUBLIC_VERCEL_URL']
+  process.env['NEXT_PUBLIC_SITE_URL'] ??
+  (process.env['NEXT_PUBLIC_VERCEL_URL']
     ? `https://${process.env['NEXT_PUBLIC_VERCEL_URL']}`
-    : 'https://prova-solana.vercel.app';
+    : 'https://www.theprova.xyz');
 
 const API_URL =
   process.env['NEXT_PUBLIC_PROVA_API_URL'] ?? 'https://prova-api.fly.dev';
@@ -196,7 +197,7 @@ export async function POST(req: NextRequest) {
 
     return actionResponse({
       transaction: serialized,
-      message: `Receipt verified · Open https://prova-solana.vercel.app/explorer/tx/${tx}`,
+      message: `Receipt verified · Open https://www.theprova.xyz/explorer/tx/${tx}`,
     });
   } catch {
     return actionResponse({ error: 'Failed to build verification transaction' }, 500);
