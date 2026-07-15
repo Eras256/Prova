@@ -4,6 +4,19 @@ import { useI18n } from '@/components/i18n-provider';
 
 const releases = [
   {
+    version: '0.2.1',
+    date: '2026-07-15',
+    type: 'Infrastructure',
+    notes: [
+      'Custom domain — theprova.xyz is the new canonical home',
+      'prova-agent-sdk@0.1.7 and prova-agent-kit@0.1.3 published to npm',
+      'Rust SDK 0.1.1 published to crates.io',
+      'Indexer hardened: full paginated backfill, periodic catch-up, WebSocket watchdog, honest health checks with self-restart',
+      'Backfilled 26,000+ attestations after re-pointing the indexer to the main program',
+      'Blinks endpoint, sitemap and quick-start snippets now resolve to theprova.xyz',
+    ],
+  },
+  {
     version: '0.2.0',
     date: '2026-05-12',
     type: 'Major',

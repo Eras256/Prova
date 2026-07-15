@@ -73,8 +73,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Prova — Cryptographic receipts for AI agent actions',
     description: 'When your AI agent acts, prove it. Signed, on-chain, in under a second.',
-    creator: '@prova_io',
-    site: '@prova_io',
+    creator: '@theprovaxyz',
+    site: '@theprovaxyz',
     images: ['/og.png'],
   },
   robots: {
@@ -109,10 +109,10 @@ const organizationSchema = {
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   description:
-    'Prova issues cryptographic, on-chain receipts for every action an AI agent takes, built on the Solana Attestation Service.',
+    'Prova issues cryptographic, on-chain receipts for every action an AI agent takes, sealed on Solana by its own Anchor program with native Ed25519 verification.',
   sameAs: [
     'https://github.com/Eras256/Prova',
-    'https://x.com/prova_io',
+    'https://x.com/theprovaxyz',
     'https://discord.gg/prova',
   ],
 };

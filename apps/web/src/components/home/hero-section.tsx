@@ -63,7 +63,7 @@ export function HeroSection() {
               { k: '< 1s', v: t('finality') },
               { k: '$0.0005', v: t('perReceipt') },
               { k: 'Apache 2.0', v: t('openSource') },
-              { k: 'SAS', v: t('native') },
+              { k: 'Ed25519', v: t('native') },
             ].map((m) => (
               <div key={m.v}>
                 <div className="font-display text-xl text-foreground sm:text-2xl">{m.k}</div>

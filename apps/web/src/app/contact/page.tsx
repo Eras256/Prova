@@ -85,7 +85,7 @@ export default function ContactPage() {
               </p>
               <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
                 <a href="https://discord.gg/prova" className="font-mono text-muted-foreground hover:text-foreground">Discord</a>
-                <a href="https://x.com/prova_io" className="font-mono text-muted-foreground hover:text-foreground">X (Twitter)</a>
+                <a href="https://x.com/theprovaxyz" className="font-mono text-muted-foreground hover:text-foreground">X (Twitter)</a>
                 <a href="https://github.com/Eras256/Prova" className="font-mono text-muted-foreground hover:text-foreground">GitHub</a>
               </div>
             </div>

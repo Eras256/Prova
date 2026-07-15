@@ -8,7 +8,7 @@ const content = {
   EN: {
     tag: 'Developers',
     headline: ['Wrap an agent action.', 'Get a receipt that', 'survives anything.'],
-    desc: 'Free, open-source TypeScript SDK. No proprietary runtime, no vendor lock-in — a thin wrapper around the Solana Attestation Service.',
+    desc: 'Free, open-source TypeScript SDK. No proprietary runtime, no vendor lock-in — a thin wrapper around Prova\'s own attestation program on Solana.',
     quickStart: 'Open the Quick Start',
     github: 'Star on GitHub',
     installTag: 'Install',
@@ -227,7 +227,7 @@ export function DevelopersContent() {
                 rel="noreferrer noopener"
                 className="flex items-center gap-1 font-pixel text-[12px] uppercase tracking-wider text-muted-foreground hover:text-primary text-right"
               >
-                Node 18+ · v0.1.6
+                Node 18+ · v0.1.7
                 <ExternalLink className="hidden h-2.5 w-2.5 sm:block" />
               </a>
             </div>
@@ -243,7 +243,7 @@ export function DevelopersContent() {
                 rel="noreferrer noopener"
                 className="flex items-center gap-1 font-pixel text-[12px] uppercase tracking-wider text-muted-foreground hover:text-primary text-right"
               >
-                Rust 1.70+ · v0.1.0
+                Rust 1.70+ · v0.1.1
                 <ExternalLink className="hidden h-2.5 w-2.5 sm:block" />
               </a>
             </div>

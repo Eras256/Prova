@@ -144,7 +144,7 @@ export function Footer() {
             </p>
             <div className="mt-5 flex gap-5">
               {[
-                { label: 'X', href: 'https://x.com/prova_io' },
+                { label: 'X', href: 'https://x.com/theprovaxyz' },
               ].map((s) => (
                 <a
                   key={s.label}
