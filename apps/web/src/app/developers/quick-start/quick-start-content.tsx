@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import { useI18n } from '@/components/i18n-provider';
 
@@ -115,6 +116,10 @@ const blinkUrl =
 // Paste this URL in Twitter/X to render the receipt as an interactive card.
 // Supported by Phantom, Backpack, Solflare, and all Dialect-compatible clients.
 console.log('Blink:', blinkUrl);`,
+    docsCtaTitle: 'Want to go deeper?',
+    docsCtaDesc:
+      'The full documentation covers core concepts, the complete SDK references (TypeScript, Agent Kit, Rust), the REST API, and the on-chain program.',
+    docsCtaLink: 'Read the full documentation',
   },
   ES: {
     tag: 'Inicio Rápido',
@@ -218,6 +223,10 @@ console.log('Recibo DeFi:', receipt.explorerUrl);`,
 
 // Pega esta URL en Twitter/X para mostrar el recibo como tarjeta interactiva.
 console.log('Blink:', blinkUrl);`,
+    docsCtaTitle: '¿Quieres profundizar?',
+    docsCtaDesc:
+      'La documentación completa cubre los conceptos clave, las referencias completas de los SDKs (TypeScript, Agent Kit, Rust), la API REST y el programa on-chain.',
+    docsCtaLink: 'Leer la documentación completa',
   },
   ZH: {
     tag: '快速入门',
@@ -310,6 +319,10 @@ console.log('DeFi 收据:', receipt.explorerUrl);`,
     blinkCode: `const blinkUrl =
   \`https://www.theprova.xyz/api/actions/verify?tx=\${receipt.txSignature}\`;
 console.log('Blink:', blinkUrl);`,
+    docsCtaTitle: '想深入了解？',
+    docsCtaDesc:
+      '完整文档涵盖核心概念、完整的 SDK 参考（TypeScript、Agent Kit、Rust）、REST API 和链上程序。',
+    docsCtaLink: '阅读完整文档',
   },
 };
 
@@ -407,6 +420,18 @@ export function QuickStartContent() {
           <div className="mt-4 overflow-x-auto border border-border bg-surface p-5">
             <pre className="font-mono text-sm leading-relaxed text-primary/90">{t.blinkCode}</pre>
           </div>
+        </div>
+
+        {/* Full docs CTA */}
+        <div className="mt-6 border border-border bg-background p-8">
+          <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.docsCtaTitle}</p>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{t.docsCtaDesc}</p>
+          <Link
+            href="/developers/docs"
+            className="mt-4 inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-foreground transition-colors hover:text-primary"
+          >
+            {t.docsCtaLink} →
+          </Link>
         </div>
       </div>
     </div>
