@@ -33,12 +33,12 @@ export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | '
 
   if (!mounted || !ready) {
     return (
-      <div className="flex items-center gap-1.5">
-        <Button size={size} variant="outline" className="gap-2" disabled>
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 w-full sm:w-auto">
+        <Button size={size} variant="outline" className="gap-2 w-full sm:w-auto justify-center" disabled>
           <Wallet className="h-4 w-4" />
           {t('connectWallet')}
         </Button>
-        <Button size={size} variant="ghost" className="gap-2 opacity-50" disabled>
+        <Button size={size} variant="ghost" className="gap-2 opacity-50 w-full sm:w-auto justify-center" disabled>
           <Mail className="h-4 w-4" />
           {t('emailLogin')}
         </Button>
@@ -63,19 +63,20 @@ export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | '
     };
 
     return (
-      <div className="flex items-center gap-1.5">
-        <Button size={size} variant="outline" className="gap-2 font-mono text-xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 w-full sm:w-auto">
+        <Button size={size} variant="outline" className="gap-2 font-mono text-xs w-full sm:w-auto justify-center">
           {isWalletConnected ? <Wallet className="h-3.5 w-3.5" /> : <User className="h-3.5 w-3.5" />}
           {label}
         </Button>
         <Button
           size={size}
           variant="ghost"
-          className="px-2"
+          className="px-2 w-full sm:w-auto justify-center gap-2"
           onClick={handleLogout}
           aria-label="Disconnect"
         >
           <LogOut className="h-3.5 w-3.5" />
+          <span className="sm:hidden font-mono text-xs uppercase tracking-wider">{t('logout') || 'Disconnect'}</span>
         </Button>
       </div>
     );
@@ -99,11 +100,11 @@ export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | '
   };
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 w-full sm:w-auto">
       <Button
         size={size}
         variant="outline"
-        className="gap-2"
+        className="gap-2 w-full sm:w-auto justify-center"
         onClick={handleConnectWallet}
       >
         <Wallet className="h-4 w-4" />
@@ -112,7 +113,7 @@ export function WalletButton({ size = 'default' }: { size?: 'default' | 'sm' | '
       <Button
         size={size}
         variant="ghost"
-        className="gap-2"
+        className="gap-2 w-full sm:w-auto justify-center"
         onClick={handleEmailLogin}
         title="Full Privy integration — Q3"
       >

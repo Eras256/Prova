@@ -152,13 +152,13 @@ export function DevelopersContent() {
           {t.resources.map((r) => (
             <li
               key={r.n}
-              className="grid gap-6 border-b border-border py-10 lg:grid-cols-[auto_auto_1fr_2fr_auto] lg:items-center lg:gap-12 lg:py-12"
+              className="grid grid-cols-[auto_1fr_auto] gap-x-4 gap-y-2 border-b border-border py-8 lg:grid-cols-[auto_auto_1fr_2fr_auto] lg:items-center lg:gap-12 lg:py-12"
             >
-              <span className="font-mono text-xs text-primary">{r.n}</span>
-              <r.icon className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
-              <h2 className="font-display text-base uppercase text-foreground lg:text-lg">{r.title}</h2>
-              <p className="text-base leading-relaxed text-muted-foreground">{r.desc}</p>
-              <Button variant="ghost" size="sm" asChild className="-ml-2 justify-self-start gap-1 text-primary lg:justify-self-end">
+              <span className="font-mono text-xs text-primary col-start-1 row-start-1 lg:col-auto lg:row-auto">{r.n}</span>
+              <r.icon className="h-5 w-5 text-muted-foreground col-start-2 row-start-1 lg:col-auto lg:row-auto" strokeWidth={1.5} />
+              <h2 className="font-display text-base uppercase text-foreground lg:text-lg col-start-1 col-span-2 row-start-2 lg:col-auto lg:row-auto">{r.title}</h2>
+              <p className="text-base leading-relaxed text-muted-foreground col-start-1 col-span-3 row-start-3 lg:col-auto lg:row-auto mt-1 lg:mt-0">{r.desc}</p>
+              <Button variant="ghost" size="sm" asChild className="-ml-2 justify-self-start gap-1 text-primary col-start-3 row-start-1 row-span-2 self-center justify-self-end lg:col-auto lg:row-auto lg:-ml-2">
                 <Link href={r.href}>
                   {r.cta}
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -180,7 +180,7 @@ export function DevelopersContent() {
                 href="https://prova-api.fly.dev/api/v1/health"
                 target="_blank"
                 rel="noreferrer noopener"
-                className="mt-3 flex items-center gap-1.5 font-mono text-sm text-foreground hover:text-primary"
+                className="mt-3 flex items-center gap-1.5 font-mono text-sm break-all text-foreground hover:text-primary"
               >
                 https://prova-api.fly.dev
                 <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
@@ -231,7 +231,7 @@ export function DevelopersContent() {
                 <ExternalLink className="hidden h-2.5 w-2.5 sm:block" />
               </a>
             </div>
-            <pre className="mt-3 overflow-x-auto font-mono text-sm text-foreground">npm install prova-agent-sdk</pre>
+            <pre className="mt-3 overflow-x-auto font-mono text-xs sm:text-sm text-foreground">npm install prova-agent-sdk</pre>
           </div>
 
           <div className="mt-4 border border-border bg-background p-6">
@@ -247,7 +247,7 @@ export function DevelopersContent() {
                 <ExternalLink className="hidden h-2.5 w-2.5 sm:block" />
               </a>
             </div>
-            <pre className="mt-3 overflow-x-auto font-mono text-sm text-foreground">cargo add prova-agent-sdk</pre>
+            <pre className="mt-3 overflow-x-auto font-mono text-xs sm:text-sm text-foreground">cargo add prova-agent-sdk</pre>
           </div>
         </div>
       </div>

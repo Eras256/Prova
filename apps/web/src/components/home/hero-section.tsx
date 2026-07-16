@@ -33,7 +33,7 @@ export function HeroSection() {
             </Link>
           </div>
 
-          <h1 className="mt-8 animate-fade-up font-display text-[2.75rem] uppercase leading-[0.92] text-foreground [animation-delay:80ms] sm:text-[3.75rem] lg:text-[5rem]">
+          <h1 className="mt-8 animate-fade-up font-display text-[2.25rem] min-[380px]:text-[2.75rem] uppercase leading-[0.92] text-foreground [animation-delay:80ms] sm:text-[3.75rem] lg:text-[5rem]">
             <span className="block">{t('heroTitle1')}</span>
             <span className="block">{t('heroTitle2')}</span>
             <span className="block">{t('heroTitle3')}</span>

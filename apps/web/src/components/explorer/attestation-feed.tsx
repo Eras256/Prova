@@ -132,7 +132,7 @@ export function AttestationFeed() {
             {attestations.map((a) => (
               <li
                 key={`${a.txSignature}-${shortBytes(a.actionHash)}`}
-                className="grid gap-3 px-5 py-4 text-sm sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6"
+                className="grid gap-3 px-4 sm:px-5 py-4 text-sm sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6"
               >
                 <span className="font-mono text-xs text-muted-foreground tabular-nums">{t.slot} {a.slot}</span>
 
@@ -172,7 +172,7 @@ export function AttestationFeed() {
           </ol>
 
           {/* Pagination Footer */}
-          <div className="flex items-center justify-between border-t border-border px-5 py-4">
+          <div className="flex items-center justify-between border-t border-border px-4 sm:px-5 py-4">
             <Button
               onClick={handlePrev}
               disabled={pageStack.length === 0}

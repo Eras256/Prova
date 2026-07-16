@@ -114,13 +114,11 @@ export function UseCasesGrid() {
           </div>
         </div>
 
-        <div className="grid border-t border-border md:grid-cols-2 md:divide-x md:divide-border lg:grid-cols-4">
-          {t.cases.map((c, i) => (
+        <div className="grid gap-px bg-border border border-border md:grid-cols-2 lg:grid-cols-4">
+          {t.cases.map((c) => (
             <article
               key={c.persona}
-              className={`flex flex-col gap-5 border-b border-border p-8 ${
-                i % 2 === 1 ? 'border-l border-border md:border-l-0' : ''
-              } lg:border-b-0`}
+              className="bg-background flex flex-col gap-5 p-8"
             >
               <c.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
               <p className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">

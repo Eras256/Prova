@@ -250,7 +250,7 @@ export function AgentDetail({ pubkey }: { pubkey: string }) {
                   {attestations.map((a) => (
                     <li
                       key={`${a.txSignature}-${bytesToHex(a.actionHash)}`}
-                      className="grid gap-3 px-5 py-4 text-sm sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6"
+                      className="grid gap-3 px-4 sm:px-5 py-4 text-sm sm:grid-cols-[auto_1fr_auto_auto] sm:items-center sm:gap-6"
                     >
                       <span className="font-mono text-xs text-muted-foreground tabular-nums">{t.slot} {a.slot}</span>
                       <Link

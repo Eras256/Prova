@@ -270,13 +270,11 @@ export function PricingContent() {
           </div>
         </div>
 
-        <div className="mt-16 grid border-t border-border md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid gap-px bg-border border border-border md:grid-cols-2 lg:grid-cols-4">
           {t.plans.map((plan, i) => (
             <div
               key={plan.name}
-              className={`relative flex flex-col gap-5 border-b border-border p-7 ${
-                i > 0 ? 'lg:border-l lg:border-border' : ''
-              } ${plan.highlight ? 'bg-primary/3' : ''} md:nth-2:border-l md:nth-2:border-border lg:nth-2:border-l lg:nth-4:border-l`}
+              className={`bg-background relative flex flex-col gap-5 p-7 ${plan.highlight ? 'bg-primary/5' : ''}`}
             >
               {'badge' in plan && plan.badge && (
                 <div className="absolute -top-2.5 left-7">
@@ -327,7 +325,7 @@ export function PricingContent() {
           ))}
         </div>
 
-        <div className="mt-20 grid gap-px bg-border md:grid-cols-2">
+        <div className="mt-20 grid gap-px bg-border border border-border md:grid-cols-2">
           <div className="bg-background p-8">
             <h2 className="font-display text-xl uppercase text-foreground">{t.singleReport.title}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">

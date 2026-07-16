@@ -88,7 +88,7 @@ function X402Banner() {
   }
 
   return (
-    <div className="mb-8 border border-border bg-background p-6">
+    <div className="mb-8 border border-border bg-background p-4 sm:p-6">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <p className="font-pixel text-[11px] uppercase tracking-wider text-primary">{t.x402Tag}</p>
@@ -103,7 +103,7 @@ function X402Banner() {
         <Button
           onClick={pay}
           disabled={paying}
-          className="gap-2 font-mono uppercase tracking-wider"
+          className="gap-2 font-mono uppercase tracking-wider text-xs sm:text-sm px-4 py-2.5 sm:px-6 sm:py-3 w-full lg:w-auto justify-center"
         >
           {paying ? (
             <><Loader2 className="h-4 w-4 animate-spin" /> {t.x402Paying}</>

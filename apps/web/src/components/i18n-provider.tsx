@@ -72,7 +72,8 @@ const translations = {
     emailLoginDesc: 'Phantom Connect / Privy embedded wallet flow initiated. Enter your corporate email to generate a secure non-custodial wallet instantly.',
     emailPlaceholder: 'you@enterprise.com',
     continueWithEmail: 'Continue with Email',
-    cancel: 'Cancel'
+    cancel: 'Cancel',
+    logout: 'Disconnect'
   },
   ES: {
     home: 'Inicio',
@@ -135,7 +136,8 @@ const translations = {
     emailLoginDesc: 'Flujo de wallet embebida Phantom Connect / Privy iniciado. Ingresa tu correo corporativo para generar una wallet no custodial segura al instante.',
     emailPlaceholder: 'tu@empresa.com',
     continueWithEmail: 'Continuar con Email',
-    cancel: 'Cancelar'
+    cancel: 'Cancelar',
+    logout: 'Desconectar'
   },
   ZH: {
     home: '首页',
@@ -198,7 +200,8 @@ const translations = {
     emailLoginDesc: 'Phantom Connect / Privy 嵌入式钱包流程已启动。输入您的企业邮箱，即刻生成安全的非托管钱包。',
     emailPlaceholder: 'you@enterprise.com',
     continueWithEmail: '使用邮箱继续',
-    cancel: '取消'
+    cancel: '取消',
+    logout: '断开连接'
   }
 };
 

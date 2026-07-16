@@ -63,17 +63,21 @@ export function ProductContent() {
             <li key={s.n} className="border-b border-border">
               <Link
                 href={s.href}
-                className="group grid gap-6 py-12 transition-colors lg:grid-cols-[auto_auto_1fr_2fr_auto] lg:items-baseline lg:gap-12 lg:py-14"
+                className="group grid grid-cols-[auto_1fr_auto] gap-x-4 gap-y-2 py-10 transition-colors lg:grid-cols-[auto_auto_1fr_2fr_auto] lg:items-baseline lg:gap-12 lg:py-14"
               >
-                <span className="font-mono text-xs text-primary">{s.n}</span>
-                <span className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">
+                <span className="font-mono text-xs text-primary col-start-1 row-start-1 lg:col-auto lg:row-auto">
+                  {s.n}
+                </span>
+                <span className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground col-start-2 row-start-1 lg:col-auto lg:row-auto">
                   {s.tag}
                 </span>
-                <h2 className="font-display text-xl uppercase text-foreground transition-colors group-hover:text-primary lg:text-2xl">
+                <h2 className="font-display text-xl uppercase text-foreground transition-colors group-hover:text-primary lg:text-2xl col-start-1 col-span-2 row-start-2 lg:col-auto lg:row-auto">
                   {s.title}
                 </h2>
-                <p className="text-base leading-relaxed text-muted-foreground">{s.desc}</p>
-                <ArrowRight className="h-4 w-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary" />
+                <p className="text-base leading-relaxed text-muted-foreground col-start-1 col-span-3 row-start-3 lg:col-auto lg:row-auto mt-1 lg:mt-0">
+                  {s.desc}
+                </p>
+                <ArrowRight className="h-4 w-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary col-start-3 row-start-1 row-span-2 self-center justify-self-end lg:col-auto lg:row-auto" />
               </Link>
             </li>
           ))}

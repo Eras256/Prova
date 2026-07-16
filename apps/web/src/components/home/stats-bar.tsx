@@ -96,14 +96,14 @@ export function StatsBar() {
   ];
 
   return (
-    <section className="border-y border-border">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <dl className="grid grid-cols-2 divide-y divide-border sm:grid-cols-3 sm:divide-y-0 sm:divide-x lg:grid-cols-5">
+    <section className="border-y border-border bg-background">
+      <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <dl className="grid grid-cols-2 gap-px bg-border sm:border-x border-border md:grid-cols-5">
           {stats.map((s, i) => (
             <div
               key={s.label}
-              className={`flex flex-col gap-1.5 px-4 py-7 sm:px-6 ${
-                i % 2 === 1 ? 'border-l border-border sm:border-l-0' : ''
+              className={`bg-background flex flex-col gap-1.5 px-4 py-7 sm:px-6 ${
+                i === 4 ? 'col-span-2 md:col-span-1' : ''
               }`}
             >
               <dt className="font-pixel text-[12px] uppercase tracking-wider text-muted-foreground">

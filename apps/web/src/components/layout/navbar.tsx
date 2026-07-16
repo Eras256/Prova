@@ -33,7 +33,7 @@ export function Navbar() {
       aria-label="Primary"
       className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md"
     >
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 xl:gap-8">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8 xl:gap-8">
         <Link
           href="/"
           aria-label="Prova — home"
@@ -50,7 +50,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden items-center gap-4 xl:gap-6 lg:flex">
+        <div className="hidden items-center lg:gap-3 xl:gap-6 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -63,7 +63,7 @@ export function Navbar() {
         </div>
 
         {/* Desktop Actions */}
-        <div className="hidden items-center gap-2 lg:flex xl:gap-3">
+        <div className="hidden items-center lg:gap-1.5 lg:flex xl:gap-3">
           <Button variant="ghost" size="sm" asChild>
             <Link href="/app/register" className="font-mono text-xs uppercase tracking-wider">
               {t('registerAgent')}

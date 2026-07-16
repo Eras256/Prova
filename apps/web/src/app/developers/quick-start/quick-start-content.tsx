@@ -356,14 +356,14 @@ export function QuickStartContent() {
               <div className="min-w-0">
                 <h2 className="font-display text-base uppercase text-foreground lg:text-lg">{s.title}</h2>
                 <div className="mt-4 overflow-x-auto border border-border bg-surface p-5">
-                  <pre className="font-mono text-sm leading-relaxed text-primary/90">{s.code}</pre>
+                  <pre className="font-mono text-xs sm:text-sm leading-relaxed text-primary/90">{s.code}</pre>
                 </div>
               </div>
             </li>
           ))}
         </ol>
 
-        <div className="mt-20 grid gap-px bg-border md:grid-cols-3">
+        <div className="mt-20 grid gap-px bg-border border border-border md:grid-cols-3">
           <div className="bg-background p-8">
             <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.onchainTitle}</p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t.onchainDesc}</p>
@@ -418,7 +418,7 @@ export function QuickStartContent() {
         <div className="mt-6 border border-border bg-background p-8">
           <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.blinkTitle}</p>
           <div className="mt-4 overflow-x-auto border border-border bg-surface p-5">
-            <pre className="font-mono text-sm leading-relaxed text-primary/90">{t.blinkCode}</pre>
+            <pre className="font-mono text-xs sm:text-sm leading-relaxed text-primary/90">{t.blinkCode}</pre>
           </div>
         </div>
 

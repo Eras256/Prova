@@ -73,7 +73,7 @@ export function OperatorsContent() {
         </div>
 
         <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
-          <div aria-hidden />
+          <div aria-hidden className="hidden lg:block" />
           <div>
             <div className="space-y-3">
               {t.benefits.map((b) => (

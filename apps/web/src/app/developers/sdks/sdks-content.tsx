@@ -285,7 +285,7 @@ export function SdksContent() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">{t.desc}</p>
             <div className="mt-8 border border-border bg-surface p-4">
-              <pre className="font-mono text-sm text-primary/90">{t.install}</pre>
+              <pre className="font-mono text-xs sm:text-sm text-primary/90">{t.install}</pre>
               <a
                 href="https://www.npmjs.com/package/prova-agent-sdk"
                 target="_blank"
@@ -377,7 +377,7 @@ export function SdksContent() {
         <div className="mt-20 border-t border-border" />
 
         {/* Types + Full Example */}
-        <section className="mt-20 grid gap-px bg-border md:grid-cols-2">
+        <section className="mt-20 grid gap-px bg-border border border-border md:grid-cols-2">
           <div className="bg-background p-8">
             <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.typesTitle}</p>
             <div className="mt-4 overflow-x-auto border border-border bg-surface p-5">

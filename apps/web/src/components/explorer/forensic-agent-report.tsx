@@ -120,34 +120,36 @@ export function ForensicAgentReport({ pubkey }: { pubkey: string }) {
               ) : attestations.length === 0 ? (
                 <p className="px-4 py-6 text-sm text-muted-foreground">No attestations issued yet.</p>
               ) : (
-                <table className="w-full text-xs">
-                  <thead className="border-b border-border bg-muted print:bg-gray-100 print:border-black">
-                    <tr>
-                      <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Slot</th>
-                      <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Tx signature</th>
-                      <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Type</th>
-                      <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Action hash</th>
-                      <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Privacy</th>
-                      <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Timestamp</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border print:divide-black/20">
-                    {attestations.map((a) => (
-                      <tr key={`${a.txSignature}-${bytesToHex(a.actionHash)}`}>
-                        <td className="px-3 py-2 font-mono tabular-nums">{a.slot}</td>
-                        <td className="px-3 py-2 font-mono break-all">
-                          {a.txSignature.slice(0, 12)}…{a.txSignature.slice(-6)}
-                        </td>
-                        <td className="px-3 py-2 font-pixel text-[10px] uppercase tracking-wider">
-                          {ACTION_TYPE_LABEL[a.actionType]}
-                        </td>
-                        <td className="px-3 py-2 font-mono break-all">{bytesToHex(a.actionHash).slice(0, 16)}…</td>
-                        <td className="px-3 py-2">{a.privacyMode ? 'vanish' : 'disclosed'}</td>
-                        <td className="px-3 py-2 font-mono">{formatTs(a.timestamp)}</td>
+                <div className="overflow-x-auto w-full">
+                  <table className="w-full text-xs min-w-[600px]">
+                    <thead className="border-b border-border bg-muted print:bg-gray-100 print:border-black">
+                      <tr>
+                        <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Slot</th>
+                        <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Tx signature</th>
+                        <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Type</th>
+                        <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Action hash</th>
+                        <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Privacy</th>
+                        <th className="px-3 py-2 text-left font-pixel text-[10px] uppercase tracking-wider text-muted-foreground">Timestamp</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-border print:divide-black/20">
+                      {attestations.map((a) => (
+                        <tr key={`${a.txSignature}-${bytesToHex(a.actionHash)}`}>
+                          <td className="px-3 py-2 font-mono tabular-nums">{a.slot}</td>
+                          <td className="px-3 py-2 font-mono break-all">
+                            {a.txSignature.slice(0, 12)}…{a.txSignature.slice(-6)}
+                          </td>
+                          <td className="px-3 py-2 font-pixel text-[10px] uppercase tracking-wider">
+                            {ACTION_TYPE_LABEL[a.actionType]}
+                          </td>
+                          <td className="px-3 py-2 font-mono break-all">{bytesToHex(a.actionHash).slice(0, 16)}…</td>
+                          <td className="px-3 py-2">{a.privacyMode ? 'vanish' : 'disclosed'}</td>
+                          <td className="px-3 py-2 font-mono">{formatTs(a.timestamp)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </Section>
           </>

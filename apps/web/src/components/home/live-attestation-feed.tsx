@@ -134,7 +134,7 @@ export function LiveAttestationFeed() {
 
         <ol className="divide-y divide-border">
           {!mounted && Array.from({ length: 5 }).map((_, i) => (
-            <li key={i} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-5 py-3.5 text-sm">
+            <li key={i} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 sm:px-5 py-3.5 text-sm">
               <span className="font-mono text-xs text-transparent select-none">att_0000…0000</span>
               <div className="min-w-0 flex flex-col justify-center gap-1.5 py-0.5">
                 <div className="h-4 w-32 bg-muted/50 rounded animate-pulse" />
@@ -153,7 +153,7 @@ export function LiveAttestationFeed() {
           {mounted && entries.map((e) => (
             <li
               key={`${e.id}-${e.ts}`}
-              className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-5 py-3.5 text-sm animate-fade-in"
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 sm:px-5 py-3.5 text-sm animate-fade-in"
             >
               <Link
                 href={e.txSignature ? `/explorer/tx/${e.txSignature}` : '/explorer'}

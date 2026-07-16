@@ -162,7 +162,7 @@ export function ForensicExport({
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-full max-w-md border border-border bg-background p-6 shadow-2xl shadow-black/60"
+            className="w-full max-w-md border border-border bg-background p-5 sm:p-6 shadow-2xl shadow-black/60"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -211,8 +211,8 @@ export function ForensicExport({
               </p>
             )}
 
-            <div className="mt-5 flex gap-2">
-              <Button onClick={handlePay} disabled={paying} className="flex-1 font-mono uppercase tracking-wider">
+            <div className="mt-5 flex flex-col sm:flex-row gap-2">
+              <Button onClick={handlePay} disabled={paying} className="w-full sm:flex-1 font-mono uppercase tracking-wider text-xs sm:text-sm justify-center">
                 {paying ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -227,7 +227,7 @@ export function ForensicExport({
                   `${t.payAndUnlock} ${X402_DISPLAY_PRICE} ${t.andUnlock}`
                 )}
               </Button>
-              <Button variant="ghost" onClick={() => setOpen(false)}>
+              <Button variant="ghost" onClick={() => setOpen(false)} className="w-full sm:w-auto justify-center text-xs sm:text-sm font-mono uppercase tracking-wider">
                 {t.cancel}
               </Button>
             </div>
