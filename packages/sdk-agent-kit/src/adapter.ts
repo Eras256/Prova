@@ -9,10 +9,11 @@ export interface ProvaClientLike {
     operatorKeypair: unknown;
     actionHash: Uint8Array;
     actionType: ProvaActionType;
+    privacyMode?: boolean;
   }): Promise<{ txSignature: string }>;
   batchAttest(args: {
     operatorKeypair: unknown;
-    attestations: Array<{ actionHash: Uint8Array; actionType: ProvaActionType }>;
+    attestations: Array<{ actionHash: Uint8Array; actionType: ProvaActionType; privacyMode?: boolean }>;
   }): Promise<{ txSignature: string }>;
 }
 
@@ -35,6 +36,7 @@ export function attesterFromProvaClient(
         operatorKeypair,
         actionHash: item.actionHash,
         actionType: item.actionType,
+        privacyMode: item.privacyMode,
       }),
     batchAttest: (items: AttestationItem[]) =>
       client.batchAttest({ operatorKeypair, attestations: items }),

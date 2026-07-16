@@ -42,6 +42,8 @@ export type ProvaActionType =
 export interface AttestationItem {
   actionHash: Uint8Array;
   actionType: ProvaActionType;
+  /** Si es true el hash queda on-chain pero el payload off-chain (Vanish). Default false. */
+  privacyMode?: boolean;
 }
 
 /**

@@ -45,7 +45,7 @@
     "access": "public"
   },
   "dependencies": {
-    "prova-agent-kit": "^0.1.3"
+    "prova-agent-kit": "workspace:^"
   },
   "devDependencies": {
     "@prova/config-typescript": "workspace:*",

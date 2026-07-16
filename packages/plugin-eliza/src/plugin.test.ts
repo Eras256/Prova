@@ -3,8 +3,8 @@ import type { ProvaAttester } from 'prova-agent-kit';
 import { createProvaPlugin, provaPlugin } from './plugin';
 import type { ElizaAction, ElizaRuntime } from './types';
 
-function fakeAttester(): ProvaAttester & { attested: Array<{ actionType: string }> } {
-  const attested: Array<{ actionType: string }> = [];
+function fakeAttester(): ProvaAttester & { attested: Array<{ actionType: string; privacyMode?: boolean }> } {
+  const attested: Array<{ actionType: string; privacyMode?: boolean }> = [];
   return {
     attested,
     hashAction: vi.fn(async (payload: string) => {
@@ -14,11 +14,11 @@ function fakeAttester(): ProvaAttester & { attested: Array<{ actionType: string 
       return bytes;
     }),
     attest: vi.fn(async (item) => {
-      attested.push({ actionType: item.actionType });
+      attested.push({ actionType: item.actionType, privacyMode: item.privacyMode });
       return { txSignature: 'sig-single' };
     }),
     batchAttest: vi.fn(async (items) => {
-      for (const item of items) attested.push({ actionType: item.actionType });
+      for (const item of items) attested.push({ actionType: item.actionType, privacyMode: item.privacyMode });
       return { txSignature: 'sig-batch' };
     }),
   };
@@ -149,6 +149,19 @@ describe('createProvaPlugin', () => {
 
     const payload = JSON.parse((attester.hashAction as ReturnType<typeof vi.fn>).mock.calls[0][0]);
     expect(payload.result).toEqual({ value: true });
+  });
+
+  it('respeta la opcion privacyMode si se pasa true en las opciones del plugin', async () => {
+    const attester = fakeAttester();
+    const runtime = fakeRuntime([action('SECRET_ACTION')]);
+    const { plugin, stop } = createProvaPlugin({ attester, privacyMode: true });
+    await plugin.init!({}, runtime);
+
+    await runtime.actions[0].handler({}, message);
+    await stop();
+
+    expect(attester.attested.length).toBe(1);
+    expect(attester.attested[0]!.privacyMode).toBe(true);
   });
 });
 

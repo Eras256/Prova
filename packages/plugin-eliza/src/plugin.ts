@@ -20,6 +20,8 @@ export interface ProvaPluginOptions {
   rules?: (actionName: string) => boolean;
   /** Configuración de batching (maxSize, flushDelayMs). */
   batch?: BatchOptions;
+  /** Activa Vanish mode: hash on-chain, payload off-chain (default false). */
+  privacyMode?: boolean;
   /** Manejo de errores (default: warn por consola). Nunca rompe la acción. */
   onError?: (error: unknown, context: { action: string }) => void;
 }
@@ -57,11 +59,12 @@ async function captureAction(
   batcher: Batcher,
   name: string,
   args: unknown[],
-  result: unknown
+  result: unknown,
+  privacyMode: boolean
 ): Promise<void> {
   const payload = buildPayload(name, extractInput(args), coerceResult(result));
   const actionHash = await attester.hashAction(JSON.stringify(payload));
-  batcher.add({ actionHash, actionType: mapActionType(name, coerceResult(result)) });
+  batcher.add({ actionHash, actionType: mapActionType(name, coerceResult(result)), privacyMode });
 }
 
 /**
@@ -75,6 +78,7 @@ async function captureAction(
 export function createProvaPlugin(options: ProvaPluginOptions): ProvaPluginHandle {
   const { attester } = options;
   const should = options.rules ?? (() => true);
+  const vanish = options.privacyMode ?? false;
   const onError =
     options.onError ??
     ((error: unknown, context: { action: string }) =>
@@ -91,7 +95,7 @@ export function createProvaPlugin(options: ProvaPluginOptions): ProvaPluginHandl
       ...action,
       handler: async (...args: unknown[]) => {
         const result = await original(...args);
-        void captureAction(attester, batcher, action.name, args, result).catch((error) =>
+        void captureAction(attester, batcher, action.name, args, result, vanish).catch((error) =>
           onError(error, { action: action.name })
         );
         return result;

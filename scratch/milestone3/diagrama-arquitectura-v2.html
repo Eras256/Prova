@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Prova — Arquitectura Técnica del MVP (v2)</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --fg: #FCFCFE;
+    --muted: #9a9aa2;
+    --dim: #5c5c64;
+    --lime: #C7F284;
+    --line: #26262b;
+    --panel: #0e0e10;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #000;
+    font-family: ui-monospace, 'Cascadia Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+    color: var(--fg);
+    display: flex; justify-content: center; padding: 24px 0;
+  }
+  .canvas {
+    width: 1600px; background: var(--bg); padding: 56px 64px 40px;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 80px 80px;
+    background-position: -1px -1px;
+  }
+  .eyebrow { font-size: 13px; letter-spacing: .22em; color: var(--lime); text-transform: uppercase; }
+  h1 { font-size: 44px; letter-spacing: -0.03em; text-transform: uppercase; margin-top: 10px; font-weight: 800; }
+  .sub { color: var(--muted); font-size: 15px; margin-top: 10px; max-width: 900px; line-height: 1.5; }
+  .meta { color: var(--dim); font-size: 12px; margin-top: 8px; letter-spacing: .12em; text-transform: uppercase; }
+
+  .section { margin-top: 44px; border: 1px solid var(--line); background: var(--panel); }
+  .section-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 22px; border-bottom: 1px solid var(--line);
+  }
+  .section-head .n {
+    background: var(--lime); color: #0a0a0a; font-weight: 800;
+    padding: 3px 10px; font-size: 14px;
+  }
+  .section-head .t { font-size: 16px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; }
+  .section-head .note { margin-left: auto; color: var(--dim); font-size: 12px; }
+  .section-body { padding: 28px 22px; }
+
+  /* ── cajas ── */
+  .box { border: 1px solid #3a3a42; background: #121215; padding: 14px 16px; }
+  .box .tag { font-size: 10px; letter-spacing: .18em; color: var(--dim); text-transform: uppercase; }
+  .box .name { font-size: 17px; font-weight: 800; text-transform: uppercase; margin-top: 4px; letter-spacing: .02em; }
+  .box .desc { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.55; }
+  .box .deploy {
+    display: inline-block; margin-top: 10px; font-size: 10px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--lime); border: 1px solid #33402a; padding: 2px 8px;
+  }
+  .box.onchain { border-color: var(--lime); background: #11150c; }
+  .box.onchain .name { color: var(--lime); }
+
+  .lane-label {
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim);
+    margin: 0 0 10px 2px;
+  }
+  .lane-label b { color: var(--lime); font-weight: 700; }
+
+  .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 60px; position: relative; }
+
+  .conn {
+    font-size: 11px; color: var(--muted); letter-spacing: .06em;
+    display: flex; align-items: center; gap: 10px; margin: 14px 0;
+  }
+  .conn .wire { flex: 0 0 26px; border-top: 1px solid #4a4a52; }
+  .conn.down { flex-direction: column; align-items: flex-start; gap: 4px; margin: 10px 0 10px 26px; }
+  .conn.down .wire { border-top: none; border-left: 1px solid #4a4a52; height: 22px; flex: none; margin-left: 8px; }
+  .arrow { color: var(--lime); }
+
+  .instr { margin-top: 10px; border-top: 1px dashed #2f3a24; padding-top: 10px; }
+  .instr .k { color: var(--lime); font-size: 11.5px; }
+  .instr div { font-size: 11.5px; color: #cfd0d6; line-height: 1.7; }
+
+  .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .step { border: 1px solid #3a3a42; background: #121215; padding: 16px; }
+  .step .num { background: var(--lime); color: #0a0a0a; font-weight: 800; font-size: 13px; padding: 2px 8px; display: inline-block; }
+  .step p { font-size: 12.5px; color: #cfd0d6; margin-top: 10px; line-height: 1.6; }
+  .step p b { color: var(--fg); }
+  .step code { color: var(--lime); font-size: 12px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid var(--line); padding: 12px 14px; font-size: 12.5px; text-align: left; vertical-align: top; line-height: 1.55; }
+  th { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); background: #101012; }
+  th.on { color: var(--lime); }
+  td.q { color: var(--fg); font-weight: 700; width: 190px; }
+  td { color: #cfd0d6; }
+  td code { color: var(--lime); font-size: 11.5px; }
+  .principle {
+    margin-top: 16px; font-size: 12.5px; color: var(--muted); line-height: 1.6;
+    border-left: 3px solid var(--lime); padding-left: 14px;
+  }
+  .principle b { color: var(--lime); }
+
+  .footer {
+    margin-top: 40px; border-top: 1px solid var(--line); padding-top: 18px;
+    display: flex; flex-wrap: wrap; gap: 8px 26px; font-size: 11.5px; color: var(--dim);
+  }
+  .footer .risks b { color: var(--muted); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .footer .ids { width: 100%; display: flex; gap: 26px; color: var(--muted); margin-top: 6px; }
+  .footer .ids span b { color: var(--lime); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+
+  <div class="eyebrow">Prova · Solana LATAM Labs (WayLearn)</div>
+  <h1>Arquitectura técnica del MVP <span style="color:var(--lime)">v2</span></h1>
+  <div class="sub">Cada acción de un agente de IA se sella como un recibo criptográfico verificable on-chain en Solana.
+    Revisión con feedback del Milestone 3: <b style="color:var(--fg)">arquitectura y flujo separados</b>, SDK con instrucciones explícitas,
+    y frontera on/off-chain como <b style="color:var(--fg)">proyección — no duplicación</b>.</div>
+  <div class="meta">Milestone 3 · rev 2 · 15 jul 2026</div>
+
+  <!-- ═══ 1. ARQUITECTURA ═══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="n">1</span><span class="t">Arquitectura — componentes y despliegue</span>
+      <span class="note">qué existe, dónde corre y cómo se conecta</span>
+    </div>
+    <div class="section-body">
+
+      <div class="lane-label">■ CAPA CLIENTE — <b>off-chain</b></div>
+      <div class="arch-grid">
+        <div class="box">
+          <div class="tag">Escritura · corre dentro del proceso del agente</div>
+          <div class="name">SDK</div>
+          <div class="desc">
+            <code style="color:var(--lime)">prova-agent-sdk v0.1.7</code> (TS) · <code style="color:var(--lime)">prova-agent-kit v0.1.3</code> (adapter Solana Agent Kit) · crate Rust <code style="color:var(--lime)">v0.1.1</code>.
+            Construye, firma y envía transacciones <b style="color:var(--fg)">directo al RPC — sin backend intermedio</b>.
+          </div>
+          <div class="instr">
+            <div class="k">INSTRUCCIONES ANCHOR QUE INVOCA:</div>
+            <div>→ <code style="color:var(--lime)">register_agent</code> — init del PDA del agente</div>
+            <div>→ <code style="color:var(--lime)">record_attestations</code> — batch ≤100 recibos/tx · pre-verificación Ed25519 (instructions sysvar)</div>
+            <div>→ <code style="color:var(--lime)">revoke_agent</code> · <code style="color:var(--lime)">update_policy_root</code></div>
+          </div>
+          <span class="deploy">npm · crates.io</span>
+        </div>
+
+        <div class="box">
+          <div class="tag">Lectura · verificación por terceros</div>
+          <div class="name">Web App — Forensic Explorer</div>
+          <div class="desc">Next.js 15 (App Router). Feed en vivo (WS a RPC), detalle de recibos, reporte forense, Blinks.
+            Wallet: Privy (embebida) · Phantom/Solflare. Consulta la REST API y <b style="color:var(--fg)">verifica también directo contra Solana</b> (no confía en el backend).</div>
+          <span class="deploy">Vercel · theprova.xyz</span>
+        </div>
+      </div>
+
+      <div class="conn down"><span><span class="arrow">▼</span> tx firmada (RPC) — invoca instrucciones</span><span class="wire"></span></div>
+
+      <div class="lane-label">■ CAPA DE CONSENSO — <b>on-chain (Solana Devnet)</b></div>
+      <div class="box onchain">
+        <div class="tag" style="color:#7a9a52">Fuente de verdad criptográfica</div>
+        <div class="name">Programa Anchor propio — G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1</div>
+        <div class="desc">
+          Estado: PDA <code>AgentAccount</code> (operator, agent_id, policy_root, attestation_count, revoked) · seed <code>b"prova_agent" + operator</code>.<br>
+          Eventos (<code>emit!</code>): <code>AttestationIssued</code> · <code>AgentRegistered</code> · <code>AgentRevokedEvent</code> · <code>PolicyRootUpdated</code> — cada recibo emite hash de acción + firma Ed25519 + timestamp + tipo. <b style="color:var(--fg)">El payload crudo nunca toca la cadena, solo su hash.</b>
+        </div>
+        <span class="deploy" style="border-color:var(--lime)">Solana Devnet · Anchor 0.31</span>
+      </div>
+
+      <div class="conn down"><span><span class="arrow">▼</span> eventos en logs (<code>Program data:</code>) — vía WebSocket <code>onLogs</code> + catch-up periódico</span><span class="wire"></span></div>
+
+      <div class="lane-label">■ CAPA DE DATOS — <b>off-chain (proyección consultable)</b></div>
+      <div class="arch-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="box">
+          <div class="tag">Worker background</div>
+          <div class="name">Indexer</div>
+          <div class="desc">Decodifica eventos Anchor de los logs y los proyecta a Postgres. WS streaming + catch-up paginado cada 60s + watchdog de reconexión. Cursor persistente e inserts idempotentes.</div>
+          <span class="deploy">Fly.io</span>
+        </div>
+        <div class="box">
+          <div class="tag">Proyección — 100% reconstruible desde la cadena</div>
+          <div class="name">Postgres</div>
+          <div class="desc">6 tablas (agents, attestations, webhooks…). <b style="color:var(--fg)">Vista derivada, nunca fuente de verdad</b>: si se pierde, se re-indexa re-escaneando Solana (probado: backfill de 26k+ recibos, jul 2026).</div>
+          <span class="deploy">Supabase · Drizzle</span>
+        </div>
+        <div class="box">
+          <div class="tag">Solo lectura</div>
+          <div class="name">REST API</div>
+          <div class="desc">Hono. Endpoints públicos (stats, attestations, agents) + premium (historial completo, reporte forense, bulk verify) gateados con x402 (micropago $0.01) y API keys.</div>
+          <span class="deploy">Fly.io · prova-api.fly.dev</span>
+        </div>
+      </div>
+
+      <div class="conn" style="margin-top:18px">
+        <span class="wire"></span>
+        <span>INDEXER <span class="arrow">→</span> POSTGRES: <b style="color:var(--lime)">proyección (reconstruible)</b> &nbsp;·&nbsp; POSTGRES <span class="arrow">→</span> REST API: lectura &nbsp;·&nbsp; REST API <span class="arrow">→</span> WEB APP: consulta &nbsp;·&nbsp; WEB APP <span class="arrow">⇢</span> SOLANA: verificación directa (RPC/WS)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 2. FLUJO ═══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="n">2</span><span class="t">Flujo del usuario</span>
+      <span class="note">del npm install al recibo verificado por un tercero</span>
+    </div>
+    <div class="section-body">
+      <div class="flow">
+        <div class="step"><span class="num">01</span><p>El developer instala el SDK y registra su agente: <code>register_agent</code> crea el <b>PDA</b> (uno por operador).</p></div>
+        <div class="step"><span class="num">02</span><p>El agente ejecuta una acción → el SDK calcula el <b>hash del payload</b> y lo firma con <b>Ed25519</b>.</p></div>
+        <div class="step"><span class="num">03</span><p><code>record_attestations</code> sella hasta <b>100 recibos en una tx</b> — finality &lt;1s, &lt;$0.001 por recibo.</p></div>
+        <div class="step"><span class="num">04</span><p>El programa valida la firma (instructions sysvar) y emite <code>AttestationIssued</code> on-chain.</p></div>
+        <div class="step"><span class="num">05</span><p>El indexer capta el evento por WebSocket y lo <b>proyecta</b> a Postgres para consultas eficientes.</p></div>
+        <div class="step"><span class="num">06</span><p>Cualquier tercero verifica: <b>Explorer</b>, <b>REST API</b> o Solana Explorer — <b>sin confiar en el operador</b>. Opcional: x402 ($0.01) y Blinks para compartir.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 3. ON/OFF-CHAIN ═══ -->
+  <div class="section">
+    <div class="section-head">
+      <span class="n">3</span><span class="t">Frontera on-chain / off-chain — proyección, no duplicación</span>
+      <span class="note">respuesta a la revisión del M3</span>
+    </div>
+    <div class="section-body">
+      <table>
+        <tr><th style="width:190px">Qué</th><th class="on">On-chain (fuente de verdad)</th><th>Off-chain (proyección consultable)</th></tr>
+        <tr><td class="q">Registro del agente</td><td>PDA <code>AgentAccount</code> — operator, agent_id, policy_root, contador</td><td>Fila en <code>agents</code> para búsquedas y stats</td></tr>
+        <tr><td class="q">Recibo (atestación)</td><td>Evento <code>AttestationIssued</code>: action_hash + firma Ed25519 + timestamp + tipo</td><td>Fila en <code>attestations</code>, indexada para filtros / paginación / breakdown por tipo</td></tr>
+        <tr><td class="q">Payload crudo</td><td><b style="color:var(--lime)">Nunca</b> — solo su hash (commitment)</td><td>Opcional <code>metadataUri</code> si el operador quiere adjuntar contexto</td></tr>
+        <tr><td class="q">Recuperación ante fallo</td><td>Inmutable por consenso — no aplica</td><td><b style="color:#cfd0d6">Re-indexable al 100%</b> re-escaneando la cadena (probado: backfill de 26,000+ recibos tras endurecer el indexer)</td></tr>
+      </table>
+      <div class="principle">
+        <b>Principio:</b> on-chain guarda el mínimo verificable (la prueba); off-chain guarda la misma prueba <b>proyectada</b> para consultabilidad y UX.
+        No es doble escritura de datos distintos: es una vista derivada que cualquiera puede reconstruir y auditar contra la cadena.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="risks"><b>Riesgos:</b>&nbsp; costo/límites de RPC · resiliencia del indexer (catch-up 60s + watchdog + health real) · economía on-chain a alta frecuencia (batching ≤100/tx) · custodia de claves · consultabilidad depende del indexer (mitigado: reconstruible)</span>
+    <div class="ids">
+      <span><b>theprova.xyz</b></span>
+      <span>npm i <b>prova-agent-sdk</b></span>
+      <span>Program ID (Devnet): <b>G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1</b></span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
