@@ -1,0 +1,32 @@
+[package]
+name = "prova-program"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = { version = "0.31.0" }
+anchor-spl = { version = "0.31.0" }
+solana-program = "=2.1.0"
+
+# Pin transitive deps que requieren edition2024 o rustc > 1.79 (la toolchain
+# SBF de Solana CLI 2.1 trae Cargo/rustc 1.79). Estas son las últimas
+# versiones que aún compilan con esa toolchain.
+hashbrown = "=0.15.2"
+blake3 = "=1.5.5"                # 1.8+ arrastra digest 0.11 → block-buffer 0.12 (edition2024)
+proc-macro-crate = "=3.2.0"      # 3.5 arrastra toml_edit 0.25 → toml_parser (edition2024)
+indexmap = "=2.7.1"              # 2.14 requiere edition2024
+unicode-segmentation = "=1.12.0" # 1.13 requiere rustc 1.85
+
+[dev-dependencies]
+anchor-lang = { version = "0.31.0" }

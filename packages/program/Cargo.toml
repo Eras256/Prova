@@ -1,31 +1,8 @@
-[package]
-name = "prova-program"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = ["programs/prova-program"]
+resolver = "2"
 
-[lib]
-crate-type = ["cdylib", "lib"]
-
-[features]
-no-entrypoint = []
-no-idl = []
-no-log-ix-name = []
-cpi = ["no-entrypoint"]
-default = []
-idl-build = ["anchor-lang/idl-build"]
-
-[dependencies]
-anchor-lang = { version = "0.31.0" }
-anchor-spl = { version = "0.31.0" }
-solana-program = "=2.1.0"
-
-# Pin transitive deps que requieren edition2024 (no soportado por Cargo 1.84
-# que viene con la toolchain SBF de Solana CLI 3.0.13). Estas son las últimas
-# versiones que aún compilan con edition 2021.
-hashbrown = "=0.15.2"
-
-[dev-dependencies]
-anchor-lang = { version = "0.31.0" }
-
+# Los profiles solo aplican desde la raíz del workspace (cargo los ignora en
+# los miembros), por eso viven aquí y no en programs/prova-program/Cargo.toml.
 [profile.release]
 overflow-checks = true
