@@ -12,10 +12,9 @@ const content = {
       eliza: {
         title: 'elizaOS Plugin',
         content: [
-          'The easiest way to integrate Prova with an elizaOS agent is via the official plugin.',
-          'import { provaPlugin } from "@prova/plugin-eliza";',
-          '// Add to your character configuration:\n{\n  "plugins": [provaPlugin],\n  "settings": {\n    "secrets": {\n      "PROVA_RPC_URL": "...",\n      "PROVA_WALLET_PRIVATE_KEY": "..."\n    }\n  }\n}',
-          'Once configured, the agent will automatically hash and attest every tool call and blockchain transaction it executes.'
+          'The easiest way to integrate Prova with an elizaOS agent is via the official plugin (npm: prova-plugin-eliza).',
+          'import { provaPlugin, attesterFromProvaClient } from "prova-plugin-eliza";\nimport { ProvaClient } from "prova-agent-sdk";\n\nconst prova = new ProvaClient({ rpcUrl, agentKeypair });\nconst attester = attesterFromProvaClient(\n  prova, ProvaClient.hashAction, operatorKeypair,\n);\n\n// Add to your runtime\'s plugins array:\nconst runtime = new AgentRuntime({\n  // ...character, model provider, etc.\n  plugins: [provaPlugin({ attester })],\n});',
+          'Once configured, the agent automatically hashes and attests every action it executes — bursts are batched into a single Solana transaction, and a Prova failure never breaks the action.'
         ]
       },
       defi: {
@@ -28,8 +27,8 @@ const content = {
       anchor: {
         title: 'Native Anchor CPI',
         content: [
-          'Solana programs can invoke the Prova contract directly via Cross-Program Invocation (CPI).',
-          '// Rust CPI Example\nprova_agent_program::cpi::record_attestation(\n    CpiContext::new(\n        prova_program.to_account_info(),\n        RecordAttestation {\n            agent: agent_account.to_account_info(),\n            operator: operator.to_account_info(),\n            system_program: system_program.to_account_info(),\n        },\n    ),\n    action_hash,\n    action_type,\n    privacy_mode\n)?;'
+          'Solana programs can invoke the Prova contract directly via Cross-Program Invocation (CPI). The Ed25519 pre-verify instruction must be added at the transaction level by the client — the program validates it through the instructions sysvar.',
+          '// Rust CPI Example (prova-program with the "cpi" feature)\nlet cpi_ctx = CpiContext::new(\n    prova_program.to_account_info(),\n    prova_program::cpi::accounts::RecordAttestations {\n        agent: agent_account.to_account_info(),\n        operator: operator.to_account_info(),\n        instructions: instructions_sysvar.to_account_info(),\n    },\n);\n\nprova_program::cpi::record_attestations(cpi_ctx, vec![AttestationInput {\n    action_type: ActionType::ToolCall,\n    action_hash,\n    privacy_mode: false,\n    signature,\n}])?;'
         ]
       }
     }
@@ -42,10 +41,9 @@ const content = {
       eliza: {
         title: 'Plugin para elizaOS',
         content: [
-          'La forma más fácil de integrar Prova con un agente elizaOS es vía el plugin oficial.',
-          'import { provaPlugin } from "@prova/plugin-eliza";',
-          '// Agrega a la configuración de tu personaje:\n{\n  "plugins": [provaPlugin],\n  "settings": {\n    "secrets": {\n      "PROVA_RPC_URL": "...",\n      "PROVA_WALLET_PRIVATE_KEY": "..."\n    }\n  }\n}',
-          'Una vez configurado, el agente automáticamente hasheará y atestará cada llamada a herramienta y transacción.'
+          'La forma más fácil de integrar Prova con un agente elizaOS es vía el plugin oficial (npm: prova-plugin-eliza).',
+          'import { provaPlugin, attesterFromProvaClient } from "prova-plugin-eliza";\nimport { ProvaClient } from "prova-agent-sdk";\n\nconst prova = new ProvaClient({ rpcUrl, agentKeypair });\nconst attester = attesterFromProvaClient(\n  prova, ProvaClient.hashAction, operatorKeypair,\n);\n\n// Agrégalo al array de plugins de tu runtime:\nconst runtime = new AgentRuntime({\n  // ...character, model provider, etc.\n  plugins: [provaPlugin({ attester })],\n});',
+          'Una vez configurado, el agente hashea y atesta automáticamente cada acción que ejecuta — las ráfagas se agrupan en una sola transacción de Solana, y un fallo de Prova jamás rompe la acción.'
         ]
       },
       defi: {
@@ -58,8 +56,8 @@ const content = {
       anchor: {
         title: 'CPI Nativo en Anchor',
         content: [
-          'Los programas de Solana pueden invocar el contrato Prova directamente vía Cross-Program Invocation (CPI).',
-          '// Ejemplo CPI en Rust\nprova_agent_program::cpi::record_attestation(\n    CpiContext::new(\n        prova_program.to_account_info(),\n        RecordAttestation {\n            agent: agent_account.to_account_info(),\n            operator: operator.to_account_info(),\n            system_program: system_program.to_account_info(),\n        },\n    ),\n    action_hash,\n    action_type,\n    privacy_mode\n)?;'
+          'Los programas de Solana pueden invocar el contrato Prova directamente vía Cross-Program Invocation (CPI). La instrucción Ed25519 de pre-verificación debe añadirla el cliente a nivel de transacción — el programa la valida vía el instructions sysvar.',
+          '// Rust CPI Example (prova-program con el feature "cpi")\nlet cpi_ctx = CpiContext::new(\n    prova_program.to_account_info(),\n    prova_program::cpi::accounts::RecordAttestations {\n        agent: agent_account.to_account_info(),\n        operator: operator.to_account_info(),\n        instructions: instructions_sysvar.to_account_info(),\n    },\n);\n\nprova_program::cpi::record_attestations(cpi_ctx, vec![AttestationInput {\n    action_type: ActionType::ToolCall,\n    action_hash,\n    privacy_mode: false,\n    signature,\n}])?;'
         ]
       }
     }
@@ -72,10 +70,9 @@ const content = {
       eliza: {
         title: 'elizaOS 插件',
         content: [
-          '将 Prova 与 elizaOS 代理集成的最简单方法是通过官方插件。',
-          'import { provaPlugin } from "@prova/plugin-eliza";',
-          '// 添加到您的角色配置中：\n{\n  "plugins": [provaPlugin],\n  "settings": {\n    "secrets": {\n      "PROVA_RPC_URL": "...",\n      "PROVA_WALLET_PRIVATE_KEY": "..."\n    }\n  }\n}',
-          '配置完成后，代理将自动对其执行的每个工具调用和区块链交易进行哈希和证明。'
+          '将 Prova 与 elizaOS 代理集成的最简单方法是通过官方插件（npm：prova-plugin-eliza）。',
+          'import { provaPlugin, attesterFromProvaClient } from "prova-plugin-eliza";\nimport { ProvaClient } from "prova-agent-sdk";\n\nconst prova = new ProvaClient({ rpcUrl, agentKeypair });\nconst attester = attesterFromProvaClient(\n  prova, ProvaClient.hashAction, operatorKeypair,\n);\n\n// 添加到 runtime 的 plugins 数组：\nconst runtime = new AgentRuntime({\n  // ...character、model provider 等\n  plugins: [provaPlugin({ attester })],\n});',
+          '配置完成后，代理会自动对其执行的每个操作进行哈希和证明 — 连续操作会打包进一笔 Solana 交易，且 Prova 故障绝不会中断操作。'
         ]
       },
       defi: {
@@ -88,8 +85,8 @@ const content = {
       anchor: {
         title: '原生 Anchor CPI',
         content: [
-          'Solana 程序可以通过跨程序调用 (CPI) 直接调用 Prova 合约。',
-          '// Rust CPI 示例\nprova_agent_program::cpi::record_attestation(\n    CpiContext::new(\n        prova_program.to_account_info(),\n        RecordAttestation {\n            agent: agent_account.to_account_info(),\n            operator: operator.to_account_info(),\n            system_program: system_program.to_account_info(),\n        },\n    ),\n    action_hash,\n    action_type,\n    privacy_mode\n)?;'
+          'Solana 程序可以通过跨程序调用 (CPI) 直接调用 Prova 合约。Ed25519 预验证指令必须由客户端添加到交易层 — 程序通过 instructions sysvar 验证它。',
+          '// Rust CPI 示例（启用 "cpi" feature 的 prova-program）\nlet cpi_ctx = CpiContext::new(\n    prova_program.to_account_info(),\n    prova_program::cpi::accounts::RecordAttestations {\n        agent: agent_account.to_account_info(),\n        operator: operator.to_account_info(),\n        instructions: instructions_sysvar.to_account_info(),\n    },\n);\n\nprova_program::cpi::record_attestations(cpi_ctx, vec![AttestationInput {\n    action_type: ActionType::ToolCall,\n    action_hash,\n    privacy_mode: false,\n    signature,\n}])?;'
         ]
       }
     }

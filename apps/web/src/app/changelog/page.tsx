@@ -10,9 +10,12 @@ const releases = [
     notes: [
       'Official MCP server — prova-mcp-server on npm: Claude, Cursor & any MCP client can query verified attestations natively',
       '9 MCP tools: stats, attestation queries, agent stats, local SHA-256 hash verification, premium forensics',
+      'Official elizaOS plugin — prova-plugin-eliza on npm: wraps every eliza action with an on-chain receipt (debounced batching, fire-and-forget)',
+      'Live try-it console at /developers/api — run real requests against the production API from the browser',
       'New documentation section at /developers/docs — 9 pages (EN/ES/ZH) with responsive sidebar: concepts, SDK references, REST API, on-chain program',
       'Docs entry added to the main navigation',
       'API & MCP reference updated with the real npx setup for Claude Code, Claude Desktop and Cursor',
+      'Anchor CPI example corrected to the real record_attestations interface; storage-model copy fixed in quick-start',
     ],
   },
   {

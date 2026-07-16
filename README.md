@@ -76,8 +76,9 @@ packages/
   program/      Anchor smart contract (Solana devnet: G11dBAzLQaADtHHM2AZNz3ThCDnkY5nhX3Ujddu1CMM1)
   sdk-typescript/  prova-agent-sdk (npm, Apache 2.0)
   sdk-agent-kit/   prova-agent-kit (npm) — Solana Agent Kit v2 adapter
-  sdk-rust/     prova-sdk (Rust crate)
+  sdk-rust/     prova-agent-sdk (crates.io, Rust)
   mcp-server/   prova-mcp-server (npm) — MCP server for Claude, Cursor & AI IDEs
+  plugin-eliza/ prova-plugin-eliza (npm) — elizaOS plugin, attests every agent action
   db/           Drizzle ORM schema + Supabase Postgres migrations
   core/         Shared types, errors, constants
   ui/           Shared shadcn/ui design system (mono-brutalist)
@@ -169,6 +170,28 @@ attachProva(agent, { attester });
 ```
 
 `attachProva()` intercepts each action through SAK's `executeAction` funnel; `ProvaWallet` can also decorate the agent's `BaseWallet` to capture the real on-chain signature. Attestations are batched and fire-and-forget — they never block or break your agent.
+
+---
+
+## elizaOS
+
+Building with [elizaOS](https://github.com/elizaOS/eliza)? One plugin attests every action your agent executes:
+
+```bash
+npm install prova-plugin-eliza prova-agent-sdk
+```
+
+```ts
+import { provaPlugin, attesterFromProvaClient } from 'prova-plugin-eliza';
+import { ProvaClient } from 'prova-agent-sdk';
+
+const prova = new ProvaClient({ rpcUrl, agentKeypair });
+const attester = attesterFromProvaClient(prova, ProvaClient.hashAction, operatorKeypair);
+
+// plugins: [provaPlugin({ attester })] — every action is now attested on-chain.
+```
+
+See [`packages/plugin-eliza`](packages/plugin-eliza).
 
 ---
 

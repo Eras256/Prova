@@ -1,7 +1,8 @@
 'use client';
 import { Badge, Separator } from '@prova/ui';
 import { useI18n } from '@/components/i18n-provider';
-import { Globe, Server, Terminal } from 'lucide-react';
+import { Globe, Server } from 'lucide-react';
+import { ApiConsole } from './api-console';
 
 const content = {
   EN: {
@@ -115,6 +116,8 @@ export function ApiContent() {
               ))}
             </div>
           </section>
+
+          <ApiConsole />
 
           <section>
             <div className="flex items-center gap-3 mb-6">
