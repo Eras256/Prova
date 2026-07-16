@@ -32,7 +32,7 @@ const posts = {
       },
       {
         type: 'p' as const,
-        text: 'Behavior attestations flip this. Every action an agent takes — a transaction, a decision, a tool call — gets wrapped in a cryptographic receipt that is written to the blockchain. The receipt is signed by the agent\'s Ed25519 keypair, anchored to a specific slot, and verifiable by anyone with the PDA address.',
+        text: 'Behavior attestations flip this. Every action an agent takes — a transaction, a decision, a tool call — gets wrapped in a cryptographic receipt that is sealed on-chain as a permanent event. The receipt is signed by the agent\'s Ed25519 keypair, verified by the runtime, and indexable/verifiable by anyone using the transaction signature.',
       },
       {
         type: 'p' as const,
@@ -64,24 +64,23 @@ const posts = {
       },
       {
         type: 'h2' as const,
-        text: 'The core primitive: BehaviorAttestation',
+        text: 'The core primitive: AttestationIssued',
       },
       {
         type: 'p' as const,
-        text: 'The Prova program stores each attestation as a PDA (Program Derived Address) using the instruction discriminator as the seed. Each account holds: the agent\'s public key, the Ed25519 signature of the action hash, the action type (transaction, decision, toolCall, etc.), and a timestamp.',
+        text: 'Instead of creating one account (PDA) per attestation — which would require a rent deposit for every single receipt — the Prova program validates the signature on-chain and emits a lightweight, permanent `AttestationIssued` event. This event holds the agent\'s PDA reference, the Ed25519 public key of the agent, the action hash, the type (transaction, decision, toolCall, etc.), and the cryptographic signature.',
       },
       {
         type: 'code' as const,
-        text: `pub struct BehaviorAttestation {
+        text: `#[event]
+pub struct AttestationIssued {
     pub agent: Pubkey,        // AgentAccount PDA
     pub agent_id: [u8; 32],   // Ed25519 pubkey of agent keypair
     pub action_type: ActionType,
     pub action_hash: [u8; 32],
     pub privacy_mode: bool,
     pub timestamp: i64,
-    pub ed25519_signature: [u8; 64],
-    pub schema_version: u64,
-    pub bump: u8,
+    pub signature: [u8; 64],
 }`,
       },
       {
@@ -90,7 +89,7 @@ const posts = {
       },
       {
         type: 'p' as const,
-        text: 'The critical security property is that the Solana runtime verifies the Ed25519 signature in the same transaction. We use the native Ed25519 program instruction as a pre-verify: the agent signs the action_hash off-chain, and the record_attestation instruction checks that the signature was verified by the runtime before writing the account.',
+        text: 'The critical security property is that the Solana runtime verifies the Ed25519 signature in the same transaction. We use the native Ed25519 program instruction as a pre-compile check: the agent signs the action_hash off-chain, and the record_attestations instruction checks that the signature was verified by the runtime before emitting the event.',
       },
       {
         type: 'p' as const,
@@ -130,7 +129,7 @@ const posts = {
       },
       {
         type: 'p' as const,
-        text: 'Prova satisfies all four requirements out of the box. Agent identity is the Ed25519 keypair registered on-chain. Action logging is the BehaviorAttestation account written per action. Audit access is the public Explorer — any auditor with a PDA address can verify independently. Revocation is the revoke_agent instruction that marks the AgentAccount as revoked on-chain.',
+        text: 'Prova satisfies all four requirements out of the box. Agent identity is the Ed25519 keypair registered on-chain. Action logging is the AttestationIssued event emitted per action. Audit access is the public Explorer — any auditor can verify the receipts independently via transaction signatures or agent history logs. Revocation is the revoke_agent instruction that marks the AgentAccount as revoked on-chain.',
       },
       {
         type: 'h2' as const,
