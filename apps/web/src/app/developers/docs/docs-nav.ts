@@ -41,6 +41,7 @@ export const docsNav: DocsNavGroup[] = [
     items: [
       { slug: 'sdk-typescript', titles: { EN: 'TypeScript SDK', ES: 'SDK TypeScript', ZH: 'TypeScript SDK' } },
       { slug: 'agent-kit', titles: { EN: 'Agent Kit Adapter', ES: 'Adapter Agent Kit', ZH: 'Agent Kit 适配器' } },
+      { slug: 'plugin-eliza', titles: { EN: 'elizaOS Plugin', ES: 'Plugin elizaOS', ZH: 'elizaOS 插件' } },
       { slug: 'sdk-rust', titles: { EN: 'Rust SDK', ES: 'SDK Rust', ZH: 'Rust SDK' } },
       { slug: 'mcp-server', titles: { EN: 'MCP Server', ES: 'Servidor MCP', ZH: 'MCP 服务器' } },
     ],

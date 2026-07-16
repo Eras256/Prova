@@ -4,6 +4,7 @@ import { gettingStarted } from './getting-started';
 import { coreConcepts } from './core-concepts';
 import { sdkTypescript } from './sdk-typescript';
 import { agentKit } from './agent-kit';
+import { pluginEliza } from './plugin-eliza';
 import { sdkRust } from './sdk-rust';
 import { mcpServer } from './mcp-server';
 import { apiReference } from './api-reference';
@@ -16,6 +17,7 @@ export const docsRegistry: Record<string, LocalizedDoc> = {
   'core-concepts': coreConcepts,
   'sdk-typescript': sdkTypescript,
   'agent-kit': agentKit,
+  'plugin-eliza': pluginEliza,
   'sdk-rust': sdkRust,
   'mcp-server': mcpServer,
   'api-reference': apiReference,
