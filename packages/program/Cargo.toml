@@ -1,8 +1,6 @@
 [workspace]
-members = ["programs/prova-program"]
+members = ["programs/*"]
 resolver = "2"
 
-# Los profiles solo aplican desde la raíz del workspace (cargo los ignora en
-# los miembros), por eso viven aquí y no en programs/prova-program/Cargo.toml.
 [profile.release]
 overflow-checks = true

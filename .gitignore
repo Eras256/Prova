@@ -19,6 +19,9 @@ out
 target/
 **/*.rs.bk
 Cargo.lock
+# El lock del programa SÍ se versiona: fija las deps transitivas compatibles
+# con la toolchain SBF de Solana 2.1 (cargo 1.79) para builds reproducibles en CI.
+!packages/program/Cargo.lock
 
 # Testing
 coverage
