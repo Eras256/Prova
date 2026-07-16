@@ -1,6 +1,6 @@
 {
   "name": "prova-plugin-eliza",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "Apache-2.0",
   "author": "Prova Labs",
   "description": "Prova plugin for elizaOS agents — emit verifiable on-chain receipts for every action your eliza agent executes",
