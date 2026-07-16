@@ -9,9 +9,18 @@ const content = {
     desc: 'prova-agent-sdk v0.1.7 ships two independent clients. ProvaClient writes receipts on-chain via Solana. ProvaApiClient queries the indexed data via REST — no wallet required.',
     install: 'npm install prova-agent-sdk',
     version: 'v0.1.7 · Apache 2.0 · Node 18+',
+    packagesTitle: 'The package ecosystem',
+    packagesDesc: 'Five open-source packages. Pick the one that matches how you build.',
+    packages: [
+      { name: 'prova-agent-sdk', reg: 'npm', tag: 'Core', desc: 'On-chain client + REST client + attestation builder. The foundation.', href: 'https://www.npmjs.com/package/prova-agent-sdk' },
+      { name: 'prova-agent-kit', reg: 'npm', tag: 'Solana Agent Kit', desc: 'Drop-in adapter — attests every action of a Solana Agent Kit v2 agent.', href: 'https://www.npmjs.com/package/prova-agent-kit' },
+      { name: 'prova-plugin-eliza', reg: 'npm', tag: 'elizaOS', desc: 'Plugin that wraps every elizaOS agent action with an on-chain receipt.', href: 'https://www.npmjs.com/package/prova-plugin-eliza' },
+      { name: 'prova-mcp-server', reg: 'npm', tag: 'MCP', desc: 'Lets Claude, Cursor & any MCP client query verified attestations.', href: 'https://www.npmjs.com/package/prova-mcp-server' },
+      { name: 'prova-agent-sdk', reg: 'crates.io', tag: 'Rust', desc: 'Full attestation lifecycle for Rust agents, with a fluent builder.', href: 'https://crates.io/crates/prova-agent-sdk' },
+    ],
     clientATag: 'On-chain',
     clientATitle: 'ProvaClient',
-    clientADesc: 'Writes signed BehaviorAttestation accounts to Solana via the Anchor program. Requires an agent keypair and an RPC URL.',
+    clientADesc: 'Signs each action hash and seals it on Solana via the Anchor program (native Ed25519, AttestationIssued event). Requires an agent keypair and an RPC URL.',
     clientBTag: 'REST API',
     clientBTitle: 'ProvaApiClient',
     clientBDesc: 'Queries the Prova indexer (Postgres-backed) over HTTP. Read-only. No wallet or Solana dependency.',
@@ -87,9 +96,18 @@ console.log('Tamper-proof:', valid); // true`,
     desc: 'prova-agent-sdk v0.1.7 incluye dos clientes independientes. ProvaClient escribe recibos on-chain en Solana. ProvaApiClient consulta los datos indexados mediante REST — sin wallet requerida.',
     install: 'npm install prova-agent-sdk',
     version: 'v0.1.7 · Apache 2.0 · Node 18+',
+    packagesTitle: 'El ecosistema de paquetes',
+    packagesDesc: 'Cinco paquetes open-source. Elige el que encaje con cómo construyes.',
+    packages: [
+      { name: 'prova-agent-sdk', reg: 'npm', tag: 'Core', desc: 'Cliente on-chain + cliente REST + builder de atestaciones. La base.', href: 'https://www.npmjs.com/package/prova-agent-sdk' },
+      { name: 'prova-agent-kit', reg: 'npm', tag: 'Solana Agent Kit', desc: 'Adapter drop-in — atesta cada acción de un agente de Solana Agent Kit v2.', href: 'https://www.npmjs.com/package/prova-agent-kit' },
+      { name: 'prova-plugin-eliza', reg: 'npm', tag: 'elizaOS', desc: 'Plugin que envuelve cada acción de un agente elizaOS con un recibo on-chain.', href: 'https://www.npmjs.com/package/prova-plugin-eliza' },
+      { name: 'prova-mcp-server', reg: 'npm', tag: 'MCP', desc: 'Permite a Claude, Cursor y cualquier cliente MCP consultar atestaciones verificadas.', href: 'https://www.npmjs.com/package/prova-mcp-server' },
+      { name: 'prova-agent-sdk', reg: 'crates.io', tag: 'Rust', desc: 'Ciclo de vida completo de atestación para agentes en Rust, con builder fluido.', href: 'https://crates.io/crates/prova-agent-sdk' },
+    ],
     clientATag: 'On-chain',
     clientATitle: 'ProvaClient',
-    clientADesc: 'Escribe cuentas BehaviorAttestation firmadas en Solana mediante el programa Anchor. Requiere un keypair del agente y una URL de RPC.',
+    clientADesc: 'Firma cada hash de acción y lo sella en Solana mediante el programa Anchor (Ed25519 nativo, evento AttestationIssued). Requiere un keypair del agente y una URL de RPC.',
     clientBTag: 'API REST',
     clientBTitle: 'ProvaApiClient',
     clientBDesc: 'Consulta el indexador de Prova (respaldado por Postgres) vía HTTP. Solo lectura. Sin dependencia de wallet ni Solana.',
@@ -165,9 +183,18 @@ console.log('A prueba de manipulación:', valid); // true`,
     desc: 'prova-agent-sdk v0.1.7 包含两个独立客户端。ProvaClient 通过 Solana 将收据写入链上。ProvaApiClient 通过 REST 查询索引数据——无需钱包。',
     install: 'npm install prova-agent-sdk',
     version: 'v0.1.7 · Apache 2.0 · Node 18+',
+    packagesTitle: '包生态',
+    packagesDesc: '五个开源包。选择与您的构建方式匹配的那个。',
+    packages: [
+      { name: 'prova-agent-sdk', reg: 'npm', tag: 'Core', desc: '链上客户端 + REST 客户端 + 证明构建器。基础包。', href: 'https://www.npmjs.com/package/prova-agent-sdk' },
+      { name: 'prova-agent-kit', reg: 'npm', tag: 'Solana Agent Kit', desc: '即插即用适配器 — 证明 Solana Agent Kit v2 代理的每个操作。', href: 'https://www.npmjs.com/package/prova-agent-kit' },
+      { name: 'prova-plugin-eliza', reg: 'npm', tag: 'elizaOS', desc: '为 elizaOS 代理的每个操作封装链上收据的插件。', href: 'https://www.npmjs.com/package/prova-plugin-eliza' },
+      { name: 'prova-mcp-server', reg: 'npm', tag: 'MCP', desc: '让 Claude、Cursor 及任何 MCP 客户端查询经过验证的证明。', href: 'https://www.npmjs.com/package/prova-mcp-server' },
+      { name: 'prova-agent-sdk', reg: 'crates.io', tag: 'Rust', desc: '为 Rust 代理提供完整证明生命周期，带流式构建器。', href: 'https://crates.io/crates/prova-agent-sdk' },
+    ],
     clientATag: '链上',
     clientATitle: 'ProvaClient',
-    clientADesc: '通过 Anchor 程序将签名的 BehaviorAttestation 账户写入 Solana。需要代理密钥对和 RPC URL。',
+    clientADesc: '对每个操作哈希签名，并通过 Anchor 程序封存到 Solana（原生 Ed25519，AttestationIssued 事件）。需要代理密钥对和 RPC URL。',
     clientBTag: 'REST API',
     clientBTitle: 'ProvaApiClient',
     clientBDesc: '通过 HTTP 查询 Prova 索引器（Postgres 支持）。只读。无需钱包或 Solana 依赖。',
@@ -298,6 +325,33 @@ export function SdksContent() {
             </div>
           </div>
         </div>
+
+        {/* Package ecosystem */}
+        <section className="mt-20">
+          <p className="font-pixel text-[12px] uppercase tracking-wider text-primary">{t.packagesTitle}</p>
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">{t.packagesDesc}</p>
+          <div className="mt-6 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+            {t.packages.map((p) => (
+              <a
+                key={`${p.name}-${p.reg}`}
+                href={p.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="group flex flex-col bg-background p-6 transition-colors hover:bg-surface"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-pixel text-[10px] uppercase tracking-wider text-primary">{p.tag}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{p.reg}</span>
+                </div>
+                <code className="mt-3 flex items-center gap-1.5 font-mono text-sm text-foreground group-hover:text-primary">
+                  {p.name}
+                  <ExternalLink className="h-3 w-3 shrink-0 opacity-50" />
+                </code>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
+              </a>
+            ))}
+          </div>
+        </section>
 
         {/* ProvaClient */}
         <section className="mt-24">
