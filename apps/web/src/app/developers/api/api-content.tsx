@@ -22,10 +22,10 @@ const content = {
       mcp: {
         title: 'Model Context Protocol (MCP)',
         content: [
-          'Prova provides an official MCP server. This allows Claude, OpenAI, and other LLMs to fetch agent reputation scores and cryptographic receipts directly within their context window.',
-          'To install the MCP server, add the following to your mcp-config.json:',
-          '{\n  "mcpServers": {\n    "prova": {\n      "command": "npx",\n      "args": ["-y", "@prova/mcp-server"]\n    }\n  }\n}',
-          'This exposes the `get_agent_attestations` and `verify_action_hash` tools to your model.'
+          'Prova provides an official MCP server (npm: prova-mcp-server). It lets Claude, Cursor, and any MCP-compatible client query verified on-chain attestations directly within their context window — Claude Code: claude mcp add prova -- npx -y prova-mcp-server.',
+          'For Claude Desktop or Cursor, add the following to your MCP config (claude_desktop_config.json / .cursor/mcp.json):',
+          '{\n  "mcpServers": {\n    "prova": {\n      "command": "npx",\n      "args": ["-y", "prova-mcp-server"]\n    }\n  }\n}',
+          'This exposes 9 tools to your model — including `list_attestations`, `get_agent_stats` and `verify_action_hash` (recomputes the SHA-256 of a payload and matches it against the on-chain hash). Set PROVA_API_KEY in the env block to unlock the premium tools (`get_full_history`, `get_forensic_report`, `bulk_verify`). Full guide in the docs → MCP Server.'
         ]
       }
     }
@@ -48,10 +48,10 @@ const content = {
       mcp: {
         title: 'Model Context Protocol (MCP)',
         content: [
-          'Prova provee un servidor MCP oficial. Esto permite a Claude, OpenAI y otros LLMs consultar puntajes de reputación y recibos criptográficos directamente en su ventana de contexto.',
-          'Para instalar el servidor MCP, agrega lo siguiente a tu mcp-config.json:',
-          '{\n  "mcpServers": {\n    "prova": {\n      "command": "npx",\n      "args": ["-y", "@prova/mcp-server"]\n    }\n  }\n}',
-          'Esto expone las herramientas `get_agent_attestations` y `verify_action_hash` a tu modelo.'
+          'Prova provee un servidor MCP oficial (npm: prova-mcp-server). Permite que Claude, Cursor y cualquier cliente compatible con MCP consulten atestaciones on-chain verificadas directamente en su ventana de contexto — Claude Code: claude mcp add prova -- npx -y prova-mcp-server.',
+          'Para Claude Desktop o Cursor, agrega lo siguiente a tu config MCP (claude_desktop_config.json / .cursor/mcp.json):',
+          '{\n  "mcpServers": {\n    "prova": {\n      "command": "npx",\n      "args": ["-y", "prova-mcp-server"]\n    }\n  }\n}',
+          'Esto expone 9 herramientas a tu modelo — incluyendo `list_attestations`, `get_agent_stats` y `verify_action_hash` (recomputa el SHA-256 de un payload y lo compara con el hash on-chain). Define PROVA_API_KEY en el bloque env para desbloquear las tools premium (`get_full_history`, `get_forensic_report`, `bulk_verify`). Guía completa en docs → Servidor MCP.'
         ]
       }
     }
@@ -74,10 +74,10 @@ const content = {
       mcp: {
         title: '模型上下文协议 (MCP)',
         content: [
-          'Prova 提供官方的 MCP 服务器。这允许 Claude、OpenAI 和其他 LLM 直接在其上下文窗口中获取代理声誉评分和密码学收据。',
-          '要安装 MCP 服务器，请将以下内容添加到您的 mcp-config.json 中：',
-          '{\n  "mcpServers": {\n    "prova": {\n      "command": "npx",\n      "args": ["-y", "@prova/mcp-server"]\n    }\n  }\n}',
-          '这会向您的模型暴露 `get_agent_attestations` 和 `verify_action_hash` 工具。'
+          'Prova 提供官方 MCP 服务器（npm：prova-mcp-server）。它让 Claude、Cursor 和任何兼容 MCP 的客户端直接在上下文窗口中查询经过验证的链上证明 — Claude Code：claude mcp add prova -- npx -y prova-mcp-server。',
+          '对于 Claude Desktop 或 Cursor，请将以下内容添加到您的 MCP 配置中（claude_desktop_config.json / .cursor/mcp.json）：',
+          '{\n  "mcpServers": {\n    "prova": {\n      "command": "npx",\n      "args": ["-y", "prova-mcp-server"]\n    }\n  }\n}',
+          '这会向您的模型暴露 9 个工具 — 包括 `list_attestations`、`get_agent_stats` 和 `verify_action_hash`（重新计算负载的 SHA-256 并与链上哈希比对）。在 env 块中设置 PROVA_API_KEY 可解锁高级工具（`get_full_history`、`get_forensic_report`、`bulk_verify`）。完整指南见文档 → MCP 服务器。'
         ]
       }
     }

@@ -77,6 +77,7 @@ packages/
   sdk-typescript/  prova-agent-sdk (npm, Apache 2.0)
   sdk-agent-kit/   prova-agent-kit (npm) — Solana Agent Kit v2 adapter
   sdk-rust/     prova-sdk (Rust crate)
+  mcp-server/   prova-mcp-server (npm) — MCP server for Claude, Cursor & AI IDEs
   db/           Drizzle ORM schema + Supabase Postgres migrations
   core/         Shared types, errors, constants
   ui/           Shared shadcn/ui design system (mono-brutalist)
@@ -168,6 +169,28 @@ attachProva(agent, { attester });
 ```
 
 `attachProva()` intercepts each action through SAK's `executeAction` funnel; `ProvaWallet` can also decorate the agent's `BaseWallet` to capture the real on-chain signature. Attestations are batched and fire-and-forget — they never block or break your agent.
+
+---
+
+## MCP Server (Claude, Cursor & AI IDEs)
+
+Let your AI assistant query verified attestations natively via the [Model Context Protocol](https://modelcontextprotocol.io):
+
+```bash
+# Claude Code
+claude mcp add prova -- npx -y prova-mcp-server
+```
+
+```json
+// Claude Desktop (claude_desktop_config.json) / Cursor (.cursor/mcp.json)
+{
+  "mcpServers": {
+    "prova": { "command": "npx", "args": ["-y", "prova-mcp-server"] }
+  }
+}
+```
+
+9 tools: `get_stats`, `list_attestations`, `get_attestation`, `get_agent`, `get_agent_stats`, `verify_action_hash` (local SHA-256 check against the on-chain hash), plus premium forensics with `PROVA_API_KEY`. See [`packages/mcp-server`](packages/mcp-server).
 
 ---
 

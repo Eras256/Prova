@@ -4,6 +4,18 @@ import { useI18n } from '@/components/i18n-provider';
 
 const releases = [
   {
+    version: '0.2.2',
+    date: '2026-07-16',
+    type: 'Feature',
+    notes: [
+      'Official MCP server — prova-mcp-server on npm: Claude, Cursor & any MCP client can query verified attestations natively',
+      '9 MCP tools: stats, attestation queries, agent stats, local SHA-256 hash verification, premium forensics',
+      'New documentation section at /developers/docs — 9 pages (EN/ES/ZH) with responsive sidebar: concepts, SDK references, REST API, on-chain program',
+      'Docs entry added to the main navigation',
+      'API & MCP reference updated with the real npx setup for Claude Code, Claude Desktop and Cursor',
+    ],
+  },
+  {
     version: '0.2.1',
     date: '2026-07-15',
     type: 'Infrastructure',
