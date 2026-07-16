@@ -66,6 +66,16 @@ export function FinalCta() {
               </div>
               <div className="flex items-center gap-2 min-w-max">
                 <span className="text-muted-foreground">$</span>
+                <span className="text-foreground">npm install</span>
+                <a href="https://www.npmjs.com/package/prova-plugin-eliza" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4">prova-plugin-eliza</a>
+              </div>
+              <div className="flex items-center gap-2 min-w-max">
+                <span className="text-muted-foreground">$</span>
+                <span className="text-foreground">npx</span>
+                <a href="https://www.npmjs.com/package/prova-mcp-server" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4">prova-mcp-server</a>
+              </div>
+              <div className="flex items-center gap-2 min-w-max">
+                <span className="text-muted-foreground">$</span>
                 <span className="text-foreground">cargo add</span>
                 <a href="https://crates.io/crates/prova-agent-sdk" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4">prova-agent-sdk</a>
                 <span className="ml-1 inline-block h-4 w-[7px] animate-blink bg-primary align-middle" aria-hidden />

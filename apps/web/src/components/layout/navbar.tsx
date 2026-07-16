@@ -26,6 +26,7 @@ export function Navbar() {
     { label: t('docs'), href: '/developers/docs' },
     { label: t('solutions'), href: '/solutions/operators' },
     { label: t('pricing'), href: '/pricing' },
+    { label: t('blog'), href: '/blog' },
   ];
 
   return (
