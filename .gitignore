@@ -81,6 +81,8 @@ VALIDACION-design-partners.md
 SDK-TESTING-GUIDE.md
 SPIKE-solana-agent-kit-integration.md
 frontier.md
+MAINNET-readiness.md
+ProvaMainnet.md
 
 # Build artifacts
 packages/program/.anchor/
